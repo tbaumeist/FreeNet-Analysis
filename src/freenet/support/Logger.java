@@ -246,6 +246,19 @@ public abstract class Logger {
 	 * Single global LoggerHook.
 	 */
 	static Logger logger = new VoidLogger();
+	static Logger sentMessLogger = null;
+	static Logger recMessLogger = null;
+	
+	// set static sent messages logger
+	public synchronized static void setSentMessageLogger(Logger logger)
+	{
+		sentMessLogger = logger;
+	}
+	
+	public synchronized static void setReceivedMessageLogger(Logger logger)
+	{
+		recMessLogger = logger;
+	}
 
 	/** Log to standard output. */
 	public synchronized static FileLoggerHook setupStdoutLogging(LogLevel level, String detail) throws InvalidThresholdException {
@@ -275,6 +288,40 @@ public abstract class Logger {
 		logger = new LoggerHookChain();
 	}
 
+	// Log out going messages from the system
+	public synchronized static void sentMessage(Class<?> c, String s) {
+		sentMessLogger.log(c, s, LogLevel.NORMAL);
+	}
+
+	public synchronized static void sentMessage(Class<?> c, String s, Throwable t) {
+		sentMessLogger.log(c, s, t, LogLevel.NORMAL);
+	}
+	
+	public synchronized static void sentMessage(Object o, String s) {
+		sentMessLogger.log(o, s, LogLevel.NORMAL);
+	}
+
+	public synchronized static void sentMessage(Object o, String s, Throwable t) {
+		sentMessLogger.log(o, s, t, LogLevel.NORMAL);
+	}
+	
+	// Log in coming messages from the system
+	public synchronized static void receivedMessage(Class<?> c, String s) {
+		recMessLogger.log(c, s, LogLevel.NORMAL);
+	}
+
+	public synchronized static void receivedMessage(Class<?> c, String s, Throwable t) {
+		recMessLogger.log(c, s, t, LogLevel.NORMAL);
+	}
+	
+	public synchronized static void receivedMessage(Object o, String s) {
+		recMessLogger.log(o, s, LogLevel.NORMAL);
+	}
+
+	public synchronized static void receivedMessage(Object o, String s, Throwable t) {
+		recMessLogger.log(o, s, t, LogLevel.NORMAL);
+	}
+	
 	// These methods log messages at various priorities using the global logger.
 	
 	public synchronized static void debug(Class<?> c, String s) {

@@ -53,6 +53,8 @@ public class LoggingConfigHandler {
 	}
 
 	protected static final String LOG_PREFIX = "freenet";
+	protected static final String SENT_MESSAGE_LOG_PREFIX = "sent_messages";
+	protected static final String RECEIVED_MESSAGE_LOG_PREFIX = "received_messages";
 	private final SubConfig config;
 	private FileLoggerHook fileLoggerHook;
 	private File logDir;
@@ -316,6 +318,48 @@ public class LoggingConfigHandler {
 			fileLoggerHook = hook;
 			Logger.globalAddHook(hook);
 			hook.start();
+			
+			
+			
+			// sent messages logger
+			FileLoggerHook sentHook = null;
+			try {
+				sentHook = 
+					new FileLoggerHook(true, new File(logDir, SENT_MESSAGE_LOG_PREFIX).getAbsolutePath(), 
+				    		"d (c, t, p): m", "MMM dd, yyyy HH:mm:ss:SSS", logRotateInterval, LogLevel.DEBUG /* filtered by chain */, false, true, 
+				    		maxZippedLogsSize /* 1GB of old compressed logfiles */, maxCachedLogLines);
+			} catch (IOException e) {
+				System.err.println("CANNOT START LOGGER: "+e.getMessage());
+				return;
+			}catch (IntervalParseException e1) {
+				System.err.println("CANNOT START LOGGER: IMPOSSIBLE: "+e1.getMessage());
+				return;
+			}
+			
+			sentHook.setMaxListBytes(maxCachedLogBytes);
+			sentHook.setMaxBacklogNotBusy(maxBacklogNotBusy);
+			Logger.setSentMessageLogger(sentHook);
+			sentHook.start();
+			
+			// received messages logger
+			FileLoggerHook recHook = null;
+			try {
+				recHook = 
+					new FileLoggerHook(true, new File(logDir, RECEIVED_MESSAGE_LOG_PREFIX).getAbsolutePath(), 
+				    		"d (c, t, p): m", "MMM dd, yyyy HH:mm:ss:SSS", logRotateInterval, LogLevel.DEBUG /* filtered by chain */, false, true, 
+				    		maxZippedLogsSize /* 1GB of old compressed logfiles */, maxCachedLogLines);
+			} catch (IOException e) {
+				System.err.println("CANNOT START LOGGER: "+e.getMessage());
+				return;
+			}catch (IntervalParseException e1) {
+				System.err.println("CANNOT START LOGGER: IMPOSSIBLE: "+e1.getMessage());
+				return;
+			}
+			
+			recHook.setMaxListBytes(maxCachedLogBytes);
+			recHook.setMaxBacklogNotBusy(maxBacklogNotBusy);
+			Logger.setReceivedMessageLogger(recHook);
+			recHook.start();
 		}
 	}
 

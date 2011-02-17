@@ -192,6 +192,9 @@ public class UdpSocketHandler implements PrioRunnable, PacketSocketHandler, Port
 	private boolean getPacket(DatagramPacket packet) {
 		try {
 			_sock.receive(packet);
+			//custom logging code
+			Logger.receivedMessage(this, "Message Recieved\n", new Exception());
+			
 			collector.addInfo(packet.getAddress() + ":" + packet.getPort(),
 					packet.getLength(), 0); // FIXME use (packet.getLength() + UDP_HEADERS_LENGTH)?
 		} catch (SocketTimeoutException e1) {
@@ -241,6 +244,9 @@ public class UdpSocketHandler implements PrioRunnable, PacketSocketHandler, Port
 		DatagramPacket packet = new DatagramPacket(blockToSend, blockToSend.length);
 		packet.setAddress(address);
 		packet.setPort(port);
+		
+		//custom logging code
+		Logger.sentMessage(this, "Message Sent\n", new Exception());
 
 		try {
 			_sock.send(packet);
