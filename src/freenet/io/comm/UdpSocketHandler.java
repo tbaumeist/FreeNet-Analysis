@@ -193,7 +193,7 @@ public class UdpSocketHandler implements PrioRunnable, PacketSocketHandler, Port
 		try {
 			_sock.receive(packet);
 			//custom logging code
-			Logger.receivedMessage(this, "Message Recieved\n", new Exception());
+			//Logger.receivedMessage(this, "Message Recieved\n", new Exception());
 			
 			collector.addInfo(packet.getAddress() + ":" + packet.getPort(),
 					packet.getLength(), 0); // FIXME use (packet.getLength() + UDP_HEADERS_LENGTH)?
@@ -246,7 +246,7 @@ public class UdpSocketHandler implements PrioRunnable, PacketSocketHandler, Port
 		packet.setPort(port);
 		
 		//custom logging code
-		Logger.sentMessage(this, "Message Sent\n", new Exception());
+		//Logger.sentMessage(this, "Message Sent\n", new Exception());
 
 		try {
 			_sock.send(packet);
