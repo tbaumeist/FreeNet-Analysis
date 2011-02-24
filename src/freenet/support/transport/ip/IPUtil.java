@@ -19,8 +19,8 @@ public class IPUtil {
 		if(i.isAnyLocalAddress()) {
 			// Wildcard address, 0.0.0.0, ignore.
 			return false;
-		} else if(i.isLinkLocalAddress() || i.isLoopbackAddress() ||
-				i.isSiteLocalAddress()) {
+		} else if(i.isLinkLocalAddress() || i.isLoopbackAddress() /*||
+				i.isSiteLocalAddress()*/) {
 			if(includeLocalAddressesInNoderefs) {
 				return true;
 			} else return false;
