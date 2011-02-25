@@ -102,7 +102,7 @@ build-dependency on ant-optional, libbsf-java and rhino.
 
 	<target name="dist" depends="clean-all, all" description="clean-build everything"/>
 
-	<target name="all" depends="package, doc" description="build everything, incl. docs, GWT js"/>
+	<target name="all" depends="package" description="build everything, incl. docs, GWT js"/>
 
 	<target name="clean-all" depends="clean, clean-doc, clean-gjs" description="clean all build products, incl. docs, GWT js"/>
 
@@ -326,7 +326,7 @@ build-dependency on ant-optional, libbsf-java and rhino.
 	<!-- Documentation                                                       -->
 	<!-- =================================================================== -->
 
-	<target name="init-doc" unless="${doc.skip}">
+	<!-- <target name="init-doc" unless="${doc.skip}">
 		<mkdir dir="${doc.api}"/>
 	</target>
 
@@ -337,10 +337,10 @@ build-dependency on ant-optional, libbsf-java and rhino.
 			<link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
 		</javadoc>
 	</target>
-
-	<target name="doc" depends="javadoc" description="build documentation">
+-->
+	<!-- <target name="doc" depends="javadoc" description="build documentation"> -->
 		<!-- currently freenet has no other documentation apart from javadocs -->
-	</target>
+	<!-- rget> -->
 
 	<target name="clean-doc" unless="${doc.skip}">
 		<delete dir="${doc.api}"/>
