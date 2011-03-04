@@ -366,9 +366,15 @@ public class FNPPacketMangler implements OutgoingPacketMangler, IncomingPacketFi
                 // Don't log too much if we are a seednode
                 if(logMINOR && crypto.isOpennet && node.wantAnonAuth()) {
                 	if(!didntTryOldOpennetPeers)
+                	{
+                		System.out.println("Unmatchable packet from "+peer);
                 		Logger.minor(this,"Unmatchable packet from "+peer);
+                	}
                 } else
+                {
+                	System.out.println("Unmatchable packet from "+peer);
                     Logger.normal(this,"Unmatchable packet from "+peer);
+                }
                 
                 if(logMINOR && !didntTryOldOpennetPeers)
                 	failedDecodePackets.incrementAndGet();
