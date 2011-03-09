@@ -36,6 +36,7 @@ import freenet.support.Logger;
 import freenet.support.Serializer;
 import freenet.support.ShortBuffer;
 import freenet.support.Logger.LogLevel;
+import freenet.node.Location;
 
 /**
  * A Message which can be read from and written to a DatagramPacket
@@ -134,7 +135,8 @@ public class Message {
 		    return null;
 		}
 		if(logMINOR) Logger.minor(Message.class, "Returning message: "+m);
-		System.out.println("Decoded message "+ m.toString());
+		System.out.println("Decoded message: "+ m.toString());
+		Logger.receivedMessage(Message.class, "Message received: " + m.toString());
 		return m;
 	}
 
@@ -261,6 +263,7 @@ public class Message {
 		if(logDEBUG)
 			Logger.debug(this, "Length: "+buf.length+", hash: "+Fields.hashCode(buf));
 		System.out.println("Encoded message "+ toString());
+		Logger.receivedMessage(Message.class, "Message sent: " + toString());
 		return buf;
 	}
 
