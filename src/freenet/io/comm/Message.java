@@ -36,7 +36,6 @@ import freenet.support.Logger;
 import freenet.support.Serializer;
 import freenet.support.ShortBuffer;
 import freenet.support.Logger.LogLevel;
-import freenet.node.Location;
 
 /**
  * A Message which can be read from and written to a DatagramPacket
@@ -68,13 +67,13 @@ public class Message {
 	final int _receivedByteCount;
 	short priority;
 
-	public static Message decodeMessageFromPacket(byte[] buf, int offset, int length, PeerContext peer, int overhead) {
+	public static Message decodeMessageFromPacket(byte[] buf, int offset, int length, PeerContext peer, int overhead, double destloc, double srcloc) {
 		ByteBufferInputStream bb = new ByteBufferInputStream(buf, offset, length);
-		return decodeMessage(bb, peer, length + overhead, true, false);
+		return decodeMessage(bb, peer, length + overhead, true, false, destloc, srcloc);
 	}
 
 	private static Message decodeMessage(ByteBufferInputStream bb, PeerContext peer, int recvByteCount,
-	        boolean mayHaveSubMessages, boolean inSubMessage) {
+	        boolean mayHaveSubMessages, boolean inSubMessage, double destloc, double srcloc) {
 		MessageType mspec;
 		try {
 			mspec = MessageType.getSpec(Integer.valueOf(bb.readInt()));
@@ -114,7 +113,7 @@ public class Message {
 		    			return m;
 		    		}
 		    		try {
-		    			Message subMessage = decodeMessage(bb2, peer, 0, false, true);
+		    			Message subMessage = decodeMessage(bb2, peer, 0, false, true, destloc, srcloc);
 		    			if(subMessage == null) return m;
 		    			if(logMINOR) Logger.minor(Message.class, "Adding submessage: "+subMessage);
 		    			m.addSubMessage(subMessage);
@@ -136,7 +135,7 @@ public class Message {
 		}
 		if(logMINOR) Logger.minor(Message.class, "Returning message: "+m);
 		System.out.println("Decoded message: "+ m.toString());
-		Logger.receivedMessage(Message.class, "Message received: " + m.toString());
+		Logger.receivedMessage(Message.class, "Message received: " + m.toString() + "\tArrived at: " + destloc + " From: " + srcloc);
 		return m;
 	}
 
@@ -223,11 +222,11 @@ public class Message {
 		_payload.put(key, value);
 	}
 
-	public byte[] encodeToPacket(PeerContext destination) {
-		return encodeToPacket(destination, true, false);
+	public byte[] encodeToPacket(PeerContext destination, double srcloc, double destloc) {
+		return encodeToPacket(destination, true, false, srcloc, destloc);
 	}
 
-	private byte[] encodeToPacket(PeerContext destination, boolean includeSubMessages, boolean isSubMessage) {
+	private byte[] encodeToPacket(PeerContext destination, boolean includeSubMessages, boolean isSubMessage, double srcloc, double destloc) {
 //		if (this.getSpec() != MessageTypes.ping && this.getSpec() != MessageTypes.pong)
 //		Logger.logMinor("<<<<< Send message : " + this);
 
@@ -248,7 +247,7 @@ public class Message {
 
 		if(_subMessages != null && includeSubMessages) {
 			for(int i=0;i<_subMessages.size();i++) {
-				byte[] temp = _subMessages.get(i).encodeToPacket(destination, false, true);
+				byte[] temp = _subMessages.get(i).encodeToPacket(destination, false, true, srcloc, destloc);
 				try {
 					dos.writeShort(temp.length);
 					dos.write(temp);
@@ -263,7 +262,8 @@ public class Message {
 		if(logDEBUG)
 			Logger.debug(this, "Length: "+buf.length+", hash: "+Fields.hashCode(buf));
 		System.out.println("Encoded message "+ toString());
-		Logger.receivedMessage(Message.class, "Message sent: " + toString());
+		System.out.println("From: " + srcloc + "To: " + destloc);
+		Logger.receivedMessage(Message.class, "Message sent: " + toString() + "\tFrom: " + srcloc + "\tTo: " + destloc + "\n");
 		return buf;
 	}
 
@@ -364,6 +364,11 @@ public class Message {
 	
 	public void boostPriority() {
 		priority--;
+	}
+	
+	public boolean shouldFilter(MessageType t) {
+		//if (t.equals(FNPBulkPacketSend) || t.equals(FNPBulkSendAborted) || t.equals(FNPBulkReceiveAborted) || t.equals(FNPBulkReceivedAll) || t.equals(FNPCHKDataRequest) || t.equals(FNPSSKDataRequest) || t.equals(FNPRejectedLoop) || t.equals(FNPRejectedOverload) || t.equals(FNPAccepted) || t.equals(FNPDataNotFound) || t.equals(FNPRecentlyFailed) || t.equals(FNPCHKDataFound) || t.equals(FNPRouteNotFound) || t.equals(FNPInsertRequest) || t.equals(FNPInsertReply) || t.equals(FNPDataInsert) || t.equals(FNPInsertTransfersCompleted)) {
+			return false;
 	}
 
 }

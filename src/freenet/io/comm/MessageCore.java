@@ -77,9 +77,9 @@ public class MessageCore {
      * @param length
      * @param peer
      */
-    public Message decodeSingleMessage(byte[] data, int offset, int length, PeerContext peer, int overhead) {
+    public Message decodeSingleMessage(byte[] data, int offset, int length, PeerContext peer, int overhead, double destloc, double srcloc) {
         try {
-            return Message.decodeMessageFromPacket(data, offset, length, peer, overhead);
+            return Message.decodeMessageFromPacket(data, offset, length, peer, overhead, destloc, srcloc);
         } catch (Throwable t) {
             Logger.error(this, "Could not decode packet: "+t, t);
             return null;

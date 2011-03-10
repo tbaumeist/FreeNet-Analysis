@@ -27,14 +27,14 @@ public class MessageItem {
 	private long cachedID;
 	private boolean hasCachedID;
 
-	public MessageItem(Message msg2, AsyncMessageCallback[] cb2, ByteCounter ctr, PeerNode pn) {
+	public MessageItem(Message msg2, AsyncMessageCallback[] cb2, ByteCounter ctr, PeerNode pn, Node n) {
 		this.msg = msg2;
 		this.cb = cb2;
 		formatted = false;
 		this.ctrCallback = ctr;
 		this.submitted = System.currentTimeMillis();
 		priority = msg2.getSpec().getPriority();
-		buf = msg.encodeToPacket(pn);
+		buf = msg.encodeToPacket(pn, n.getLocation(), pn.getLocation());
 	}
 
 	public MessageItem(byte[] data, AsyncMessageCallback[] cb2, boolean formatted, ByteCounter ctr, short priority) {
