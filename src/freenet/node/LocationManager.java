@@ -123,6 +123,7 @@ public class LocationManager implements ByteCounter {
     		Logger.error(this, "Setting invalid location: "+l, new Exception("error"));
     		return;
     	}
+        Logger.sentMessage(this, "Location changed from: " + this.loc + " to: " + l);
         this.loc = l;
         timeLocSet = System.currentTimeMillis();
     }

@@ -367,7 +367,7 @@ public class Message {
 	}
 	
 	public boolean shouldFilter(MessageType t) {
-		//if (t.equals(FNPBulkPacketSend) || t.equals(FNPBulkSendAborted) || t.equals(FNPBulkReceiveAborted) || t.equals(FNPBulkReceivedAll) || t.equals(FNPCHKDataRequest) || t.equals(FNPSSKDataRequest) || t.equals(FNPRejectedLoop) || t.equals(FNPRejectedOverload) || t.equals(FNPAccepted) || t.equals(FNPDataNotFound) || t.equals(FNPRecentlyFailed) || t.equals(FNPCHKDataFound) || t.equals(FNPRouteNotFound) || t.equals(FNPInsertRequest) || t.equals(FNPInsertReply) || t.equals(FNPDataInsert) || t.equals(FNPInsertTransfersCompleted)) {
+		//if (t.equals(FNPSSKDataRequest) || t.equals(FNPRejectedLoop) || t.equals(FNPRejectedOverload) || t.equals(FNPAccepted) || t.equals(FNPRouteNotFound) || t.equals(FNPRealTimeFlag) || t.equals(FNPCHKDataRequest) || t.equals(FNPRouteNotFound) || t.equals(FNPSSKInsertRequest)) {
 			return false;
 	}
 
