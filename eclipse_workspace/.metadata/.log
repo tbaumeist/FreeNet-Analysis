@@ -500,3 +500,86 @@ java.lang.NullPointerException
 	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
 	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
 	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+!SESSION 2011-03-10 18:43:13.227 -----------------------------------------------
+eclipse.buildId=M20100211-1343
+java.version=1.6.0_20
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.core.resources 4 2 2011-03-10 18:44:41.261
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 1
+org.eclipse.core.runtime.CoreException: Variable references non-existent resource : ${workspace_loc:/FreeNet-Analysis/build.xml}
+	at org.eclipse.debug.internal.core.variables.WorkspaceResolver.resolveValue(WorkspaceResolver.java:56)
+	at org.eclipse.core.internal.variables.DynamicVariable.getValue(DynamicVariable.java:54)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.resolve(StringSubstitutionEngine.java:267)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.substitute(StringSubstitutionEngine.java:192)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.performStringSubstitution(StringSubstitutionEngine.java:86)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:580)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:363)
+	at org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsUtil.getLocation(ExternalToolsUtil.java:70)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.launch(AntLaunchDelegate.java:150)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:853)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:703)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:696)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.launchBuild(ExternalToolBuilder.java:179)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.doBuildBasedOnScope(ExternalToolBuilder.java:167)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.build(ExternalToolBuilder.java:86)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:627)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:170)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:253)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:309)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:341)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:140)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:238)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2011-03-10 18:44:42.664
+!MESSAGE Variable references non-existent resource : ${workspace_loc:/FreeNet-Analysis/build.xml}
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2011-03-10 18:44:42.664
+!MESSAGE Variable references non-existent resource : ${workspace_loc:/FreeNet-Analysis/build.xml}
+
+!ENTRY org.eclipse.core.resources 4 75 2011-03-10 18:44:42.690
+!MESSAGE Errors occurred during the build.
+!SUBENTRY 1 org.eclipse.ui.externaltools 2 75 2011-03-10 18:44:42.690
+!MESSAGE Errors running builder 'Integrated External Tool Builder' on project 'FreeNet-Source'.
+!STACK 1
+org.eclipse.core.runtime.CoreException: Variable references non-existent resource : ${workspace_loc:/FreeNet-Analysis/build.xml}
+	at org.eclipse.debug.internal.core.variables.WorkspaceResolver.resolveValue(WorkspaceResolver.java:56)
+	at org.eclipse.core.internal.variables.DynamicVariable.getValue(DynamicVariable.java:54)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.resolve(StringSubstitutionEngine.java:267)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.substitute(StringSubstitutionEngine.java:192)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.performStringSubstitution(StringSubstitutionEngine.java:86)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:580)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:363)
+	at org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsUtil.getLocation(ExternalToolsUtil.java:70)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.launch(AntLaunchDelegate.java:150)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:853)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:703)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:696)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.launchBuild(ExternalToolBuilder.java:179)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.doBuildBasedOnScope(ExternalToolBuilder.java:167)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.build(ExternalToolBuilder.java:86)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:627)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:170)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:253)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:309)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:341)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:140)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:238)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 2 org.eclipse.core.resources 4 368 2011-03-10 18:44:42.690
+!MESSAGE Variable references non-existent resource : ${workspace_loc:/FreeNet-Analysis/build.xml}
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2011-03-10 18:44:42.690
+!MESSAGE Variable references non-existent resource : ${workspace_loc:/FreeNet-Analysis/build.xml}
+
+!ENTRY org.eclipse.jdt.debug.ui 4 4 2011-03-10 18:45:11.228
+!MESSAGE Launch configuration Fred_Builder references non-existing project FreeNet-Analysis.
