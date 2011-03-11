@@ -1,0 +1,502 @@
+!SESSION 2011-03-03 20:18:37.919 -----------------------------------------------
+eclipse.buildId=M20100211-1343
+java.version=1.6.0_20
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.search 4 0 2011-03-03 20:19:25.121
+!MESSAGE Problems encountered during text search.
+!SUBENTRY 1 org.eclipse.search 4 4 2011-03-03 20:19:25.121
+!MESSAGE File 'FreeNet-Analysis/build/main/freenet/node/Version.java' has been skipped, problem while reading: ('Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.').
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:664)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:288)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:277)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.getInputStream(FileCharSequenceProvider.java:283)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.initializeReader(FileCharSequenceProvider.java:277)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.reset(FileCharSequenceProvider.java:269)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider.newCharSequence(FileCharSequenceProvider.java:40)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.processFile(TextSearchVisitor.java:260)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.processFiles(TextSearchVisitor.java:196)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.search(TextSearchVisitor.java:172)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.search(TextSearchVisitor.java:184)
+	at org.eclipse.search.core.text.TextSearchEngine$1.search(TextSearchEngine.java:54)
+	at org.eclipse.search.internal.ui.text.FileSearchQuery.run(FileSearchQuery.java:182)
+	at org.eclipse.search2.internal.ui.InternalSearchUI$InternalSearchJob.run(InternalSearchUI.java:91)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 2 org.eclipse.core.resources 4 274 2011-03-03 20:19:25.122
+!MESSAGE Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.
+
+!ENTRY org.eclipse.search 4 0 2011-03-03 20:19:34.481
+!MESSAGE Problems encountered during text search.
+!SUBENTRY 1 org.eclipse.search 4 4 2011-03-03 20:19:34.481
+!MESSAGE File 'FreeNet-Analysis/build/main/freenet/node/Version.java' has been skipped, problem while reading: ('Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.').
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:664)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:288)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:277)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.getInputStream(FileCharSequenceProvider.java:283)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.initializeReader(FileCharSequenceProvider.java:277)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.reset(FileCharSequenceProvider.java:269)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider.newCharSequence(FileCharSequenceProvider.java:40)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.processFile(TextSearchVisitor.java:260)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.processFiles(TextSearchVisitor.java:196)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.search(TextSearchVisitor.java:172)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.search(TextSearchVisitor.java:184)
+	at org.eclipse.search.core.text.TextSearchEngine$1.search(TextSearchEngine.java:54)
+	at org.eclipse.search.internal.ui.text.FileSearchQuery.run(FileSearchQuery.java:182)
+	at org.eclipse.search2.internal.ui.InternalSearchUI$InternalSearchJob.run(InternalSearchUI.java:91)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 2 org.eclipse.core.resources 4 274 2011-03-03 20:19:34.481
+!MESSAGE Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.
+
+!ENTRY org.eclipse.search 4 0 2011-03-03 20:20:05.138
+!MESSAGE Problems encountered during text search.
+!SUBENTRY 1 org.eclipse.search 4 4 2011-03-03 20:20:05.138
+!MESSAGE File 'FreeNet-Analysis/build/main/freenet/node/Version.java' has been skipped, problem while reading: ('Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.').
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:664)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:288)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:277)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.getInputStream(FileCharSequenceProvider.java:283)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.initializeReader(FileCharSequenceProvider.java:277)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.reset(FileCharSequenceProvider.java:269)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider.newCharSequence(FileCharSequenceProvider.java:40)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.processFile(TextSearchVisitor.java:260)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.processFiles(TextSearchVisitor.java:196)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.search(TextSearchVisitor.java:172)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.search(TextSearchVisitor.java:184)
+	at org.eclipse.search.core.text.TextSearchEngine$1.search(TextSearchEngine.java:54)
+	at org.eclipse.search.internal.ui.text.FileSearchQuery.run(FileSearchQuery.java:182)
+	at org.eclipse.search2.internal.ui.InternalSearchUI$InternalSearchJob.run(InternalSearchUI.java:91)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 2 org.eclipse.core.resources 4 274 2011-03-03 20:20:05.138
+!MESSAGE Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.
+
+!ENTRY org.eclipse.search 4 0 2011-03-03 20:20:16.474
+!MESSAGE Problems encountered during text search.
+!SUBENTRY 1 org.eclipse.search 4 4 2011-03-03 20:20:16.474
+!MESSAGE File 'FreeNet-Analysis/build/main/freenet/node/Version.java' has been skipped, problem while reading: ('Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.').
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:664)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:288)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:277)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.getInputStream(FileCharSequenceProvider.java:283)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.initializeReader(FileCharSequenceProvider.java:277)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider$FileCharSequence.reset(FileCharSequenceProvider.java:269)
+	at org.eclipse.search.internal.core.text.FileCharSequenceProvider.newCharSequence(FileCharSequenceProvider.java:40)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.processFile(TextSearchVisitor.java:260)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.processFiles(TextSearchVisitor.java:196)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.search(TextSearchVisitor.java:172)
+	at org.eclipse.search.internal.core.text.TextSearchVisitor.search(TextSearchVisitor.java:184)
+	at org.eclipse.search.core.text.TextSearchEngine$1.search(TextSearchEngine.java:54)
+	at org.eclipse.search.internal.ui.text.FileSearchQuery.run(FileSearchQuery.java:182)
+	at org.eclipse.search2.internal.ui.InternalSearchUI$InternalSearchJob.run(InternalSearchUI.java:91)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 2 org.eclipse.core.resources 4 274 2011-03-03 20:20:16.475
+!MESSAGE Resource is out of sync with the file system: '/FreeNet-Analysis/build/main/freenet/node/Version.java'.
+!SESSION 2011-03-10 07:27:46.750 -----------------------------------------------
+eclipse.buildId=M20100211-1343
+java.version=1.6.0_20
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:38:04.289
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:38:27.912
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:38:30.000
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:38:36.154
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.jface.text 4 0 2011-03-10 07:41:28.792
+!MESSAGE Unexpected runtime error while computing a text hover
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.model.AntModel.getProjectNode(AntModel.java:1393)
+	at org.eclipse.ant.internal.ui.model.AntModel.getProjectNode(AntModel.java:1403)
+	at org.eclipse.ant.internal.ui.model.AntModel.getTargetNode(AntModel.java:1367)
+	at org.eclipse.ant.internal.ui.model.AntModel.getTargetDescription(AntModel.java:1359)
+	at org.eclipse.ant.internal.ui.editor.text.XMLTextHover.getAntModelHoverMessage(XMLTextHover.java:145)
+	at org.eclipse.ant.internal.ui.editor.text.XMLTextHover.getHoverInfo(XMLTextHover.java:120)
+	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:168)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:41:34.561
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:41:38.629
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.core.resources 4 2 2011-03-10 07:45:09.702
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 1
+org.eclipse.core.runtime.CoreException: Reference to undefined variable -nowarn
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.resolve(StringSubstitutionEngine.java:259)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.substitute(StringSubstitutionEngine.java:192)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.performStringSubstitution(StringSubstitutionEngine.java:86)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:580)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:363)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.getProgramArguments(AntLaunchDelegate.java:123)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.launch(AntLaunchDelegate.java:185)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:853)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:703)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:696)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.launchBuild(ExternalToolBuilder.java:179)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.clean(ExternalToolBuilder.java:286)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:629)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:170)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:253)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:309)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:341)
+	at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:330)
+	at org.eclipse.ui.internal.ide.dialogs.CleanDialog.doClean(CleanDialog.java:306)
+	at org.eclipse.ui.internal.ide.dialogs.CleanDialog$1.runInWorkspace(CleanDialog.java:154)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:38)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.core.variables 4 120 2011-03-10 07:45:09.715
+!MESSAGE Reference to undefined variable -nowarn
+!SUBENTRY 1 org.eclipse.core.variables 4 120 2011-03-10 07:45:09.715
+!MESSAGE Reference to undefined variable -nowarn
+
+!ENTRY org.eclipse.core.resources 4 75 2011-03-10 07:45:09.724
+!MESSAGE Errors occurred during the build.
+!SUBENTRY 1 org.eclipse.ui.externaltools 2 75 2011-03-10 07:45:09.724
+!MESSAGE Errors running builder 'Integrated External Tool Builder' on project 'FreeNet-Analysis'.
+!STACK 1
+org.eclipse.core.runtime.CoreException: Reference to undefined variable -nowarn
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.resolve(StringSubstitutionEngine.java:259)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.substitute(StringSubstitutionEngine.java:192)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.performStringSubstitution(StringSubstitutionEngine.java:86)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:580)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:363)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.getProgramArguments(AntLaunchDelegate.java:123)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.launch(AntLaunchDelegate.java:185)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:853)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:703)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:696)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.launchBuild(ExternalToolBuilder.java:179)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.clean(ExternalToolBuilder.java:286)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:629)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:170)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:253)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:309)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:341)
+	at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:330)
+	at org.eclipse.ui.internal.ide.dialogs.CleanDialog.doClean(CleanDialog.java:306)
+	at org.eclipse.ui.internal.ide.dialogs.CleanDialog$1.runInWorkspace(CleanDialog.java:154)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:38)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 2 org.eclipse.core.variables 4 120 2011-03-10 07:45:09.725
+!MESSAGE Reference to undefined variable -nowarn
+!SUBENTRY 1 org.eclipse.core.variables 4 120 2011-03-10 07:45:09.725
+!MESSAGE Reference to undefined variable -nowarn
+
+!ENTRY org.eclipse.core.resources 4 2 2011-03-10 07:45:31.756
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 1
+org.eclipse.core.runtime.CoreException: Reference to undefined variable -nowarn
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.resolve(StringSubstitutionEngine.java:259)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.substitute(StringSubstitutionEngine.java:192)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.performStringSubstitution(StringSubstitutionEngine.java:86)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:580)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:363)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.getProgramArguments(AntLaunchDelegate.java:123)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.launch(AntLaunchDelegate.java:185)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:853)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:703)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:696)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.launchBuild(ExternalToolBuilder.java:179)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.clean(ExternalToolBuilder.java:286)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:629)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:170)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:253)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:309)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:341)
+	at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:330)
+	at org.eclipse.ui.internal.ide.dialogs.CleanDialog.doClean(CleanDialog.java:306)
+	at org.eclipse.ui.internal.ide.dialogs.CleanDialog$1.runInWorkspace(CleanDialog.java:154)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:38)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.core.variables 4 120 2011-03-10 07:45:31.757
+!MESSAGE Reference to undefined variable -nowarn
+!SUBENTRY 1 org.eclipse.core.variables 4 120 2011-03-10 07:45:31.757
+!MESSAGE Reference to undefined variable -nowarn
+
+!ENTRY org.eclipse.core.resources 4 75 2011-03-10 07:45:31.757
+!MESSAGE Errors occurred during the build.
+!SUBENTRY 1 org.eclipse.ui.externaltools 2 75 2011-03-10 07:45:31.757
+!MESSAGE Errors running builder 'Integrated External Tool Builder' on project 'FreeNet-Analysis'.
+!STACK 1
+org.eclipse.core.runtime.CoreException: Reference to undefined variable -nowarn
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.resolve(StringSubstitutionEngine.java:259)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.substitute(StringSubstitutionEngine.java:192)
+	at org.eclipse.core.internal.variables.StringSubstitutionEngine.performStringSubstitution(StringSubstitutionEngine.java:86)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:580)
+	at org.eclipse.core.internal.variables.StringVariableManager.performStringSubstitution(StringVariableManager.java:363)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.getProgramArguments(AntLaunchDelegate.java:123)
+	at org.eclipse.ant.internal.ui.launchConfigurations.AntLaunchDelegate.launch(AntLaunchDelegate.java:185)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:853)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:703)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:696)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.launchBuild(ExternalToolBuilder.java:179)
+	at org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder.clean(ExternalToolBuilder.java:286)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:629)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:170)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:253)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:309)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:341)
+	at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:330)
+	at org.eclipse.ui.internal.ide.dialogs.CleanDialog.doClean(CleanDialog.java:306)
+	at org.eclipse.ui.internal.ide.dialogs.CleanDialog$1.runInWorkspace(CleanDialog.java:154)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:38)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 2 org.eclipse.core.variables 4 120 2011-03-10 07:45:31.757
+!MESSAGE Reference to undefined variable -nowarn
+!SUBENTRY 1 org.eclipse.core.variables 4 120 2011-03-10 07:45:31.757
+!MESSAGE Reference to undefined variable -nowarn
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:48:28.298
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:49:31.120
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.jface.text 4 0 2011-03-10 07:50:41.421
+!MESSAGE Unexpected runtime error while computing a text hover
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.model.AntModel.getProjectNode(AntModel.java:1393)
+	at org.eclipse.ant.internal.ui.model.AntModel.getProjectNode(AntModel.java:1403)
+	at org.eclipse.ant.internal.ui.model.AntModel.getPropertyValue(AntModel.java:1604)
+	at org.eclipse.ant.internal.ui.editor.text.XMLTextHover.getAntModelHoverMessage(XMLTextHover.java:140)
+	at org.eclipse.ant.internal.ui.editor.text.XMLTextHover.getHoverInfo(XMLTextHover.java:120)
+	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:168)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:51:18.209
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:51:23.773
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
+
+!ENTRY org.eclipse.ant.ui 4 120 2011-03-10 07:51:25.888
+!MESSAGE Error logged from Ant UI: 
+!STACK 0
+java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:411)
+	at org.apache.tools.ant.PropertyHelper.setUserProperty(PropertyHelper.java:740)
+	at org.apache.tools.ant.Project.setUserProperty(Project.java:565)
+	at org.apache.tools.ant.Project.setDefault(Project.java:731)
+	at org.eclipse.ant.internal.ui.model.AntModelProject.reset(AntModelProject.java:71)
+	at org.eclipse.ant.internal.ui.model.AntProjectNode.reset(AntProjectNode.java:78)
+	at org.eclipse.ant.internal.ui.model.AntModel.prepareForFullIncremental(AntModel.java:365)
+	at org.eclipse.ant.internal.ui.model.AntModel.parseDocument(AntModel.java:314)
+	at org.eclipse.ant.internal.ui.model.AntModel.reconcile(AntModel.java:267)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.internalReconcile(XMLReconcilingStrategy.java:43)
+	at org.eclipse.ant.internal.ui.editor.text.XMLReconcilingStrategy.reconcile(XMLReconcilingStrategy.java:56)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:77)
+	at org.eclipse.ant.internal.ui.editor.text.NotifyingReconciler.process(NotifyingReconciler.java:39)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
