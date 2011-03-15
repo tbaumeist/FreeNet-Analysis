@@ -13,7 +13,20 @@ _defaultConfigFile=./config/remoteMachines.dat
 #4 Remote Install Directory
 function CleanRemoteMachine
 {
-	local runCommand="rm $4*peers* "
+	local runCommand="rm $4*peers*"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function CleanRemoteMachine2
+{
+	local runCommand="rm $4freenet.jar"
 	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
 	echo "Running ssh $2@$1... command $runCommand"
 	$_sshScript $1 $2 $3 "$runCommand"
@@ -60,6 +73,7 @@ do
        
 	echo "Cleaning files on $remoteMachine"
 	CleanRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir
+	#CleanRemoteMachine2 $remoteMachine $remoteUser $password $remoteInstallDir
 done
 exec 0<&3
 echo "********** Clean Complete ***************"
