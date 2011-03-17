@@ -1,3 +1,8 @@
+/eclipse_workspace/FreeNet-Source/bin
+/eclipse_workspace/FreeNet-Source/build
+/eclipse_workspace/FreeNet-Source/dist
+/eclipse_workspace/FreeNet-Source/freenet-*
+/eclipse_workspace/FreeNet-Source/javadoc
 /eclipse_workspace/FreeNet-Source/junitvmwatcher*
 /eclipse_workspace/FreeNet-Source/generator/js/lib
 /eclipse_workspace/FreeNet-Source/generator/js/tests/lib
