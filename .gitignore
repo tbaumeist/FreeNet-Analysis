@@ -1,0 +1,13 @@
+/eclipse_workspace/FreeNet-Source/junitvmwatcher*
+/eclipse_workspace/FreeNet-Source/generator/js/lib
+/eclipse_workspace/FreeNet-Source/generator/js/tests/lib
+/eclipse_workspace/FreeNet-Source/generator/js/tests/bin
+/eclipse_workspace/FreeNet-Source/.classpath
+/eclipse_workspace/FreeNet-Source/*.swp
+/eclipse_workspace/FreeNet-Source/*.iml
+/eclipse_workspace/FreeNet-Source/*.ipr
+/eclipse_workspace/FreeNet-Source/*.iws
+/eclipse_workspace/FreeNet-Source/.*
+/eclipse_workspace/FreeNet-Source/*~
+/override.properties
+!/eclipse_workspace/FreeNet-Source/.externalToolBuilders
