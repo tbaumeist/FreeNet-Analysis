@@ -1,3 +1,3 @@
-192.168.0.101,freenetuser,/home/freenetuser/Freenet/,./../NodeImages/SeedNode/
-192.168.0.102,freenetuser,/home/freenetuser/Freenet/,./../NodeImages/General/
-192.168.0.103,freenetuser,/home/freenetuser/Freenet/,./../NodeImages/General/
+192.168.0.101,SEED,freenetuser,/home/freenetuser/Freenet/,./../NodeImages/SeedNode/
+192.168.0.102,NODE,freenetuser,/home/freenetuser/Freenet/,./../NodeImages/General/
+192.168.0.103,NODE,freenetuser,/home/freenetuser/Freenet/,./../NodeImages/General/
