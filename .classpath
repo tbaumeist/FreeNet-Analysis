@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="build/main"/>
+	<classpathentry kind="src" path="eclipse_workspace/FreeNet-Source/generator/js/src"/>
+	<classpathentry kind="src" path="eclipse_workspace/FreeNet-Source/generator/js/tests/src"/>
+	<classpathentry kind="src" path="eclipse_workspace/FreeNet-Source/src"/>
+	<classpathentry kind="src" path="eclipse_workspace/FreeNet-Source/stats/probe_test"/>
+	<classpathentry kind="src" path="eclipse_workspace/FreeNet-Source/test"/>
+	<classpathentry kind="lib" path="eclipse_workspace/FreeNet-Source/lib/freenet-ext.jar"/>
+	<classpathentry kind="lib" path="NodeImages/General/freenet.jar"/>
+	<classpathentry kind="lib" path="NodeImages/SeedNode/freenet.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="build/main"/>
+</classpath>
