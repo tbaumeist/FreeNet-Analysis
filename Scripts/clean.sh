@@ -11,7 +11,7 @@ _defaultConfigFile=./config/remoteMachines.dat
 #2 Remote User Name
 #3 Remote User Password
 #4 Remote Install Directory
-function CleanRemoteMachine
+function CleanRemoteMachinePeers
 {
 	local runCommand="rm $4*peers*"
 	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
@@ -24,13 +24,92 @@ function CleanRemoteMachine
 #2 Remote User Name
 #3 Remote User Password
 #4 Remote Install Directory
-function CleanRemoteMachine2
+function CleanRemoteMachinePackets
 {
-	local runCommand="rm $4freenet.jar"
+	local runCommand="rm $4*packets*"
 	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
 	echo "Running ssh $2@$1... command $runCommand"
 	$_sshScript $1 $2 $3 "$runCommand"
 }
+
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function CleanRemoteMachineOpennet
+{
+	local runCommand="rm $4*opennet*"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function CleanRemoteMachineExtraData
+{
+	local runCommand="rm -rf $4extra*"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function CleanRemoteMachinePersistentData
+{
+	local runCommand="rm -rf $4persistent*"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function CleanRemoteMachineLogs
+{
+	local runCommand="rm -rf $4logs"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function CleanRemoteMachineTemp
+{
+	local runCommand="rm -rf $4temp*"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function CleanRemoteMachineNode
+{
+	local runCommand="rm -rf $4temp*"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
 
 #===================================================================================================
 #===================================================================================================
@@ -68,12 +147,21 @@ exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
-	remoteUser=$(echo $line | cut -d',' -f2)
-	remoteInstallDir=$(echo $line | cut -d',' -f3)
+	remoteType=$(echo $line | cut -d',' -f2)
+	remoteUser=$(echo $line | cut -d',' -f3)
+	remoteInstallDir=$(echo $line | cut -d',' -f4)
        
 	echo "Cleaning files on $remoteMachine"
-	CleanRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir
-	#CleanRemoteMachine2 $remoteMachine $remoteUser $password $remoteInstallDir
+	CleanRemoteMachinePeers $remoteMachine $remoteUser $password $remoteInstallDir
+	CleanRemoteMachinePackets $remoteMachine $remoteUser $password $remoteInstallDir
+	CleanRemoteMachineExtraData $remoteMachine $remoteUser $password $remoteInstallDir
+	CleanRemoteMachinePersistentData $remoteMachine $remoteUser $password $remoteInstallDir
+	CleanRemoteMachineLogs $remoteMachine $remoteUser $password $remoteInstallDir
+	if [ "$remoteType" = "NODE" ]
+	then	
+		CleanRemoteMachineOpennet $remoteMachine $remoteUser $password $remoteInstallDir
+	fi
+
 done
 exec 0<&3
 echo "********** Clean Complete ***************"

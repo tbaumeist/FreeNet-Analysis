@@ -77,8 +77,9 @@ exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
-	remoteUser=$(echo $line | cut -d',' -f2)
-	remoteInstallDir=$(echo $line | cut -d',' -f3)
+	remoteType=$(echo $line | cut -d',' -f2)
+	remoteUser=$(echo $line | cut -d',' -f3)
+	remoteInstallDir=$(echo $line | cut -d',' -f4)
 
 	if [ "$control" = "s" ]	
 	then
