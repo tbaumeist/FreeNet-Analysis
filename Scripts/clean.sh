@@ -50,6 +50,19 @@ function CleanRemoteMachineOpennet
 #2 Remote User Name
 #3 Remote User Password
 #4 Remote Install Directory
+function CleanRemoteMachineThrottleData
+{
+	local runCommand="rm $4node-throttle.dat"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
 function CleanRemoteMachineExtraData
 {
 	local runCommand="rm -rf $4extra*"
@@ -153,6 +166,7 @@ do
        
 	echo "Cleaning files on $remoteMachine"
 	CleanRemoteMachinePeers $remoteMachine $remoteUser $password $remoteInstallDir
+	CleanRemoteMachineThrottleData $remoteMachine $remoteUser $password $remoteInstallDir
 	CleanRemoteMachinePackets $remoteMachine $remoteUser $password $remoteInstallDir
 	CleanRemoteMachineExtraData $remoteMachine $remoteUser $password $remoteInstallDir
 	CleanRemoteMachinePersistentData $remoteMachine $remoteUser $password $remoteInstallDir

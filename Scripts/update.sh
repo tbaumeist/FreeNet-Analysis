@@ -110,21 +110,22 @@ function CheckRemoteData
 	for (( i = 1 ; i < ${#_dataArrayLocal[@]} ; i = i+3 ))
 	do
 		local fileCopy=true
-		for (( j = 1 ; j < ${#_dataArrayRemote[@]} ; j = j+3 ))
-		do
-			if [ "${_dataArrayLocal[$i]}" = "${_dataArrayRemote[$j]}" ]
-			then
+		# just blindly copy the files no matter if they are the same, much faster
+		#for (( j = 1 ; j < ${#_dataArrayRemote[@]} ; j = j+3 ))
+		#do
+			#if [ "${_dataArrayLocal[$i]}" = "${_dataArrayRemote[$j]}" ]
+			#then
 				#echo " This and that ${_dataArrayLocal[$i+1]} = ${_dataArrayRemote[$j+1]}"
-				if [ "${_dataArrayLocal[$i+1]}" = "${_dataArrayRemote[$j+1]}" ]
-				then
+				#if [ "${_dataArrayLocal[$i+1]}" = "${_dataArrayRemote[$j+1]}" ]
+				#then
 					#echo " This and that ${_dataArrayLocal[$i+2]} = ${_dataArrayRemote[$j+2]}"
-					if [ "${_dataArrayLocal[$i+2]}" = "${_dataArrayRemote[$j+2]}" ]
-					then
-						fileCopy=false
-					fi
-				fi				
-			fi
-		done
+					#if [ "${_dataArrayLocal[$i+2]}" = "${_dataArrayRemote[$j+2]}" ]
+					#then
+					#	fileCopy=false
+					#fi
+				#fi				
+			#fi
+		#done
 
 		# File not found copy it
 		if [ $fileCopy = true ]
@@ -193,7 +194,7 @@ do
 	unset _dataArrayRemote
 	unset _dataArrayLocal
 	echo "Checking files on $remoteMachine as user $remoteUser in directory $remoteInstallDir ..."
-	GetRemoteData $remoteMachine $remoteUser $password $remoteInstallDir
+	#GetRemoteData $remoteMachine $remoteUser $password $remoteInstallDir
 	GetLocalData $localInstallDir
 	CheckRemoteData $remoteMachine $remoteUser $password $remoteInstallDir $localInstallDir
 done
