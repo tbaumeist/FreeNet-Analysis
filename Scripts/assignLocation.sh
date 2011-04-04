@@ -109,18 +109,8 @@ else
 fi
 
 location=0.0
-machineCount=0
 
 exec 3<&0
-# get total number of machines
-exec 0<$configFile
-while read line
-do
-	machineCount=$(echo $machineCount + 1 | bc)
-done
-
-step=$(calc 1 / $machineCount)
-
 exec 0<$configFile
 while read line
 do
@@ -128,13 +118,17 @@ do
 	remoteType=$(echo $line | cut -d',' -f2)
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
-       
+
+	# random location
+	radNumber=$[$RANDOM%1000]
+	location=$(echo "scale=4;$radNumber / 1000" | bc)
+	# add leading zero on
+	location="0$location"
+	
 	echo "Changing location on $remoteMachine to location $location"
 	unset _dataArrayRemote
 	GetRemoteData $remoteMachine $remoteUser $password $remoteInstallDir
 	Changelocation $remoteMachine $remoteUser $password $remoteInstallDir $location
-
-	location=$(echo $location + $step | bc)
 done
 exec 0<&3
 echo "********** Clean Complete ***************"
