@@ -4,6 +4,7 @@
 _dataArrayRemote=()
 _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
+_scpScriptCopyFrom=./common/scplogin_copyFrom.exp
 _defaultConfigFile=./config/remoteMachines.dat
 _tmpDir="/tmp/"
 
@@ -71,7 +72,7 @@ function Changelocation
 	local remoteFile="$4${_dataArrayRemote[1]}"
 	#echo "remote $remoteFile"
 	#echo "local $localFile and loc $5"
-	$_scpScript $1 $2 $3 "$remoteFile" "$localFile"
+	$_scpScriptCopyFrom $1 $2 $3 "$remoteFile" "$localFile"
 	sed -e "s/^location=.*/location=$5/" "$localFile" > "$localFile.correct"
 	$_scpScript $1 $2 $3 "$localFile.correct" "$remoteFile"
 }

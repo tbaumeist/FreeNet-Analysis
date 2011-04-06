@@ -6,6 +6,7 @@ _dataArrayLocal=()
 _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
 _cleanScript=./clean.sh
+_assignLocations=./assignLocation.sh
 _defaultConfigFile=./config/remoteMachines.dat
 
 
@@ -176,6 +177,9 @@ fi
 
 #clean all of the peer info since, copying the ini will invalidate it
 $_cleanScript $configFile $password
+
+# change the node location of all the nodes
+$_assignLocations $configFile $password
 
 exec 3<&0
 exec 0<$configFile
