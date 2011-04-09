@@ -6,7 +6,7 @@ _dataArrayLocal=()
 _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
 _cleanScript=./clean.sh
-_assignLocations=./assignLocation.sh
+_assignLocations=./common/assignLocation.sh
 _defaultConfigFile=./config/remoteMachines.dat
 
 

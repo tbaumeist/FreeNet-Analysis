@@ -14,5 +14,5 @@ send -- \"$PASS\r\"
 send -- \"\r\"
 expect eof
 ")
-echo "==============="
-echo "$VAR"
+#echo "==============="
+#echo "$VAR"

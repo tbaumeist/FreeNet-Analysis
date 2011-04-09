@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # Variables
-_defaultPort=2323
-_scpScriptCopyFrom=./common/scplogin_copyFrom.exp
-_defaultConfigFile=./config/remoteMachines.dat
-_defaultSaveDir=~/Desktop/Network_Topology/
-
+_sshScript=../common/sshlogin.exp
+_scpScriptCopyFrom=../common/scplogin_copyFrom.exp
+_defaultConfigFile=../config/remoteMachines.dat
+_defaultSaveDir=~/Desktop/Node_Logs/
 
 #===================================================================================================
 #===================================================================================================
@@ -38,13 +37,13 @@ else
 	echo ""
 fi
 
-fileName=$_defaultSaveDir"network-topology $(date --rfc-3339=seconds).dot"
-fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
-echo "Creating file $fileName"
+folderName=$_defaultSaveDir"General Logs $(date --rfc-3339=seconds)/"
+folderName=$(echo $folderName | sed -e 's/ /_/g' -e 's/:/\-/g')
+folderNameRawData=$folderName"raw_data/"
+echo "Creating folder $folderName"
 
-mkdir -p $_defaultSaveDir
+mkdir -p $folderNameRawData
 
-echo "digraph G {" > "$fileName"
 
 exec 3<&0
 exec 0<$configFile
@@ -54,30 +53,21 @@ do
 	remoteType=$(echo $line | cut -d',' -f2)
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
-       
-	echo "Get peers from $remoteMachine"
-	VAR=$(expect -c "
-	spawn telnet $remoteMachine $_defaultPort
-	match_max 100000
-	expect \"*TMCI>*\"
-	send -- \"PEERFILE:CONNECTED\r\"
-	send -- \"QUIT\r\"
-	expect eof
-	")
-	#echo $VAR
 	
-	$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"peers.txt" "$_defaultSaveDir"
-	cat $_defaultSaveDir"peers.txt" >> "$fileName"
-	rm $_defaultSaveDir"peers.txt"
+	#copy remote files
+	$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"logs/general_messages-*.gz" "$folderNameRawData"
 	
+	# delete remote files
+	runCommand="rm "$remoteInstallDir"logs/general_messages-*.gz"
+	#echo $runCommand
+	$_sshScript $remoteMachine $remoteUser $password "$runCommand"
+
+	#rename local files
+	rename "s/\/general_messages-*/\/"$remoteMachine"__general_messages-/" $folderNameRawData*
+
 done
 exec 0<&3
 
-echo "}" >> "$fileName"
-
-#cat "$fileName"
-
-circo -Tpng "$fileName" -o "$fileName.png"
 
 
-echo "********** Graph Complete ***************"
+echo "********** Complete ***************"
