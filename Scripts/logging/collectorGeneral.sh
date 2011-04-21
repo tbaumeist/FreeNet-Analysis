@@ -5,6 +5,7 @@ _sshScript=../common/sshlogin.exp
 _scpScriptCopyFrom=../common/scplogin_copyFrom.exp
 _defaultConfigFile=../config/remoteMachines.dat
 _defaultSaveDir=~/Desktop/Node_Logs/
+_generalProcessScript=./generalLogProcessor.sh
 
 #===================================================================================================
 #===================================================================================================
@@ -23,11 +24,22 @@ else
 	echo "Using default configuration file :$configFile"
 fi
 
-# password check code
+# check if directory was supplied
 if [[ -n "$2" ]]
 then
+	# config file was given
+	folderName="$2"
+else
+	# use default config file
+	folderName="$_defaultSaveDir"
+	echo "Working in directory :$folderName"
+fi
+
+# password check code
+if [[ -n "$3" ]]
+then
 	# password was given
-	password="$2"
+	password="$3"
 else
 	# ask for password
 	echo -n "Enter password:"
@@ -37,7 +49,7 @@ else
 	echo ""
 fi
 
-folderName=$_defaultSaveDir"General Logs $(date --rfc-3339=seconds)/"
+folderName=$folderName"General Logs $(date --rfc-3339=seconds)/"
 folderName=$(echo $folderName | sed -e 's/ /_/g' -e 's/:/\-/g')
 folderNameRawData=$folderName"raw_data/"
 echo "Creating folder $folderName"
@@ -64,10 +76,9 @@ do
 
 	#rename local files
 	rename "s/\/general_messages-*/\/"$remoteMachine"__general_messages-/" $folderNameRawData*
-
 done
 exec 0<&3
 
-
+$_generalProcessScript $configFile $folderName $password 
 
 echo "********** Complete ***************"
