@@ -3,9 +3,7 @@
 # Variables
 _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
-_defaultConfigFile=./config/remoteMachines.dat
-
-
+_loggingScript=./logging/collectorGeneral.sh
 
 
 
@@ -37,35 +35,23 @@ function StartRemoteMachine
 }
 
 #===================================================================================================
+# Main Entry Point
 #===================================================================================================
 # parameters
-# 1 Configuration file [optional]
-# 2 password [optional, must supply parameter 1]
+# 1 Configuration file
+# 2 Password
 
-# check if config file was supplied
-if [[ -n "$1" ]]
-then
-	# config file was given
-	configFile="$1"
-else
-	# use default config file
-	configFile="$_defaultConfigFile"
-	echo "Using default configuration file :$configFile"
-fi
+source ./common/parameters.sh
 
-# password check code
-if [[ -n "$2" ]]
-then
-	# password was given
-	password="$2"
-else
-	# ask for password
-	echo -n "Enter password:"
-	stty -echo
-	read password
-	stty echo
-	echo ""
-fi
+declare configFile
+declare password
+
+ParameterScriptWelcome "runRemote.sh"
+ParameterConfigurationFile configFile $1
+ParameterPassword password $2
+ParameterScriptWelcomeEnd
+
+#===================================================================================================
 
 #ask start stop
 echo -n "Start (s)/ Stop (x) [default is x]:"
@@ -91,4 +77,16 @@ do
 	fi
 done
 exec 0<&3
+
+if [ "$control" = "s" ]	
+then
+	# Start Logging Script
+
+	timeDelay=300
+	echo "Starting logging script ctrl-C to stop it..."
+	echo "Letting Freenet nodes warm up, logging collection process will begin in $timeDelay seconds"
+	#sleep $timeDelay
+	$_loggingScript "$configFile" $password "./logging/"
+fi
+
 echo "********** Complete ***************"

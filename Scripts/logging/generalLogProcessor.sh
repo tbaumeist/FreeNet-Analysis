@@ -3,54 +3,47 @@
 # Variables
 _sshScript=../common/sshlogin.exp
 _scpScriptCopyFrom=../common/scplogin_copyFrom.exp
-_defaultConfigFile=../config/remoteMachines.dat
-_defaultDirectory=~/Desktop/Freenet_Data/Node_Logs/
+_startDirectory=./
 
 #===================================================================================================
+# Main Entry Point
 #===================================================================================================
 # parameters
-# 1 Configuration file [optional]
-# 2 password [optional, must supply parameter 1]
+# 1 Configuration file
+# 2 Password
+# 3 Working in directory
+# 4 Save to directory
 
-# check if config file was supplied
-if [[ -n "$1" ]]
-then
-	# config file was given
-	configFile="$1"
-else
-	# use default config file
-	configFile="$_defaultConfigFile"
-	echo "Using default configuration file :$configFile"
-fi
+declare configFile
+declare password
+declare startDirectory
+declare folderRootName
 
-# check if directory was supplied
-if [[ -n "$2" ]]
-then
-	# config file was given
-	folderName="$2"
-else
-	# use default config file
-	folderName="$_defaultDirectory"
-	echo "Working in directory :$folderName"
-fi
-
-# password check code
+# check if start directory was supplied
 if [[ -n "$3" ]]
 then
-	# password was given
-	password="$3"
+	# was given
+	startDirectory="$3"
 else
-	# ask for password
-	echo -n "Enter password:"
-	stty -echo
-	read password
-	stty echo
-	echo ""
+	# use default dir
+	startDirectory="$_startDirectory"
 fi
+echo "generalLogProcessor.sh Working in directory :$startDirectory"
 
-folderNameRawData=$folderName"raw_data/"
-folderNameProcessedData=$folderName"processed_data/"
-folderNameInterView=$folderName"intermediate_view/"
+source $startDirectory../common/parameters.sh
+
+
+ParameterScriptWelcome "runRemote.sh"
+ParameterConfigurationFile configFile $1
+configFile=$startDirectory$configFile #append start directory incase this cript was started in another dir
+ParameterPassword password $2
+ParameterSaveDirectoryLogs folderRootName $4
+ParameterScriptWelcomeEnd
+#===================================================================================================
+
+folderNameRawData=$folderRootName"raw_data/"
+folderNameProcessedData=$folderRootName"processed_data/"
+folderNameInterView=$folderRootName"intermediate_view/"
 
 mkdir -p $folderNameProcessedData
 mkdir -p $folderNameInterView
@@ -69,7 +62,7 @@ do
 
 	echo "Processing file"
 
-	xsltproc --output "$unCompressed.generalCommonUID.xml" ./generalCommonUID.xslt $unCompressed
+	xsltproc --output "$unCompressed.generalCommonUID.xml" $startDirectory"generalCommonUID.xslt" $unCompressed
 
 	rm $unCompressed
 done
@@ -89,11 +82,11 @@ echo "</MessageTraces>" >> $comdFileName
 
 
 echo "Processing intermediate file"
-xsltproc --output "$comdFileName.generalCommonUID.xml" ./generalCommonUID.xslt $comdFileName
+xsltproc --output "$comdFileName.generalCommonUID.xml" $startDirectory"generalCommonUID.xslt" $comdFileName
 rm $comdFileName
 
 echo "Generating simple message trace"
-java -jar SimpleMessageParser.jar "$comdFileName.generalCommonUID.xml" "$comdFileName.generalSimpleTrace.xml"
+java -jar $startDirectory"SimpleMessageParser.jar" "$comdFileName.generalCommonUID.xml" "$comdFileName.generalSimpleTrace.xml"
 
 mv "$comdFileName.generalSimpleTrace.xml" $folderNameInterView
 mv "$comdFileName.generalCommonUID.xml" $folderNameInterView

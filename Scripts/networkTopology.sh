@@ -3,42 +3,32 @@
 # Variables
 _defaultPort=2323
 _scpScriptCopyFrom=./common/scplogin_copyFrom.exp
-_defaultConfigFile=./config/remoteMachines.dat
 _defaultSaveDir=~/Desktop/Freenet_Data/Network_Topology/
 
 
 #===================================================================================================
+# Main Entry Point
 #===================================================================================================
 # parameters
-# 1 Configuration file [optional]
-# 2 password [optional, must supply parameter 1]
+# 1 Configuration file
+# 2 Password
+# 3 Save location
 
-# check if config file was supplied
-if [[ -n "$1" ]]
-then
-	# config file was given
-	configFile="$1"
-else
-	# use default config file
-	configFile="$_defaultConfigFile"
-	echo "Using default configuration file :$configFile"
-fi
+source ./common/parameters.sh
 
-# password check code
-if [[ -n "$2" ]]
-then
-	# password was given
-	password="$2"
-else
-	# ask for password
-	echo -n "Enter password:"
-	stty -echo
-	read password
-	stty echo
-	echo ""
-fi
+declare configFile
+declare password
+declare saveDir
 
-fileName=$_defaultSaveDir"network-topology $(date --rfc-3339=seconds).dot"
+ParameterScriptWelcome "runRemote.sh"
+ParameterConfigurationFile configFile $1
+ParameterPassword password $2
+ParameterSaveDirectoryTopology saveDir $3
+ParameterScriptWelcomeEnd
+#===================================================================================================
+
+
+fileName=$saveDir"network-topology $(date --rfc-3339=seconds).dot"
 fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
 echo "Creating file $fileName"
 
@@ -54,6 +44,10 @@ do
 	remoteType=$(echo $line | cut -d',' -f2)
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
+
+	#remove peer file from remote machine if it already exists
+	local runCommand="rm $remoteInstallDirpeers.txt"
+	$_sshScript $remoteMachine $remoteUser $password "$runCommand"
        
 	echo "Get peers from $remoteMachine"
 	VAR=$(expect -c "
@@ -66,6 +60,7 @@ do
 	")
 	#echo $VAR
 	
+	rm $_defaultSaveDir"peers.txt"
 	$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"peers.txt" "$_defaultSaveDir"
 	cat $_defaultSaveDir"peers.txt" >> "$fileName"
 	rm $_defaultSaveDir"peers.txt"

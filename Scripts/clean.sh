@@ -3,7 +3,6 @@
 # Variables
 _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
-_defaultConfigFile=./config/remoteMachines.dat
 
 
 #Parameters
@@ -123,37 +122,37 @@ function CleanRemoteMachineNode
 	$_sshScript $1 $2 $3 "$runCommand"
 }
 
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function CleanRemoteMachineDatastore
+{
+	local runCommand="rm -rf $4datastore"
+	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
+	echo "Running ssh $2@$1... command $runCommand"
+	$_sshScript $1 $2 $3 "$runCommand"
+}
+
 
 #===================================================================================================
+# Main Entry Point
 #===================================================================================================
 # parameters
-# 1 Configuration file [optional]
-# 2 password [optional, must supply parameter 1]
+# 1 Configuration file
+# 2 Password
 
-# check if config file was supplied
-if [[ -n "$1" ]]
-then
-	# config file was given
-	configFile="$1"
-else
-	# use default config file
-	configFile="$_defaultConfigFile"
-	echo "Using default configuration file :$configFile"
-fi
+source ./common/parameters.sh
 
-# password check code
-if [[ -n "$2" ]]
-then
-	# password was given
-	password="$2"
-else
-	# ask for password
-	echo -n "Enter password:"
-	stty -echo
-	read password
-	stty echo
-	echo ""
-fi
+declare configFile
+declare password
+
+ParameterScriptWelcome "runRemote.sh"
+ParameterConfigurationFile configFile $1
+ParameterPassword password $2
+ParameterScriptWelcomeEnd
+#===================================================================================================
 
 exec 3<&0
 exec 0<$configFile
@@ -171,6 +170,7 @@ do
 	CleanRemoteMachineExtraData $remoteMachine $remoteUser $password $remoteInstallDir
 	CleanRemoteMachinePersistentData $remoteMachine $remoteUser $password $remoteInstallDir
 	CleanRemoteMachineLogs $remoteMachine $remoteUser $password $remoteInstallDir
+	CleanRemoteMachineDatastore $remoteMachine $remoteUser $password $remoteInstallDir
 	if [ "$remoteType" = "NODE" ]
 	then	
 		CleanRemoteMachineOpennet $remoteMachine $remoteUser $password $remoteInstallDir

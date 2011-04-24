@@ -1,64 +1,12 @@
 #!/bin/bash
 
 # Variables
-_dataArrayRemote=()
 _dataArrayLocal=()
 _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
 _cleanScript=./clean.sh
 _assignLocations=./common/assignLocation.sh
-_defaultConfigFile=./config/remoteMachines.dat
 
-
-#Parameters
-#1 Remote Server IP
-#2 Remote User Name
-#3 Remote User Password
-#4 Remote Install Directory
-# Array to store results
-#	% 1 = File Name
-#	% 2 = File Size
-#	% 3 = Modified Date in seconds
-function GetRemoteData
-{
-	local runCommand="find $4 -type f -printf '%s:%TY:%Tj:%TT:%p:\n'"
-	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
-	echo "Running ssh $2@$1..."
-	local index=1
-	#1 File Size:2 Year:3 Day of Year:4 Hour:5 Minute:6 Second:7 File Name
-	while read fileLine
-	do
-		#echo "File: $fileLine"
-		#echo "Check: $4"
-		if [[ $(echo $fileLine | cut -d':' -f7) == *$4* ]]
-		then
-			_dataArrayRemote[$index]=$(echo $fileLine | cut -d':' -f7 | sed -e "s/$installEscaped//")
-			_dataArrayRemote[$index+1]=$(echo $fileLine | cut -d':' -f1)
-			local year=$(echo $fileLine | cut -d':' -f2)
-			local day=$(echo $fileLine | cut -d':' -f3 | sed 's/0*//')
-			local hour=$(echo $fileLine | cut -d':' -f4 | sed 's/0*//')
-			local min=$(echo $fileLine | cut -d':' -f5 | sed 's/0*//')
-			local sec=$(echo $fileLine | cut -d':' -f6 | sed 's/0*//')
-			sec=${sec/\.*}
-
-			#echo $year
-			#echo $day
-			#echo $hour
-			#echo $min
-			#echo $sec
-
-			_dataArrayRemote[$index+2]=$[(year*31622400)+(day*86400)+(hour*3600)+(min*60)+sec]
-
-
-			#echo "Remote file foud"
-			#echo "${_dataArrayRemote[$index]}"
-			#echo ${_dataArrayRemote[$index+1]} 
-			#echo ${_dataArrayRemote[$index+2]}
-
-			let "index += 3"
-		fi
-	done  < <($_sshScript $1 $2 $3 "$runCommand")
-}
 
 #Parameters
 #1 Local Install Directory
@@ -145,35 +93,22 @@ function CheckRemoteData
 
 
 #===================================================================================================
+# Main Entry Point
 #===================================================================================================
 # parameters
-# 1 Configuration file [optional]
-# 2 password [optional, must supply parameter 1]
+# 1 Configuration file
+# 2 Password
 
-# check if config file was supplied
-if [[ -n "$1" ]]
-then
-	# config file was given
-	configFile="$1"
-else
-	# use default config file
-	configFile="$_defaultConfigFile"
-	echo "Using default configuration file :$configFile"
-fi
+source ./common/parameters.sh
 
-# password check code
-if [[ -n "$2" ]]
-then
-	# password was given
-	password="$2"
-else
-	# ask for password
-	echo -n "Enter password:"
-	stty -echo
-	read password
-	stty echo
-	echo ""
-fi
+declare configFile
+declare password
+
+ParameterScriptWelcome "runRemote.sh"
+ParameterConfigurationFile configFile $1
+ParameterPassword password $2
+ParameterScriptWelcomeEnd
+#===================================================================================================
 
 #clean all of the peer info since, copying the ini will invalidate it
 $_cleanScript $configFile $password
@@ -190,15 +125,9 @@ do
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
 	localInstallDir=$(echo $line | cut -d',' -f5)
-	#echo $remoteMachine
-	#echo $remoteUser
-	#echo $remoteInstallDir
-	#echo $password
-       
-	unset _dataArrayRemote
+
 	unset _dataArrayLocal
 	echo "Checking files on $remoteMachine as user $remoteUser in directory $remoteInstallDir ..."
-	#GetRemoteData $remoteMachine $remoteUser $password $remoteInstallDir
 	GetLocalData $localInstallDir
 	CheckRemoteData $remoteMachine $remoteUser $password $remoteInstallDir $localInstallDir
 done
