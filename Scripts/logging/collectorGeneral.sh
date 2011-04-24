@@ -94,8 +94,8 @@ ParameterScriptWelcomeEnd
 while true; do
 
 	echo "Waiting for next poll in $_sleepMinutes minutes ...."
-	#sleep $[$_sleepMinutes*60] # sleep for x minutes
-	sleep $[60] # sleep for x minutes
+	sleep $[$_sleepMinutes*60] # sleep for x minutes
+	#sleep $[60] # sleep for x minutes
 	
 	folderName=$folderRootName"General Logs $(date --rfc-3339=seconds)/"
 	folderName=$(echo $folderName | sed -e 's/ /_/g' -e 's/:/\-/g')

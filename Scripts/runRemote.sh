@@ -85,7 +85,7 @@ then
 	timeDelay=300
 	echo "Starting logging script ctrl-C to stop it..."
 	echo "Letting Freenet nodes warm up, logging collection process will begin in $timeDelay seconds"
-	#sleep $timeDelay
+	sleep $timeDelay
 	$_loggingScript "$configFile" $password "./logging/"
 fi
 
