@@ -4,7 +4,7 @@
 _sshScript=../common/sshlogin.exp
 _scpScriptCopyFrom=../common/scplogin_copyFrom.exp
 _defaultConfigFile=../config/remoteMachines.dat
-_defaultDirectory=~/Desktop/Node_Logs/
+_defaultDirectory=~/Desktop/Freenet_Data/Node_Logs/
 
 #===================================================================================================
 #===================================================================================================

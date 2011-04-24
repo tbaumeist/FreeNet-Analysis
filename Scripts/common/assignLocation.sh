@@ -68,13 +68,17 @@ function GetRemoteData
 #5 Location
 function Changelocation
 {
-	local localFile="$_tmpDir${_dataArrayRemote[1]}"
-	local remoteFile="$4${_dataArrayRemote[1]}"
-	#echo "remote $remoteFile"
-	#echo "local $localFile and loc $5"
-	$_scpScriptCopyFrom $1 $2 $3 "$remoteFile" "$localFile"
-	sed -e "s/^location=.*/location=$5/" "$localFile" > "$localFile.correct"
-	$_scpScript $1 $2 $3 "$localFile.correct" "$remoteFile"
+	#echo "Array count = ${#_dataArrayRemote[@]}"
+	for (( j = 1 ; j < ${#_dataArrayRemote[@]} ; j = j+3 ))
+	do
+		local localFile="$_tmpDir${_dataArrayRemote[$j]}"
+		local remoteFile="$4${_dataArrayRemote[$j]}"
+		echo "remote $remoteFile"
+		echo "local $localFile and loc $5"
+		$_scpScriptCopyFrom $1 $2 $3 "$remoteFile" "$localFile"
+		sed -e "s/^location=.*/location=$5/" "$localFile" > "$localFile.correct"
+		$_scpScript $1 $2 $3 "$localFile.correct" "$remoteFile"
+	done
 }
 
 

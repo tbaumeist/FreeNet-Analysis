@@ -4,7 +4,7 @@
 _defaultPort=2323
 _scpScriptCopyFrom=./common/scplogin_copyFrom.exp
 _defaultConfigFile=./config/remoteMachines.dat
-_defaultSaveDir=~/Desktop/Network_Topology/
+_defaultSaveDir=~/Desktop/Freenet_Data/Network_Topology/
 
 
 #===================================================================================================
