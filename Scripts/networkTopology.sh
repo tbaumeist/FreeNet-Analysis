@@ -20,7 +20,7 @@ declare configFile
 declare password
 declare saveDir
 
-ParameterScriptWelcome "runRemote.sh"
+ParameterScriptWelcome "networkTopology.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
 ParameterSaveDirectoryTopology saveDir $3

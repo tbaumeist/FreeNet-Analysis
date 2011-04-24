@@ -81,7 +81,7 @@ echo "CollectorGeneral.sh Working in directory :$startDirectory"
 source $startDirectory../common/parameters.sh
 
 
-ParameterScriptWelcome "runRemote.sh"
+ParameterScriptWelcome "collectorGeneral.sh"
 ParameterConfigurationFile configFile $1
 configFile=$startDirectory$configFile #append start directory incase this cript was started in another dir
 ParameterPassword password $2

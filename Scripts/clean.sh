@@ -148,7 +148,7 @@ source ./common/parameters.sh
 declare configFile
 declare password
 
-ParameterScriptWelcome "runRemote.sh"
+ParameterScriptWelcome "clean.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
 ParameterScriptWelcomeEnd
