@@ -3,6 +3,7 @@
 # Variables
 _defaultPort=2323
 _scpScriptCopyFrom=./common/scplogin_copyFrom.exp
+_sshScript=./common/sshlogin.exp
 _defaultSaveDir=~/Desktop/Freenet_Data/Network_Topology/
 
 
@@ -46,7 +47,7 @@ do
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
 
 	#remove peer file from remote machine if it already exists
-	local runCommand="rm $remoteInstallDirpeers.txt"
+	runCommand="rm $remoteInstallDirpeers.txt"
 	$_sshScript $remoteMachine $remoteUser $password "$runCommand"
        
 	echo "Get peers from $remoteMachine"

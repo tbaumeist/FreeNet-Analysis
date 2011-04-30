@@ -83,7 +83,6 @@ source $startDirectory../common/parameters.sh
 
 ParameterScriptWelcome "collectorGeneral.sh"
 ParameterConfigurationFile configFile $1
-configFile=$startDirectory$configFile #append start directory incase this cript was started in another dir
 ParameterPassword password $2
 ParameterSaveDirectoryLogs folderRootName $4
 ParameterScriptWelcomeEnd
