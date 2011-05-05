@@ -57,7 +57,7 @@ do
 	sleep 20
 	
 	echo "Taking a snapshot of the topology so far"
-	$_topologyScript $configFile $password "~/Desktop/Freenet_Data/Network_Topology/Traces"
+	$_topologyScript $configFile $password
 
 done
 exec 0<&3
