@@ -53,6 +53,8 @@ do
 
 	echo "Starting Freenet on $remoteMachine"
 	StartRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir
+
+	sleep 10
 	
 	echo "Taking a snapshot of the topology so far"
 	$_topologyScript $configFile $password "~/Desktop/Freenet_Data/Network_Topology/Traces"
