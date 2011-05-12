@@ -36,6 +36,7 @@ echo "Creating file $fileName"
 mkdir -p $_defaultSaveDir
 
 echo "digraph G {" > "$fileName"
+echo "overlap=\"true\"" >> "$fileName"
 
 exec 3<&0
 exec 0<$configFile
