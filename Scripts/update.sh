@@ -56,7 +56,7 @@ function GetLocalData
 function CheckRemoteData
 {
 	echo "Deleting old Freenet.jar files"
-	$_sshScript $1 $2 $3 "rm freenet*"
+	$_sshScript $1 $2 $3 "rm $4freenet*"
 
 
 	for (( i = 1 ; i < ${#_dataArrayLocal[@]} ; i = i+3 ))
