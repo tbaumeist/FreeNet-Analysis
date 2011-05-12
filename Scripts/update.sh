@@ -55,6 +55,9 @@ function GetLocalData
 #	% 3 = Modified Date in seconds
 function CheckRemoteData
 {
+	echo "Deleting old Freenet.jar files"
+	$_sshScript $1 $2 $3 "rm freenet*"
+
 
 	for (( i = 1 ; i < ${#_dataArrayLocal[@]} ; i = i+3 ))
 	do
