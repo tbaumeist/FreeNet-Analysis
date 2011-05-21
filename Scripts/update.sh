@@ -113,11 +113,17 @@ ParameterPassword password $2
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
-#clean all of the peer info since, copying the ini will invalidate it
-$_cleanScript $configFile $password
+echo -n "Reset Nodes (r)/ No reset (n) [default is n]:"
+read control 
 
-# change the node location of all the nodes
-$_assignLocations $configFile $password
+if [ "$control" = "r" ]	
+then
+	#clean all of the peer info since, copying the ini will invalidate it
+	$_cleanScript $configFile $password
+
+	# change the node location of all the nodes
+	$_assignLocations $configFile $password
+fi
 
 exec 3<&0
 exec 0<$configFile
