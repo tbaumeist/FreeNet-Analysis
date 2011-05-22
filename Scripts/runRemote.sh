@@ -63,12 +63,21 @@ read control
 
 if [ "$control" = "s" ]	
 then
-	echo -n "Start logging collection (l)/ Start remote debugging (r)/ Nothing (x) [default is x]:"
+	echo -n "Start logging collection (l)/ Start remote debugging {linux only} (r)/ Nothing (x) [default is x]:"
 	read controlAfter 
+fi
+
+if [ "$controlAfter" = "r" ]	
+then
+	# Start the remote debug collector
+
+	echo "Starting debug server"
+	xterm -e "java -jar $_debugServer $_port; bash" &
 fi
 
 #Get local IP
 IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
+
 
 exec 3<&0
 exec 0<$configFile
@@ -105,14 +114,6 @@ then
 	echo "Letting Freenet nodes warm up, logging collection process will begin in $timeDelay seconds"
 	sleep $timeDelay
 	$_loggingScript "$configFile" $password "./logging/"
-fi
-
-if [ "$controlAfter" = "r" ]	
-then
-	# Start the remote debug collector
-
-	echo "Starting debug server"
-	xterm -e "java -jar $_debugServer $_port; bash" &
 fi
 
 
