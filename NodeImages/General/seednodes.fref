@@ -12,6 +12,7 @@ ark.pubURI=SSK@SYPtPr1qvGL8QvhTPCbTkhWYoTU~nbTThUATjbjGvRQ,ZGO229IIHu~jH1T1tRiWG
 ark.number=0
 auth.negTypes=2;4
 End
+
 opennet=true
 identity=QjL47VlF51HhsaQlrLGsU94ctGOzGBmik14TpdbgxlU
 lastGoodVersion=Fred,0.7,1.0,1310

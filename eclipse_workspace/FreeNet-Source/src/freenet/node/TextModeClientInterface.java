@@ -19,9 +19,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 import freenet.client.ClientMetadata;
 import freenet.client.DefaultMIMETypes;
@@ -963,6 +966,79 @@ public class TextModeClientInterface implements Runnable {
 						out.flush();
 					} catch (IOException e) {
 						// Ignore
+					}
+				}
+
+				public void onRejectOverload() {
+					String msg = "Probe trace received RejectOverload\n";
+					try {
+						out.write(msg.getBytes());
+						out.flush();
+					} catch (IOException e) {
+						// Ignore
+					}
+				}
+        	};
+        	outsb.append("Probing keyspace around "+d+" ...");
+        	n.dispatcher.startProbe(d, cb);
+        	synchronized(this) {
+        		while(!doneSomething) {
+        			try {
+        				wait(5000);
+        			} catch (InterruptedException e) {
+        				// Ignore
+        			}
+        		}
+        		doneSomething = false;
+        	}
+        } else if(uline.startsWith("PROBETOPOLOGY:")) {
+        	String s = uline.substring("PROBETOPOLOGY:".length()).trim();
+        	double d = Double.parseDouble(s);
+        	if(d > 1.0 || d < 0.0) {
+        		System.err.println("Unacceptable target location: "+d);
+        		return false;
+        	}
+        	ProbeCallback cb = new ProbeCallback() {
+        		// Outer hashtable is source, inner is peers for that source
+        		private Hashtable<Double, Hashtable<Double, Object>> topology = new Hashtable<Double, Hashtable<Double, Object>>();
+				public void onCompleted(String reason, double target, double best, double nearest, long id, short counter, short uniqueCounter, short linearCounter) {
+					String msg = "digraph G {\noverlap=\"scale\"\n";
+					for(Double sourceLoc : topology.keySet())
+					{
+						for(Double peerLoc : topology.get(sourceLoc).keySet())
+						{
+							// Round it to 3 decimal places for our purposes
+							DecimalFormat threeDForm = new DecimalFormat("#.###");
+							// +1 becuz they are all -1.######
+							double peerRounded = Double.valueOf(threeDForm.format(peerLoc.doubleValue()+1));
+
+							msg += "\""+ sourceLoc+ "\" -> \""+Math.abs(peerRounded)+"\"\n";
+						}
+					}
+					msg += "}\n";
+					try {
+						out.write(msg.getBytes());
+						out.flush();
+					} catch (IOException e) {
+						// Already closed. :(
+					}
+					synchronized(TextModeClientInterface.this) {
+						doneSomething = true;
+						TextModeClientInterface.this.notifyAll();
+					}
+				}
+
+				public void onTrace(long uid, double target, double nearest, double best, short htl, short counter, double location, long nodeUID, double[] peerLocs, long[] peerUIDs, double[] locsNotVisited, short forkCount, short linearCounter, String reason, long prevUID) {
+					Double dLocation = new Double(location);
+					if(!topology.containsKey(dLocation))
+						topology.put(dLocation, new Hashtable<Double, Object>());
+					
+					Hashtable<Double, Object> peers = topology.get(dLocation);
+					for(double peerLoc : peerLocs)
+					{
+						Double dPeerLoc = new Double(peerLoc);
+						if(!peers.containsKey(dPeerLoc))
+							peers.put(dPeerLoc, new Object());// should use a list here but w/e
 					}
 				}
 

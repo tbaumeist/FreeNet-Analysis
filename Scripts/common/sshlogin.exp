@@ -1,4 +1,6 @@
 #!/bin/bash
+# This script uses a program called "expect" to install
+# this program run "sudo apt-get install expect"
 
 HOST=$1
 USER=$2
