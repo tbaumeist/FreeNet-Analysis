@@ -4,6 +4,8 @@
 _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
 _loggingScript=./logging/collectorGeneral.sh
+_port=8889
+_debugServer=./debug/DebugServer.jar
 
 
 
@@ -26,9 +28,11 @@ function StopRemoteMachine
 #2 Remote User Name
 #3 Remote User Password
 #4 Remote Install Directory
+#5 Local IP
+#6 Local Port
 function StartRemoteMachine
 {
-	local runCommand="$4run.sh start"
+	local runCommand="$4run.sh start $5 $6"
 	local installEscaped=$(echo $4 | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')
 	echo "Running ssh $2@$1... command $runCommand"
 	$_sshScript $1 $2 $3 "$runCommand"
@@ -57,6 +61,14 @@ ParameterScriptWelcomeEnd
 echo -n "Start (s)/ Stop (x) [default is x]:"
 read control 
 
+if [ "$control" = "s" ]	
+then
+	echo -n "Start logging collection (l)/ Start remote debugging (r)/ Nothing (x) [default is x]:"
+	read controlAfter 
+fi
+
+#Get local IP
+IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
 
 exec 3<&0
 exec 0<$configFile
@@ -69,8 +81,14 @@ do
 
 	if [ "$control" = "s" ]	
 	then
-		echo "Starting Freenet on $remoteMachine"
-		StartRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir
+		if [ "$controlAfter" = "r" ]	
+		then
+			echo "Starting Freenet on $remoteMachine with remote debug"
+			StartRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir $IP $_port
+		else
+			echo "Starting Freenet on $remoteMachine"
+			StartRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir "" ""
+		fi
 	else
 		echo "Stopping Freenet on $remoteMachine"
 		StopRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir
@@ -78,7 +96,7 @@ do
 done
 exec 0<&3
 
-if [ "$control" = "s" ]	
+if [ "$controlAfter" = "l" ]	
 then
 	# Start Logging Script
 
@@ -88,5 +106,14 @@ then
 	sleep $timeDelay
 	$_loggingScript "$configFile" $password "./logging/"
 fi
+
+if [ "$controlAfter" = "r" ]	
+then
+	# Start the remote debug collector
+
+	echo "Starting debug server"
+	xterm -e "java -jar $_debugServer $_port; bash" &
+fi
+
 
 echo "********** Complete ***************"
