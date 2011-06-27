@@ -63,7 +63,7 @@ read control
 
 if [ "$control" = "s" ]	
 then
-	echo -n "Start logging collection (l)/ Start remote debugging {linux only} (r)/ Nothing (x) [default is x]:"
+	echo -n "Start logging collection (l)/ Start remote debugging (r)/ Nothing (x) [default is x]:"
 	read controlAfter 
 fi
 
