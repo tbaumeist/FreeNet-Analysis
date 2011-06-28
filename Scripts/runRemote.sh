@@ -112,7 +112,7 @@ then
 	# Start the remote debug collector
 
 	echo "Starting debug server"
-	xterm -e "java -jar $_debugServer $_port; bash" &
+	java -jar $_debugServer $_port
 fi
 
 
