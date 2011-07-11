@@ -38,5 +38,6 @@
 /eclipse_workspace/SimpleTrace_XMLParser/*.iws
 /eclipse_workspace/SimpleTrace_XMLParser/.*
 /eclipse_workspace/SimpleTrace_XMLParser/*~
+/eclipse_workspace/.*
 /override.properties
 !/eclipse_workspace/FreeNet-Source/.externalToolBuilders
