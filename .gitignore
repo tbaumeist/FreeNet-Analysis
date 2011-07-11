@@ -7,7 +7,6 @@
 /eclipse_workspace/FreeNet-Source/generator/js/lib
 /eclipse_workspace/FreeNet-Source/generator/js/tests/lib
 /eclipse_workspace/FreeNet-Source/generator/js/tests/bin
-/eclipse_workspace/FreeNet-Source/.classpath
 /eclipse_workspace/FreeNet-Source/*.swp
 /eclipse_workspace/FreeNet-Source/*.iml
 /eclipse_workspace/FreeNet-Source/*.ipr
@@ -19,7 +18,6 @@
 /eclipse_workspace/ExDebugTools/dist
 /eclipse_workspace/ExDebugTools/freenet-*
 /eclipse_workspace/ExDebugTools/javadoc
-/eclipse_workspace/ExDebugTools/.classpath
 /eclipse_workspace/ExDebugTools/*.swp
 /eclipse_workspace/ExDebugTools/*.iml
 /eclipse_workspace/ExDebugTools/*.ipr
@@ -31,7 +29,6 @@
 /eclipse_workspace/SimpleTrace_XMLParser/dist
 /eclipse_workspace/SimpleTrace_XMLParser/freenet-*
 /eclipse_workspace/SimpleTrace_XMLParser/javadoc
-/eclipse_workspace/SimpleTrace_XMLParser/.classpath
 /eclipse_workspace/SimpleTrace_XMLParser/*.swp
 /eclipse_workspace/SimpleTrace_XMLParser/*.iml
 /eclipse_workspace/SimpleTrace_XMLParser/*.ipr
