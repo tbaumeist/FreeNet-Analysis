@@ -586,6 +586,12 @@ public class Node implements TimeSkewDetectorCallback {
 	 * allow requests to store here, then we get pollution by inserts for keys not
 	 * close to our specialization). These conclusions derived from Oskar's simulations. */
 	CHKStore chkDatastore;
+	
+	/** String version of our chkDatastore
+	 * Automatically updated whenever something is placed into it.
+	 */
+	String[] chkDatastoreContents;
+	
 	/** The SSK datastore. See description for chkDatastore. */
 	private SSKStore sskDatastore;
 	/** The store of DSAPublicKeys (by hash). See description for chkDatastore. */
@@ -4403,13 +4409,20 @@ public class Node implements TimeSkewDetectorCallback {
 
 				if (deep) {
 					chkDatastore.put(block, !canWriteDatastore);
-					// custom logging - log when node stores a block
-					//Logger.specialLogMessage(this, "Node at: " + loc + " Stored: " + block.toString());
 					nodeStats.avgStoreCHKLocation.report(loc);
+					
+					// Add block to chkDatastoreContents for network storage topology
+					String[] newChkDatastoreContents = new String[chkDatastoreContents.length + 1];
+					System.arraycopy(chkDatastoreContents, 0, newChkDatastoreContents, 0, chkDatastoreContents.length);
+					newChkDatastoreContents[chkDatastoreContents.length] = block.toString();
+					chkDatastoreContents = newChkDatastoreContents;
+
+					//System.out.println("Added " + block.toString() + "to chkDatastore.");
+
 				}
 				// custom removal of caching
-				//chkDatacache.put(block, !canWriteDatastore);
-				//nodeStats.avgCacheCHKLocation.report(loc);
+				// chkDatacache.put(block, !canWriteDatastore);
+				nodeStats.avgCacheCHKLocation.report(loc);
 			}
 			if (canWriteDatastore || forULPR || useSlashdotCache)
 				failureTable.onFound(block);
@@ -4869,6 +4882,31 @@ public class Node implements TimeSkewDetectorCallback {
 				//sb.append("No peers yet");
 			out.write(sb.toString());
 			//out.write('\n');
+			out.close();
+		} catch (IOException e) {
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * Write CHK Datastore array to file 
+	 */
+	public String writeChkDatastoreFile() {
+		StringBuilder sb = new StringBuilder();
+		try {
+			FileWriter fstream = new FileWriter("datastore.txt");
+			BufferedWriter out = new BufferedWriter(fstream);
+			sb.append(getLocation());
+
+			if (chkDatastoreContents != null) {
+				for (int i = 0; i < chkDatastoreContents.length; i++) {
+					sb.append("\n" + chkDatastoreContents[i]);
+				}
+			}
+			else {
+				sb.append("CHK Datastore appears to be empty.\n");
+			}
+			out.write(sb.toString());
 			out.close();
 		} catch (IOException e) {
 		}
@@ -6279,5 +6317,15 @@ public class Node implements TimeSkewDetectorCallback {
 	
 	public boolean getUseSlashdotCache() {
 		return useSlashdotCache;
+	}
+	
+	public String storeStats() {
+		// Do the node stats match the chkDatastore's stats?
+		StringBuilder sb = new StringBuilder();
+		sb.append("Stored inserts: " + completeInsertsStored + " of " + completeInsertsTotal + "\n");
+		sb.append("Hits: " + chkDatastore.hits() + "\n");
+		sb.append("Hits: " + chkDatastore.misses() + "\n");
+		sb.append("Hits: " + chkDatastore.writes() + "\n");
+		return sb.toString();
 	}
 }
