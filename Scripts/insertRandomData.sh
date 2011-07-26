@@ -26,7 +26,7 @@ function InsertData
 		expect eof
 		send -- \"QUIT\r\"
 		interact timeout 30 return 
-		" | grep "URI:"
+		" | egrep "URI:|Double:"
 	done
 }
 
