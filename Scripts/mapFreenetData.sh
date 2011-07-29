@@ -12,6 +12,8 @@ _dataArrayWordIndex=()
 #Parameters
 function readMasterList
 {
+
+	echo "Loading the master word file from $_tmpWordInserted"
 	local index=1
 	while read line
 	do
@@ -71,7 +73,7 @@ function GetData
 		do
 			if [ "${_dataArrayWordIndex[$i+1]}" = "$chk" ]
 			then
-				_dataArrayWordIndex[$i+3]="${_dataArrayWordIndex[$i+3]}, $loc"				
+				_dataArrayWordIndex[$i+3]="${_dataArrayWordIndex[$i+3]} $loc"				
 			fi
 		done
 
@@ -94,7 +96,7 @@ declare configFile
 declare password
 declare saveDir
 
-ParameterScriptWelcome "networkTopology.sh"
+ParameterScriptWelcome "mapFreenetData.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
 ParameterScriptWelcomeEnd
