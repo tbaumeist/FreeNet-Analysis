@@ -70,6 +70,54 @@ function ParameterPassword
 #Parameters
 #1 Variable to write to
 #3 Given value
+function ParameterRandomCount
+{
+	local _variable=$1
+	local givenValue=$2
+	local value
+
+	if [[ -n "$givenValue" ]]
+	then
+		# count was given
+		value="$givenValue"
+	else
+		# ask for count
+		echo -n "How many random words:"
+		read value
+		echo ""
+	fi	
+
+	echo -e "\tNumber of random words=$value"
+	eval $_variable="'$value'"
+}
+
+#Parameters
+#1 Variable to write to
+#3 Given value
+function ParameterEnterHost
+{
+	local _variable=$1
+	local givenValue=$2
+	local value
+
+	if [[ -n "$givenValue" ]]
+	then
+		# host was given
+		value="$givenValue"
+	else
+		# ask for count
+		echo -n "Enter host to run inserts from (ex:192.168.0.101):"
+		read value
+		echo ""
+	fi	
+
+	echo -e "\tHost to insert=$value"
+	eval $_variable="'$value'"
+}
+
+#Parameters
+#1 Variable to write to
+#3 Given value
 function ParameterSaveDirectoryLogs
 {
 	local _variable=$1
