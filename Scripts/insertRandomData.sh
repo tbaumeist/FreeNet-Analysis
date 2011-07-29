@@ -34,25 +34,22 @@ function InsertData
 # Main Entry Point
 #===================================================================================================
 # parameters
-# 1 Configuration file
-# 2 Password
+# 1 Number of random words to insert
+# 2 Host to perform the inserts
 
 source ./common/parameters.sh
 
 declare configFile
+declare randomCount
+declate insertHost
 
 ParameterScriptWelcome "insertRandomData.sh"
-ParameterConfigurationFile configFile $1
+#ParameterConfigurationFile configFile $1
+ParameterRandomCount randomCount $1
+ParameterEnterHost insertHost $2
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
-echo -n "How many random inserts (enter integer):"
-read control 
-
-echo -n "Host to perform the inserts (ex:192.168.0.101, ex:localhost):"
-read host 
-
-InsertData $host $control
-
+InsertData $insertHost $randomCount
 
 echo "********** Insert Complete ***************"
