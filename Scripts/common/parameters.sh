@@ -4,6 +4,7 @@
 _defaultConfigFile=./config/remoteMachines.dat
 _defaultSaveDirLogs=~/Desktop/Freenet_Data/Node_Logs/
 _defaultSaveDirTopology=~/Desktop/Freenet_Data/Network_Topology/
+_defaultSaveDirGeneral=~/Desktop/Freenet_Data/
 
 
 #Parameters
@@ -156,6 +157,28 @@ function ParameterSaveDirectoryTopology
 	fi	
 
 	echo -e "\tLog Save Directory=$value"
+	eval $_variable="'$value'"
+}
+
+#Parameters
+#1 Variable to write to
+#3 Given value
+function ParameterSaveDirectoryGeneral
+{
+	local _variable=$1
+	local givenValue=$2
+	local value
+
+	if [[ -n "$givenValue" ]]
+	then
+		# config file was given
+		value="$givenValue"
+	else
+		# use default config file
+		value="$_defaultSaveDirGeneral"
+	fi	
+
+	echo -e "\tGeneral Save Directory=$value"
 	eval $_variable="'$value'"
 }
 

@@ -4,7 +4,7 @@
 _defaultPort=2323
 _sshScript=./common/sshlogin.exp
 _wordfile="/usr/share/dict/words"
-_tmpWordInserted="/tmp/_randomFreenetWords.dat"
+_wordInserted="_randomFreenetWords.dat"
 
 
 #Parameters
@@ -33,7 +33,7 @@ function InsertData
 		if [[ -n "$returned" ]]
 		then
 			local doctored=$(echo $returned | sed -e 's/URI//g' -e 's/Double//g' -e 's/\r//g')
-			echo "$word $doctored" >> $_tmpWordInserted
+			echo "$word $doctored" >> $saveDir$_wordInserted
 		fi
 	done
 }
@@ -49,12 +49,14 @@ source ./common/parameters.sh
 
 declare configFile
 declare randomCount
-declate insertHost
+declare insertHost
+declare saveDir
 
 ParameterScriptWelcome "insertRandomData.sh"
 #ParameterConfigurationFile configFile $1
 ParameterRandomCount randomCount $1
 ParameterEnterHost insertHost $2
+ParameterSaveDirectoryGeneral saveDir $3
 ParameterScriptWelcomeEnd
 #===================================================================================================
 

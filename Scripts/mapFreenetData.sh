@@ -4,16 +4,17 @@
 _defaultPort=2323
 _scpScriptCopyFrom=./common/scplogin_copyFrom.exp
 _sshScript=./common/sshlogin.exp
-_tmpWordInserted="/tmp/_randomFreenetWords.dat"
+_wordInserted="_randomFreenetWords.dat"
 _defaultSaveDir="/tmp/"
 _fileName="datastorea.txt"
 _dataArrayWordIndex=()
 
 #Parameters
+#1 File directory
 function readMasterList
 {
 
-	echo "Loading the master word file from $_tmpWordInserted"
+	echo "Loading the master word file from $1$_wordInserted"
 	local index=1
 	while read line
 	do
@@ -27,7 +28,7 @@ function readMasterList
 		_dataArrayWordIndex[$index+3]=""
 		#echo "${_dataArrayWordIndex[$index]}:${_dataArrayWordIndex[$index+1]}:${_dataArrayWordIndex[$index+2]} "
 		let "index += 4"
-	done < <(cat $_tmpWordInserted)
+	done < <(cat $1$_wordInserted)
 }
 
 #Parameters
@@ -99,11 +100,12 @@ declare saveDir
 ParameterScriptWelcome "mapFreenetData.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
+ParameterSaveDirectoryGeneral saveDir $3
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
 unset _dataArrayWordIndex
-readMasterList
+readMasterList $saveDir
 
 exec 3<&0
 exec 0<$configFile
