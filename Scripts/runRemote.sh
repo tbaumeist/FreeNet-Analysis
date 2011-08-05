@@ -49,10 +49,12 @@ source ./common/parameters.sh
 
 declare configFile
 declare password
+declare saveDir
 
 ParameterScriptWelcome "runRemote.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
+ParameterSaveDirectoryGeneral saveDir $3
 ParameterScriptWelcomeEnd
 
 #===================================================================================================
@@ -112,7 +114,10 @@ then
 	# Start the remote debug collector
 
 	echo "Starting debug server"
-	java -jar $_debugServer $_port
+	mkdir -p $saveDir
+	fileName=$saveDir"Chk Message Dump $(date --rfc-3339=seconds).dat"
+	fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
+	java -jar $_debugServer $_port $fileName
 fi
 
 
