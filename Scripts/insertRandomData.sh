@@ -53,7 +53,6 @@ declare insertHost
 declare saveDir
 
 ParameterScriptWelcome "insertRandomData.sh"
-#ParameterConfigurationFile configFile $1
 ParameterRandomCount randomCount $1
 ParameterEnterHost insertHost $2
 ParameterSaveDirectoryGeneral saveDir $3

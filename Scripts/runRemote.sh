@@ -5,6 +5,7 @@ _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
 _loggingScript=./logging/collectorGeneral.sh
 _port=8889
+_telnetPort=8887
 _debugServer=./debug/DebugServer.jar
 
 
@@ -38,6 +39,15 @@ function StartRemoteMachine
 	$_sshScript $1 $2 $3 "$runCommand"
 }
 
+function close
+{
+	if [ $remoteDebugPID -ge 0 ]	
+	then
+		echo "Killing debug server $remoteDebugPID"
+		kill $remoteDebugPID
+	fi
+}
+
 #===================================================================================================
 # Main Entry Point
 #===================================================================================================
@@ -49,12 +59,11 @@ source ./common/parameters.sh
 
 declare configFile
 declare password
-declare saveDir
+declare remoteDebugPID=-1
 
 ParameterScriptWelcome "runRemote.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
-ParameterSaveDirectoryGeneral saveDir $3
 ParameterScriptWelcomeEnd
 
 #===================================================================================================
@@ -71,6 +80,18 @@ fi
 
 #Get local IP
 IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
+
+
+# start remote debug server
+if [ "$controlAfter" = "r" ]	
+then
+	# Start the remote debug collector
+	trap close INT
+
+	echo "Starting debug server"
+	java -jar $_debugServer $_port $_telnetPort &
+	remoteDebugPID=$!
+fi
 
 exec 3<&0
 exec 0<$configFile
@@ -109,16 +130,11 @@ then
 	$_loggingScript "$configFile" $password "./logging/"
 fi
 
-if [ "$controlAfter" = "r" ]	
+if [ $remoteDebugPID -ge 0 ]	
 then
-	# Start the remote debug collector
-
-	echo "Starting debug server"
-	mkdir -p $saveDir
-	fileName=$saveDir"Chk Message Dump $(date --rfc-3339=seconds).dat"
-	fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
-	java -jar $_debugServer $_port $fileName
+	echo "*******************************************"
+	echo "Listening to debug server (CTRL-C to close)"
+	wait $remoteDebugPID
 fi
-
 
 echo "********** Complete ***************"

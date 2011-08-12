@@ -3,72 +3,25 @@ package Test;
 
 import static org.junit.Assert.*;
 
-import java.io.*;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import DebugMessenger.DebugMessage;
 import DebugMessenger.DebugMessengerClientSender;
 
-public class ClientSendMessage {
-
-	private int _port = 8889;
-	private String _ip = "127.0.0.1";
-	private Process _server = null;
-	private volatile String _lastOutputLine = "";
-	private Thread _listener = null;
-	
-	@Before
-	public void setUp() throws Exception {
-		ProcessBuilder pb = new ProcessBuilder("java", "DebugServer.Server", ""+_port);
-		pb.redirectErrorStream(true); // merges stderr and stdout
-		pb.directory(new File("./bin"));
-		_server = pb.start();
-		final InputStream is = _server.getInputStream();
-		_listener = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                    	_lastOutputLine = line;
-                        System.out.println(line);
-                    }
-                } catch (java.io.IOException e) {
-                }
-            }
-        });
-		_listener.start();
-		Thread.sleep(1000); // sleep giving server setup time
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		if(_server != null)
-			_server.destroy();
-		if(_listener != null)
-			_listener.interrupt();
-		
-		_lastOutputLine = "";
-		_server = null;
-		_listener = null;
-		Thread.sleep(1000);
-	}
+public class ClientSendMessage extends ClientBase {
 	
 	@Test
 	public void sendMessageSuccess()
 	{
 		DebugMessengerClientSender sender = new DebugMessengerClientSender(_ip, _port);
 		DebugMessage mess = sendMessage(sender);
-		assertTrue(_lastOutputLine.equals(mess.toString()));
+		assertTrue(_lastOutputLine.contains(mess.getMessage()));
 		
 		mess = sendMessage2(sender);
-		assertTrue(_lastOutputLine.equals(mess.toString()));
+		assertTrue(_lastOutputLine.contains(mess.getMessage()));
 		
 		mess = sendMessage(sender);
-		assertTrue(_lastOutputLine.equals(mess.toString()));
+		assertTrue(_lastOutputLine.contains(mess.getMessage()));
 	}
 	
 	@Test
@@ -92,7 +45,7 @@ public class ClientSendMessage {
 	{
 		DebugMessengerClientSender sender = new DebugMessengerClientSender(_ip, _port);
 		DebugMessage mess = sendMessage(sender);
-		assertTrue(_lastOutputLine.equals(mess.toString()));
+		assertTrue(_lastOutputLine.contains(mess.getMessage()));
 		
 		// shutdown server
 		try {
@@ -135,10 +88,10 @@ public class ClientSendMessage {
 		} catch (InterruptedException e) {} 
 		
 		mess = sendMessage(sender);
-		assertTrue(_lastOutputLine.equals(mess.toString()));
+		assertTrue(_lastOutputLine.contains(mess.getMessage()));
 		
 		mess = sendMessage2(sender);
-		assertTrue(_lastOutputLine.equals(mess.toString()));
+		assertTrue(_lastOutputLine.contains(mess.getMessage()));
 	}
 	
 	@Test
@@ -156,6 +109,7 @@ public class ClientSendMessage {
 		mess.setUniqueId("localhost");
 		mess.setMessageType("Test");
 		mess.setMessage("Hello World");
+		mess.setCustomProperty("URL", "http://www.google.com");
 		sender.SendMessage(mess);
 		try {
 			Thread.sleep(1000);
@@ -169,6 +123,7 @@ public class ClientSendMessage {
 		mess.setUniqueId("localhost");
 		mess.setMessageType("Test");
 		mess.setMessage("Good Bye");
+		mess.setCustomProperty("URL", "http://www.digg.com");
 		sender.SendMessage(mess);
 		try {
 			Thread.sleep(1000);

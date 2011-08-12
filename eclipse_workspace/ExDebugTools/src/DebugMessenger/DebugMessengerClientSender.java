@@ -34,15 +34,45 @@ public class DebugMessengerClientSender implements Runnable {
 			return;
 		_message = mess;
 		run();
-		/*Thread t = new Thread(this);
-		t.start();
-		try {
-			// t.join(3000);
-			t.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-		}*/
+	}
+	
+	public boolean getInsertLock() throws Exception
+	{
+		Socket socket = openSocket(_ip, getTelnetPort());
+		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+		LockResponseReader response = new LockResponseReader(socket.getInputStream());
+		response.start();
+		out.println("InsertAttackLock");
+		
+		response.join(); // wait for response
+		socket.close();
+		return response.getResponse();
+	}
+	public boolean getRequestLock() throws Exception
+	{
+		Socket socket = openSocket(_ip, getTelnetPort());
+		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+		LockResponseReader response = new LockResponseReader(socket.getInputStream());
+		response.start();
+		out.println("RequestAttackLock");
+		
+		response.join(); // wait for response
+		socket.close();
+		return response.getResponse();
+	}
+	public void setInsertLock(boolean set) throws Exception
+	{
+		Socket socket = openSocket(_ip, getTelnetPort());
+		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+		out.println("InsertAttackLock:"+(set?"true":"false"));
+		socket.close();
+	}
+	public void setRequestLock(boolean set) throws Exception
+	{
+		Socket socket = openSocket(_ip, getTelnetPort());
+		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+		out.println("RequestAttackLock:"+(set?"true":"false"));
+		socket.close();
 	}
 
 	@Override
@@ -65,8 +95,7 @@ public class DebugMessengerClientSender implements Runnable {
 			ObjectOutput out = null;
 
 			try {
-				echoSocket = new Socket();
-				echoSocket.connect(new InetSocketAddress(_ip, _port), 5*1000);
+				echoSocket = openSocket(_ip, _port);
 				out = new ObjectOutputStream(echoSocket.getOutputStream());
 			} catch (UnknownHostException e) {
 				System.out.println("Don't know about host: " + _ip);
@@ -96,4 +125,44 @@ public class DebugMessengerClientSender implements Runnable {
 			_lastConnectionFail = new Date();
 		}
 	}
+	
+	private Socket openSocket(String ip, int port) throws IOException
+	{
+		Socket socket = new Socket();
+		socket.connect(new InetSocketAddress(ip, port), 5*1000);
+		return socket;
+	}
+	
+	private int getTelnetPort()
+	{
+		return _port-2;
+	}
+	
+	private class LockResponseReader extends Thread
+	{
+		private boolean _response = false;
+		private InputStream _input;
+		public LockResponseReader(InputStream i)
+		{
+			_input = i;	
+		}
+		public boolean getResponse()
+		{
+			return _response;
+		}
+        public void run() {
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(_input));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if(line.toLowerCase().startsWith("status:"))
+					{
+						_response = line.toLowerCase().endsWith("true");
+						break;
+					}
+                }
+            } catch (java.io.IOException e) {
+            }
+        }
+    }
 }

@@ -83,12 +83,12 @@ function ParameterRandomCount
 		value="$givenValue"
 	else
 		# ask for count
-		echo -n "How many random words:"
+		echo -n "How many:"
 		read value
 		echo ""
 	fi	
 
-	echo -e "\tNumber of random words=$value"
+	echo -e "\tNumber=$value"
 	eval $_variable="'$value'"
 }
 

@@ -17,7 +17,10 @@ public class SimpleClient {
 		
 		DebugMessage mess = new DebugMessage();
 		mess.setUniqueId("localhost");
-		mess.setMessageType("TestClient");
+		mess.setMessageType("MESSAGE_TRACE");
+		mess.setCustomProperty("URL", "http://www.maps.google.com");
+		mess.setCustomProperty("MESSAGE_CHK", "2034dkfpwdr80342fd2");
+		mess.setCustomProperty("MESSAGE_UID","13234234");
 		String inputString = "";
         while ((inputString = r.readLine()) != null) {
             mess.setMessage(inputString);
