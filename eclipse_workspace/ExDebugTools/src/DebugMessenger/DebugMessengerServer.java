@@ -5,134 +5,148 @@
 package DebugMessenger;
 
 import java.io.*;
-import java.util.*;
 
 /**
- *
+ * 
  * @author Todd Baumeister
  */
 public class DebugMessengerServer {
 
-    private DebugMessengerServerListener _listener = null;
-    private ArrayList<DebugMessage> _messages = new ArrayList<DebugMessage>();
-    private PrintStream _output = null;
-    private BufferedReader _input = null;
-    private ArrayList<String> _currentMessageFilters = new ArrayList<String>();
-    private int _messageCapacity = 800;
+	private ServerListener _inputListener = null;
+	private ServerListener _telnetListener = null;
+	
+	private ChkMessageTracker _chkTracker = new ChkMessageTracker();
+	
+	private boolean _insertAttackLock = false;
+	private boolean _requestAttackLock = false;
+	
+	private PrintStream _output = null;
+	private BufferedReader _input = null;
+	
+	private PrintStream _archiveOutput = null;
 
-    public DebugMessengerServer(PrintStream output, InputStream input, int listenPort) {
-        _output = output;
-        _input = new BufferedReader(new InputStreamReader(input));
-        _listener = new DebugMessengerServerListener(listenPort);
-        _listener.addOnMessageRecievedEvent(new RecievedMessageEvent(this));
-    }
+	public DebugMessengerServer(PrintStream output, InputStream input,
+			int listenPort)  throws IOException 
+	{
+		this(output, input, listenPort, -1);
+	}
+	
+	public DebugMessengerServer(PrintStream output, InputStream input,
+			int listenPort, int telnetPort) throws IOException {
+		_output = output;
+		_input = new BufferedReader(new InputStreamReader(input));
+		
+		ControllerInterface ctrl = new ControllerInterface()
+		{
+			public void onMessageRecieved(DebugMessage message)  throws Exception{
+				addMessage(message);
+			}
+		};
+		_inputListener = new ServerListener(ctrl, listenPort, ServerListener.listenerType.INPUT_LISTENER);
+		
+		if(telnetPort > 0)
+		{
+			_telnetListener = new ServerListener(new ControllerTelnet(), telnetPort, ServerListener.listenerType.TELNET_LISTENER);
+		}
+	}
 
-    public void run() {
-        // only one thread and it runs until termination
-        DebugMessengerServerInputControllerThread inputControl =
-                new DebugMessengerServerInputControllerThread(_output, _input);
-        inputControl.addOnHelpEvent(new HelpedEvent(this));
-        inputControl.addOnDumpEvent(new DumpEvent(this));
-        inputControl.addOnFilterEvent(new FilterEvent(this));
-        inputControl.start();
+	public void run() {
+		// only one thread and it runs until termination
+		ServerInputControllerThread inputControl = new ServerInputControllerThread(
+				new ControllerTelnet(), _output, _input);
+		inputControl.start();
 
-        _output.println("Server Starting");
+		println("Server Starting");
 
-        _listener.run();
-        try {
-            _input.close();
-        } catch (IOException ex) {
-            System.err.println("Error closing input stream");
-        }
-    }
+		_telnetListener.start();
+		_inputListener.run(); // waits here until closed
+		try {
+			_input.close();
+		} catch (IOException ex) {
+			System.err.println("Error closing input stream");
+		}
+	}
+	
+	protected synchronized void archiveChkMessages(String fileName) throws IOException
+	{
+		if(_archiveOutput != null)
+			_archiveOutput.close();
+		_archiveOutput = null;
+		
+		if(fileName == null)
+			return;
+		
+		File f = new File(fileName);
+		f.createNewFile();
+		_archiveOutput = new PrintStream(f);
+	}
 
-    protected synchronized void addMessage(DebugMessage mess) {
-        while(_messages.size() >= _messageCapacity)
-        	_messages.remove(0);
-        
-    	_messages.add(mess);
-        if (_currentMessageFilters.size() == 0
-                || _currentMessageFilters.contains("all")
-                || _currentMessageFilters.contains(mess.getMessageType())) {
-            _output.println(mess);
-        }
-    }
+	protected synchronized void addMessage(DebugMessage mess) {
+		if (_chkTracker.isChkMessage(mess)) {
+			_chkTracker.addMessage(mess);
 
-    protected void showMessageCount() {
-        _output.println("Current Number of Messages Stored = " + _messages.size());
-    }
+			printlnArchive(mess.toString());
+		}
 
-    protected void filterMessages(ArrayList<String> messageTypes) {
-        _output.print("Filtering Messages of Type: ");
-        for(String msg : messageTypes)
-        	_output.print(msg+" ");
-        if(messageTypes.size() == 0)
-        	_output.print("all");
-        _output.println();
-        
-        _currentMessageFilters.addAll(messageTypes);
-    }
-
-    protected void dumpMessage(String messageType) {
-        _output.println("Dumping All Messages of Type: " + messageType);
-        _output.println();
-        for (DebugMessage mess : _messages) {
-            if (messageType.equals("") || messageType.equalsIgnoreCase("all")
-                    || mess.getMessageType().equalsIgnoreCase(messageType)) {
-                _output.println(mess);
-            }
-        }
-    }
-
-    private class RecievedMessageEvent implements MessageEventListener<DebugMessage> {
-
-        private DebugMessengerServer _server = null;
-
-        public RecievedMessageEvent(DebugMessengerServer server) {
-            _server = server;
-        }
-
-        public void onMessageEventOccurred(MessageEvent<DebugMessage> evt) {
-            _server.addMessage(evt.getData());
-        }
-    }
-
-    private class HelpedEvent implements MessageEventListener<String> {
-
-        private DebugMessengerServer _server = null;
-
-        public HelpedEvent(DebugMessengerServer server) {
-            _server = server;
-        }
-
-        public void onMessageEventOccurred(MessageEvent<String> evt) {
-            _server.showMessageCount();
-        }
-    }
-
-    private class FilterEvent implements MessageEventListener<ArrayList<String>> {
-
-        private DebugMessengerServer _server = null;
-
-        public FilterEvent(DebugMessengerServer server) {
-            _server = server;
-        }
-
-        public void onMessageEventOccurred(MessageEvent<ArrayList<String>> evt) {
-            _server.filterMessages(evt.getData());
-        }
-    }
-
-    private class DumpEvent implements MessageEventListener<String> {
-
-        private DebugMessengerServer _server = null;
-
-        public DumpEvent(DebugMessengerServer server) {
-            _server = server;
-        }
-
-        public void onMessageEventOccurred(MessageEvent<String> evt) {
-            _server.dumpMessage(evt.getData());
-        }
-    }
+		println(mess.toString());
+	}
+	
+	protected synchronized void reset() throws IOException
+	{
+		_chkTracker = new ChkMessageTracker();
+		archiveChkMessages(null);
+	}	
+	
+	private void println(String s)
+	{
+		_output.println(s);
+	}
+	
+	private void printlnArchive(String s)
+	{
+		if(_archiveOutput == null)
+			return;
+		_archiveOutput.println(s);
+	}
+	
+	private class ControllerTelnet extends ControllerInterface
+	{
+		public void onArchiveChkMessages(String fileName) throws Exception {
+			archiveChkMessages(fileName);
+		}
+		public void onPrintAllChks(PrintStream out) throws Exception {
+			out.print(_chkTracker.toStringChks());
+		}
+		public void onReset() throws Exception {
+			reset();
+		}
+		public void onClose() throws Exception {
+			println("CLOSE can only be used from the telnet interface.");
+		}
+		public boolean onGetInsertAttackLock(PrintStream out) throws Exception
+		{
+			if(_insertAttackLock)
+				out.println("status:true");
+			else
+				out.println("status:false");
+			return _insertAttackLock;
+		}
+		public void onSetInsertAttackLock(boolean set) throws Exception
+		{
+			_insertAttackLock = set;
+		}
+		public boolean onGetRequestAttackLock(PrintStream out) throws Exception
+		{
+			if(_requestAttackLock)
+				out.println("status:true");
+			else
+				out.println("status:false");
+			return _requestAttackLock;
+		}
+		public void onSetRequestAttackLock(boolean set) throws Exception
+		{
+			_requestAttackLock = set;
+		}
+	};
+	
 }
