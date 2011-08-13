@@ -120,11 +120,17 @@ do
 	echo -n "Checking if can start : ."
 	declare status
 	getControlLock status
+	waitCount=0
 	while [ "$status" != "true" ]
 	do
 		echo -n "."
-		sleep 10
+		sleep 20
 		getControlLock status
+		if [ $waitCount -ge 5 ]
+		then
+			break
+		fi
+		let "waitCount += 1"
 	done
 	echo ""
 
