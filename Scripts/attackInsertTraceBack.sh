@@ -110,7 +110,7 @@ do
 		echo -n "."
 		sleep 20
 		getControlLock status
-		if [ $waitCount -ge 5 ]
+		if [ $waitCount -ge 3 ]
 		then
 			break
 		fi
@@ -130,7 +130,7 @@ do
 	# insert the random word
 	$_insertRandomWord 1 $remoteMachine   
 
-	sleep 15 #sleep x seconds
+	sleep 10 #sleep x seconds
 
 	returned=$(expect -c "
 		spawn telnet localhost $_telnetPort
