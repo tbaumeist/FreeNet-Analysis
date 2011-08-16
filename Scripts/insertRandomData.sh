@@ -53,8 +53,8 @@ declare insertHost
 declare saveDir
 
 ParameterScriptWelcome "insertRandomData.sh"
-ParameterRandomCount randomCount $1
-ParameterEnterHost insertHost $2
+ParameterRandomCount randomCount $1 "How many random words to insert? "
+ParameterEnterHost insertHost $2 "Enter host to perform insert from: "
 ParameterSaveDirectoryGeneral saveDir $3
 ParameterScriptWelcomeEnd
 #===================================================================================================

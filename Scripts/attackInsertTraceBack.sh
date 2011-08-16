@@ -4,6 +4,7 @@
 _insertRandomWord=./insertRandomData.sh
 _wordInserted="_randomFreenetWords.dat"
 _telnetPort=8887
+_defaultPort=2323
 
 
 #Parameters
@@ -50,6 +51,22 @@ function getControlLock
 }
 
 
+#Parameters
+#1 Attack monitor host name
+#2 Attack Cloud host name
+function turnOnMonitorNode
+{
+	local returned=$(expect -c "
+		spawn telnet $1 $_defaultPort
+		match_max 100000
+		send -- \"ATTACKAGENT:$2\r\"
+		send -- \"ATTACKAGENTINSERTFILTER:true\r\"
+		expect eof
+		send -- \"close\r\"
+		")
+}
+
+
 #===================================================================================================
 # Main Entry Point
 #===================================================================================================
@@ -63,11 +80,15 @@ source ./common/parameters.sh
 declare configFile
 declare randomCount
 declare saveDir
+declare attackMonitorHost
+declare attackCloudHost
 
 ParameterScriptWelcome "attackInsertTraceBack.sh"
 ParameterConfigurationFile configFile $1
-ParameterRandomCount randomCount $2
-ParameterSaveDirectoryGeneral saveDir $3
+ParameterRandomCount randomCount $2 "How many random words to insert? "
+ParameterEnterHost attackMonitorHost $3 "Enter host name for the monitor node: "
+ParameterEnterHost attackCloudHost $4 "Enter host name for node used to perform actual attack [attack cloud]: "
+ParameterSaveDirectoryGeneral saveDir $5
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
@@ -83,6 +104,9 @@ else
 	echo "***************************************************************"
 	exit
 fi
+
+echo "Activating monitor node $attackMonitorHost to use $attackCloudHost as its attack node..."
+turnOnMonitorNode attackMonitorHost attackCloudHost
 
 fileName=$saveDir"insert-attack $(date --rfc-3339=seconds).dat"
 fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
@@ -117,6 +141,7 @@ do
 		let "waitCount += 1"
 	done
 	echo ""
+	echo "Starting..."
 	
 
 	rnum=$((RANDOM%$lineCount+1))
