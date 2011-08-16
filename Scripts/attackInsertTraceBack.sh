@@ -62,7 +62,7 @@ function turnOnMonitorNode
 		send -- \"ATTACKAGENT:$2\r\"
 		send -- \"ATTACKAGENTINSERTFILTER:true\r\"
 		expect eof
-		send -- \"close\r\"
+		send -- \"QUIT\r\"
 		")
 }
 
