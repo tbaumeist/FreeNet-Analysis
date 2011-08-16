@@ -85,6 +85,7 @@ function turnOnMonitorNode
 source ./common/parameters.sh
 
 declare configFile
+declare password
 declare randomInsertCount
 declare randomRequestCount
 declare saveDir
@@ -97,12 +98,13 @@ defFileName=$(echo $defFileName | sed -e 's/ /_/g' -e 's/:/\-/g')
 
 ParameterScriptWelcome "attackRequestTraceBack.sh"
 ParameterConfigurationFile configFile $1
-ParameterRandomCount randomInsertCount "How many random words to insert? " $2
-ParameterRandomCount randomRequestCount "How many random inserted words to request? " $3
-ParameterEnterHost attackMonitorHost "Enter host name for the monitor node: " $4
-ParameterEnterHost attackCloudHost "Enter host name for node used to perform actual attack [attack cloud]: " $5
-ParameterSaveDirectoryGeneral saveDir $6
-ParameterFileName fileName $defFileName $7
+ParameterPassword password $2
+ParameterRandomCount randomInsertCount "How many random words to insert? " $3
+ParameterRandomCount randomRequestCount "How many random inserted words to request? " $4
+ParameterEnterHost attackMonitorHost "Enter host name for the monitor node: " $5
+ParameterEnterHost attackCloudHost "Enter host name for node used to perform actual attack [attack cloud]: " $6
+ParameterSaveDirectoryGeneral saveDir $7
+ParameterFileName fileName $defFileName $8
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
