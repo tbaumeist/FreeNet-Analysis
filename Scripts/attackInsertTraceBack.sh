@@ -125,8 +125,8 @@ fi
 echo "Activating monitor node $attackMonitorHost to use $attackCloudHost as its attack node..."
 turnOnMonitorNode $attackMonitorHost $attackCloudHost
 
-fileName=$saveDir$fileName
-echo "Creating file $fileName"
+fullFileName=$saveDir$fileName
+echo "Creating file $fullFileName"
 mkdir -p $saveDir
 
 #reset the list of inserted random words
@@ -186,7 +186,7 @@ do
 
 	# Save origin, CHK, UIDS, and nodes with UIDs
 	echo "Saving insert information..."
-	echo "$i|$remoteMachine|$returned" >> $fileName
+	echo "$i|$remoteMachine|$returned" >> $fullFileName
 
 	#save topology
 	$_netTopology $configFile $password $saveDir "$fileName-$i.dot"
