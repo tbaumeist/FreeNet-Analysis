@@ -164,6 +164,30 @@ function ParameterSaveDirectoryTopology
 
 #Parameters
 #1 Variable to write to
+#2 Default Value
+#3 Given value
+function ParameterFileName
+{
+	local _variable=$1
+	local defaultValue=$2
+	local givenValue=$3
+	local value
+
+	if [[ -n "$givenValue" ]]
+	then
+		# config file was given
+		value="$givenValue"
+	else
+		# use default config file
+		value="$defaultValue"
+	fi	
+
+	echo -e "\tFile name=$value"
+	eval $_variable="'$value'"
+}
+
+#Parameters
+#1 Variable to write to
 #3 Given value
 function ParameterSaveDirectoryGeneral
 {
