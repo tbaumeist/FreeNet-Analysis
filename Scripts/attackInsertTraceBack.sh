@@ -13,9 +13,11 @@ function reset
 	local returned=$(expect -c "
 		spawn telnet localhost $_telnetPort
 		match_max 100000
+		expect \"*CMD>*\"
 		send -- \"reset\r\"
-		expect eof
+		expect \"*CMD>*\"
 		send -- \"close\r\"
+		expect eof
 		")
 }
 
@@ -26,9 +28,11 @@ function setControlLock
 	local returned=$(expect -c "
 		spawn telnet localhost $_telnetPort
 		match_max 100000
+		expect \"*CMD>*\"
 		send -- \"InsertAttackLock:$1\r\"
-		expect eof
+		expect \"*CMD>*\"
 		send -- \"close\r\"
+		expect eof
 		")
 }
 
@@ -41,9 +45,11 @@ function getControlLock
 	local returned=$(expect -c "
 		spawn telnet localhost $_telnetPort
 		match_max 100000
+		expect \"*CMD>*\"
 		send -- \"InsertAttackLock\r\"
-		expect eof
+		expect \"*CMD>*\"
 		send -- \"close\r\"
+		expect eof
 		" | grep "status:")
 	value=$(echo $returned | cut -d':' -f2)
 	value=$(echo $value | sed -e 's/\r//g')
