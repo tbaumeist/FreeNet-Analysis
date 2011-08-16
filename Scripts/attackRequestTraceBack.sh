@@ -157,7 +157,7 @@ do
 		send -- \"close\r\"
 		" )
 
-	sleep 10 #sleep x seconds
+	sleep 3 #sleep x seconds
 
 	returned=$(expect -c "
 		spawn telnet localhost $_telnetPort
@@ -169,9 +169,13 @@ do
 	echo $returned
 
 	# Save origin, CHK, UIDS, and nodes with UIDs
+	echo "Saving request information..."
 	echo "$remoteMachine|$returned" >> $fileName
 
+	sleep 5 #sleep x seconds
+
 	# Give the attacker node the go ahead
+	echo "Flagging node to begin attack..."
 	setControlLock "false"
 done
 echo "********** Attack Complete ***************"
