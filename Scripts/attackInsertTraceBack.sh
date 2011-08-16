@@ -61,8 +61,8 @@ function turnOnMonitorNode
 		match_max 100000
 		send -- \"ATTACKAGENT:$2\r\"
 		send -- \"ATTACKAGENTINSERTFILTER:true\r\"
-		expect eof
 		send -- \"QUIT\r\"
+		expect eof
 		")
 }
 
