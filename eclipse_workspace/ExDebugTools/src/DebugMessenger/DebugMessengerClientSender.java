@@ -157,6 +157,7 @@ public class DebugMessengerClientSender implements Runnable {
                 while ((line = br.readLine()) != null) {
                     if(line.toLowerCase().contains("status:"))
 					{
+                    	System.out.println(line);
 						_response = line.toLowerCase().contains("true");
 						break;
 					}

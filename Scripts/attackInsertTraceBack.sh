@@ -145,6 +145,8 @@ do
 		getControlLock status
 		if [ $waitCount -ge 3 ]
 		then
+			# set control lock
+			setControlLock "true"
 			break
 		fi
 		let "waitCount += 1"
