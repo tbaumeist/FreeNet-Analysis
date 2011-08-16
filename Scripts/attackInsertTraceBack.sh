@@ -189,7 +189,7 @@ do
 	echo "$i|$remoteMachine|$returned" >> $fileName
 
 	#save topology
-	$_netTopology $configFile $password $saveDir "$fileName_$i"
+	$_netTopology $configFile $password $saveDir "$fileName-$i.dot"
 
 	sleep 5 #sleep x seconds
 
