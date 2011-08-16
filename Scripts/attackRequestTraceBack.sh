@@ -5,6 +5,7 @@ _insertRandomWord=./insertRandomData.sh
 _netTopology=./networkTopology.sh
 _wordInserted="_randomFreenetWords.dat"
 _telnetPort=8887
+_defaultPort=2323
 
 
 #Parameters
