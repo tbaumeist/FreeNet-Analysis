@@ -4,7 +4,6 @@
 _defaultPort=2323
 _scpScriptCopyFrom=./common/scplogin_copyFrom.exp
 _sshScript=./common/sshlogin.exp
-_defaultSaveDir=~/Desktop/Freenet_Data/Network_Topology/
 
 
 #===================================================================================================
@@ -20,20 +19,24 @@ source ./common/parameters.sh
 declare configFile
 declare password
 declare saveDir
+declare fileName
+
+defFileName="network-topology $(date --rfc-3339=seconds).dot"
+defFileName=$(echo $defFileName | sed -e 's/ /_/g' -e 's/:/\-/g')
 
 ParameterScriptWelcome "networkTopology.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
 ParameterSaveDirectoryTopology saveDir $3
+ParameterFileName fileName $defFileName $4
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
 
-fileName=$saveDir"network-topology $(date --rfc-3339=seconds).dot"
-fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
+fileName=$saveDir$fileName
 echo "Creating file $fileName"
 
-mkdir -p $_defaultSaveDir
+mkdir -p $saveDir
 
 echo "digraph G {" > "$fileName"
 echo "overlap=\"scale\"" >> "$fileName"
@@ -62,10 +65,10 @@ do
 	")
 	#echo $VAR
 	
-	rm $_defaultSaveDir"peers.txt"
-	$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"peers.txt" "$_defaultSaveDir"
-	cat $_defaultSaveDir"peers.txt" >> "$fileName"
-	rm $_defaultSaveDir"peers.txt"
+	rm $saveDir"peers.txt"
+	$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"peers.txt" "$saveDir"
+	cat $saveDir"peers.txt" >> "$fileName"
+	rm $saveDir"peers.txt"
 	
 done
 exec 0<&3

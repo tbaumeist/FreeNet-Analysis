@@ -2,6 +2,7 @@
 
 # Variables
 _insertRandomWord=./insertRandomData.sh
+_netTopology=./networkTopology.sh
 _wordInserted="_randomFreenetWords.dat"
 _telnetPort=8887
 _defaultPort=2323
@@ -87,17 +88,24 @@ function turnOnMonitorNode
 source ./common/parameters.sh
 
 declare configFile
+declare password
 declare randomCount
 declare saveDir
+declare fileName
 declare attackMonitorHost
 declare attackCloudHost
 
+defFileName="insert-attack $(date --rfc-3339=seconds).dat"
+defFileName=$(echo $defFileName | sed -e 's/ /_/g' -e 's/:/\-/g')
+
 ParameterScriptWelcome "attackInsertTraceBack.sh"
 ParameterConfigurationFile configFile $1
-ParameterRandomCount randomCount "How many random words to insert? " $2
-ParameterEnterHost attackMonitorHost "Enter host name for the monitor node: " $3
-ParameterEnterHost attackCloudHost "Enter host name for node used to perform actual attack [attack cloud]: " $4
-ParameterSaveDirectoryGeneral saveDir $5
+ParameterPassword password $2
+ParameterRandomCount randomCount "How many random words to insert? " $3
+ParameterEnterHost attackMonitorHost "Enter host name for the monitor node: " $4
+ParameterEnterHost attackCloudHost "Enter host name for node used to perform actual attack [attack cloud]: " $5
+ParameterSaveDirectoryGeneral saveDir $6
+ParameterFileName fileName $defFileName $7
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
@@ -117,8 +125,7 @@ fi
 echo "Activating monitor node $attackMonitorHost to use $attackCloudHost as its attack node..."
 turnOnMonitorNode $attackMonitorHost $attackCloudHost
 
-fileName=$saveDir"insert-attack $(date --rfc-3339=seconds).dat"
-fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
+fileName=$saveDir$fileName
 echo "Creating file $fileName"
 mkdir -p $saveDir
 
@@ -143,7 +150,7 @@ do
 		echo -n "."
 		sleep 20
 		getControlLock status
-		if [ $waitCount -ge 3 ]
+		if [ $waitCount -ge 5 ]
 		then
 			# set control lock
 			setControlLock "true"
@@ -179,7 +186,10 @@ do
 
 	# Save origin, CHK, UIDS, and nodes with UIDs
 	echo "Saving insert information..."
-	echo "$remoteMachine|$returned" >> $fileName
+	echo "$i|$remoteMachine|$returned" >> $fileName
+
+	#save topology
+	$_netTopology $configFile $password $saveDir "$fileName_$i"
 
 	sleep 5 #sleep x seconds
 
