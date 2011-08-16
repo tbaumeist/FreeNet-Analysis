@@ -70,7 +70,8 @@ function ParameterPassword
 
 #Parameters
 #1 Variable to write to
-#3 Given value
+#2 Given value
+#3 Question
 function ParameterRandomCount
 {
 	local _variable=$1
@@ -83,7 +84,7 @@ function ParameterRandomCount
 		value="$givenValue"
 	else
 		# ask for count
-		echo -n "How many:"
+		echo -n "$3"
 		read value
 		echo ""
 	fi	
@@ -94,7 +95,8 @@ function ParameterRandomCount
 
 #Parameters
 #1 Variable to write to
-#3 Given value
+#2 Given value
+#3 Question
 function ParameterEnterHost
 {
 	local _variable=$1
@@ -107,7 +109,7 @@ function ParameterEnterHost
 		value="$givenValue"
 	else
 		# ask for count
-		echo -n "Enter host to run inserts from (ex:192.168.0.101):"
+		echo -n "$3"
 		read value
 		echo ""
 	fi	

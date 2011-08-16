@@ -49,6 +49,21 @@ function getControlLock
 	eval $_variable="'$value'"
 }
 
+#Parameters
+#1 Attack monitor host name
+#2 Attack cloud host name
+function turnOnMonitorNode
+{
+	local returned=$(expect -c "
+		spawn telnet $1 $_defaultPort
+		match_max 100000
+		send -- \"ATTACKAGENT:$2\r\"
+		send -- \"ATTACKAGENTREQUESTFILTER:true\r\"
+		expect eof
+		send -- \"close\r\"
+		")
+}
+
 #===================================================================================================
 # Main Entry Point
 #===================================================================================================
@@ -63,12 +78,16 @@ declare configFile
 declare randomInsertCount
 declare randomRequestCount
 declare saveDir
+declare attackMonitorHost
+declare attackCloudHost
 
 ParameterScriptWelcome "attackRequestTraceBack.sh"
 ParameterConfigurationFile configFile $1
-ParameterRandomCount randomInsertCount $2
-ParameterRandomCount randomRequestCount $3
-ParameterSaveDirectoryGeneral saveDir $4
+ParameterRandomCount randomInsertCount $2 "How many random words to insert? "
+ParameterRandomCount randomRequestCount $3 "How many random inserted words to request? "
+ParameterEnterHost attackMonitorHost $4 "Enter host name for the monitor node: "
+ParameterEnterHost attackCloudHost $5 "Enter host name for node used to perform actual attack [attack cloud]: "
+ParameterSaveDirectoryGeneral saveDir $6
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
@@ -84,6 +103,9 @@ else
 	echo "***************************************************************"
 	exit
 fi
+
+echo "Activating monitor node $attackMonitorHost to use $attackCloudHost as its attack node..."
+turnOnMonitorNode attackMonitorHost attackCloudHost
 
 fileName=$saveDir"request-attack $(date --rfc-3339=seconds).dat"
 fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
@@ -133,6 +155,7 @@ do
 		let "waitCount += 1"
 	done
 	echo ""
+	echo "Starting..."
 
 	rnum=$((RANDOM%$lineCount+1))
 	line=$(sed -n "$rnum p" $configFile)
