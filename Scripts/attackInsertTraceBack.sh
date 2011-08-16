@@ -150,7 +150,7 @@ do
 		echo -n "."
 		sleep 20
 		getControlLock status
-		if [ $waitCount -ge 5 ]
+		if [ $waitCount -ge 3 ]
 		then
 			# set control lock
 			setControlLock "true"
