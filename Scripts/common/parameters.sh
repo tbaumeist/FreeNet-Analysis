@@ -70,12 +70,12 @@ function ParameterPassword
 
 #Parameters
 #1 Variable to write to
-#2 Given value
-#3 Question
+#2 Question
+#3 Given value
 function ParameterRandomCount
 {
 	local _variable=$1
-	local givenValue=$2
+	local givenValue=$3
 	local value
 
 	if [[ -n "$givenValue" ]]
@@ -84,7 +84,7 @@ function ParameterRandomCount
 		value="$givenValue"
 	else
 		# ask for count
-		echo -n "$3"
+		echo -n "$2"
 		read value
 		echo ""
 	fi	
@@ -95,12 +95,12 @@ function ParameterRandomCount
 
 #Parameters
 #1 Variable to write to
-#2 Given value
-#3 Question
+#2 Question
+#3 Given value
 function ParameterEnterHost
 {
 	local _variable=$1
-	local givenValue=$2
+	local givenValue=$3
 	local value
 
 	if [[ -n "$givenValue" ]]
@@ -109,7 +109,7 @@ function ParameterEnterHost
 		value="$givenValue"
 	else
 		# ask for count
-		echo -n "$3"
+		echo -n "$2"
 		read value
 		echo ""
 	fi	

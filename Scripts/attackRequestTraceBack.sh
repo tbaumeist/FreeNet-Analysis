@@ -83,10 +83,10 @@ declare attackCloudHost
 
 ParameterScriptWelcome "attackRequestTraceBack.sh"
 ParameterConfigurationFile configFile $1
-ParameterRandomCount randomInsertCount $2 "How many random words to insert? "
-ParameterRandomCount randomRequestCount $3 "How many random inserted words to request? "
-ParameterEnterHost attackMonitorHost $4 "Enter host name for the monitor node: "
-ParameterEnterHost attackCloudHost $5 "Enter host name for node used to perform actual attack [attack cloud]: "
+ParameterRandomCount randomInsertCount "How many random words to insert? " $2
+ParameterRandomCount randomRequestCount "How many random inserted words to request? " $3
+ParameterEnterHost attackMonitorHost "Enter host name for the monitor node: " $4
+ParameterEnterHost attackCloudHost "Enter host name for node used to perform actual attack [attack cloud]: " $5
 ParameterSaveDirectoryGeneral saveDir $6
 ParameterScriptWelcomeEnd
 #===================================================================================================
