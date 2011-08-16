@@ -57,8 +57,11 @@ function turnOnMonitorNode
 	local returned=$(expect -c "
 		spawn telnet $1 $_defaultPort
 		match_max 100000
+		expect \"*CMD>*\"
 		send -- \"ATTACKAGENT:$2\r\"
+		expect \"*CMD>*\"
 		send -- \"ATTACKAGENTREQUESTFILTER:true\r\"
+		expect \"*CMD>*\"
 		send -- \"QUIT\r\"
 		expect eof
 		")
@@ -105,7 +108,7 @@ else
 fi
 
 echo "Activating monitor node $attackMonitorHost to use $attackCloudHost as its attack node..."
-turnOnMonitorNode attackMonitorHost attackCloudHost
+turnOnMonitorNode $attackMonitorHost $attackCloudHost
 
 fileName=$saveDir"request-attack $(date --rfc-3339=seconds).dat"
 fileName=$(echo $fileName | sed -e 's/ /_/g' -e 's/:/\-/g')
