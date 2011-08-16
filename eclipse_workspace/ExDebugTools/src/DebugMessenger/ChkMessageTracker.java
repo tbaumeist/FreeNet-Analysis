@@ -78,23 +78,28 @@ public class ChkMessageTracker {
 			for(Long l : _trackedUids.keySet() )
 			{
 				if(_trackedUids.get(l).equalsIgnoreCase(chk))
+				{
 					s += l+",";
+					for(String id : getUniqueIds(_messages.get(chk), l))
+						s += id +",";
+				}
+				s = s.substring(0, s.length()-1); // remove last ,
+				s += ":";
 			}
-			s = s.substring(0, s.length()-1); // remove last ,
-			s += "|";
-			for(String id : getUniqueIds(_messages.get(chk)))
-				s += id +",";
-			s = s.substring(0, s.length()-1); // remove last ,
+			s = s.substring(0, s.length()-1); // remove last :
 			s += "\n";
 		}
 		return s;
 	}
 	
-	private List<String> getUniqueIds(List<DebugMessage> lstMsg)
+	private List<String> getUniqueIds(List<DebugMessage> lstMsg, long l)
 	{
 		ArrayList<String> ids = new ArrayList<String>();
 		for(DebugMessage m : lstMsg)
 		{
+			long uid = Long.parseLong(m.getCustomProperty(UID_PROP));
+			if(uid != l)
+				continue;
 			if(!ids.contains(m.getUniqueId()))
 				ids.add(m.getUniqueId());
 		}

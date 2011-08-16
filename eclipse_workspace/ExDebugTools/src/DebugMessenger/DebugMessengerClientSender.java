@@ -155,9 +155,9 @@ public class DebugMessengerClientSender implements Runnable {
                 BufferedReader br = new BufferedReader(new InputStreamReader(_input));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if(line.toLowerCase().startsWith("status:"))
+                    if(line.toLowerCase().contains("status:"))
 					{
-						_response = line.toLowerCase().endsWith("true");
+						_response = line.toLowerCase().contains("true");
 						break;
 					}
                 }
