@@ -103,7 +103,7 @@ ParameterConfigurationFile configFile $1
 ParameterPassword password $2
 ParameterRandomCount randomCount "How many random words to insert? " $3
 ParameterEnterHost attackMonitorHost "Enter host name for the monitor node: " $4
-ParameterEnterHost attackCloudHost "Enter host name for node used to perform actual attack [attack cloud]: " $5
+ParameterEnterHost attackCloudHost "Enter host name for node used to perform actual attack , separated [attack cloud]: " $5
 ParameterSaveDirectoryGeneral saveDir $6
 ParameterFileName fileName $defFileName $7
 ParameterScriptWelcomeEnd
@@ -173,7 +173,7 @@ do
 	# insert the random word
 	$_insertRandomWord 1 $remoteMachine   
 
-	sleep 3 #sleep x seconds
+	#sleep 3 #sleep x seconds
 
 	returned=$(expect -c "
 		spawn telnet localhost $_telnetPort
@@ -191,7 +191,7 @@ do
 	#save topology
 	$_netTopology $configFile $password $saveDir "$fileName-$i.dot"
 
-	sleep 5 #sleep x seconds
+	#sleep 5 #sleep x seconds
 
 	# Give the attacker node the go ahead
 	echo "Flagging node to begin attack..."
