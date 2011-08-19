@@ -3,6 +3,7 @@
 # Variables
 _insertRandomWord=./insertRandomData.sh
 _netTopology=./networkTopology.sh
+_mapData=./mapFreenetData.sh
 _wordInserted="_randomFreenetWords.dat"
 _telnetPort=8887
 _defaultPort=2323
@@ -151,6 +152,8 @@ do
 	$_insertRandomWord 1 $remoteMachine   
 done
 
+#save data mapped to nodes
+$_mapData $configFile $password $saveDir "$fileName-word-map.dat"
 
 ######################################################################
 # Request y random words from random points
@@ -212,7 +215,7 @@ do
 
 	# Save origin, CHK, UIDS, and nodes with UIDs
 	echo "Saving request information..."
-	echo "$i|$remoteMachine|$returned" >> $fullFileName
+	echo "$i|$remoteMachine|$insertedWord|$returned" >> $fullFileName
 
 	#save topology
 	$_netTopology $configFile $password $saveDir "$fileName-$i.dot"
@@ -223,4 +226,5 @@ do
 	echo "Flagging node to begin attack..."
 	setControlLock "false"
 done
+
 echo "********** Attack Complete ***************"

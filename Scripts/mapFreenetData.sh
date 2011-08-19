@@ -32,13 +32,16 @@ function readMasterList
 }
 
 #Parameters
+#1 Save to file
 function printMasterList
 {
 	echo "List of random words and their storage location."
 	echo -e "Actual Loc\t\t Random word\t Stored Locs"
+	echo -e "Actual Loc\t\t Random word\t Stored Locs" >> $1
 	for (( i = 1 ; i < ${#_dataArrayWordIndex[@]} ; i = i+4 ))
 	do
 		echo -e "${_dataArrayWordIndex[$i+2]}\t ${_dataArrayWordIndex[$i]}\t ${_dataArrayWordIndex[$i+3]}"
+		echo -e "${_dataArrayWordIndex[$i+2]}\t ${_dataArrayWordIndex[$i]}\t ${_dataArrayWordIndex[$i+3]}" >> $1
 	done
 }
 
@@ -74,7 +77,7 @@ function GetData
 		do
 			if [ "${_dataArrayWordIndex[$i+1]}" = "$chk" ]
 			then
-				_dataArrayWordIndex[$i+3]="${_dataArrayWordIndex[$i+3]} $loc"				
+				_dataArrayWordIndex[$i+3]="${_dataArrayWordIndex[$i+3]} $remoteMachine $loc,"				
 			fi
 		done
 
@@ -96,13 +99,20 @@ source ./common/parameters.sh
 declare configFile
 declare password
 declare saveDir
+declare fileName
+
+defFileName="map-randomwords $(date --rfc-3339=seconds).dat"
+defFileName=$(echo $defFileName | sed -e 's/ /_/g' -e 's/:/\-/g')
 
 ParameterScriptWelcome "mapFreenetData.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
 ParameterSaveDirectoryGeneral saveDir $3
+ParameterFileName fileName $defFileName $4
 ParameterScriptWelcomeEnd
 #===================================================================================================
+
+fileName=$saveDir$fileName
 
 unset _dataArrayWordIndex
 readMasterList $saveDir
@@ -121,6 +131,6 @@ do
 done
 exec 0<&3
 
-printMasterList
+printMasterList $fileName
 
 echo "********** Complete ***************"
