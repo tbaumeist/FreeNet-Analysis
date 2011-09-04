@@ -39,6 +39,7 @@ echo "Creating file $fileName"
 mkdir -p $saveDir
 
 echo "digraph G {" > "$fileName"
+echo "node [fontsize=24]" >> "$fileName"
 echo "overlap=\"scale\"" >> "$fileName"
 
 exec 3<&0
@@ -67,7 +68,7 @@ do
 	
 	rm $saveDir"peers.txt"
 	$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"peers.txt" "$saveDir"
-	cat $saveDir"peers.txt" >> "$fileName"
+	cat $saveDir"peers.txt" | sed "s/192.168.0.1//g" | sed "s/:[0-9]*//g"  >> "$fileName"
 	rm $saveDir"peers.txt"
 	
 done
