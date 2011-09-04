@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # ask for computer name
-define compName
+declare compName
 echo -n "Enter computer name: "
 read compName
 echo ""
 
 # ask for static IP
-define staticIP
+declare staticIP
 echo -n "Enter static IP: "
 read staticIP
 echo ""
