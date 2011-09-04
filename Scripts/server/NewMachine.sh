@@ -4,13 +4,11 @@
 declare compName
 echo -n "Enter computer name: "
 read compName
-echo ""
 
 # ask for static IP
 declare staticIP
 echo -n "Enter static IP: "
 read staticIP
-echo ""
 
 # write network interface
 networkInterfaceFile="/etc/network/interfaces"
@@ -30,4 +28,8 @@ echo "" >> $networkInterfaceFile
 #write computer name
 comptNameFile="/etc/hostname"
 echo "$compName" > $comptNameFile
+
+# restart
+echo "rebooting...."
+reboot
 
