@@ -1,20 +1,72 @@
-#!/bin/bash
-# This script uses a program called "expect" to install
-# this program run "sudo apt-get install expect"
+#!/usr/bin/expect -f
+set timeout 60
 
-HOST=$1
-USER=$2
-PASS=$3
-CMD=$4
+#To turn the screen output off:
+log_user 0
 
-#echo $CMD
-VAR=$(expect -c "
-spawn ssh $USER@$HOST $CMD
-match_max 100000
-expect \"*?assword:*\"
-send -- \"$PASS\r\"
-send -- \"\r\"
-expect eof
-")
-echo "==============="
-echo "$VAR"
+proc login {password} {
+	send "$password\n" 
+	expect {
+		"> " { }
+		"$ " { }
+		"assword: " {
+			send_user "\n*ERROR ** Incorrect password ********\n"
+			exit			
+		}
+	}
+}
+
+
+#example of getting arguments passed from command line..
+#not necessarily the best practice for passwords though...
+set server [lindex $argv 0]
+set user [lindex $argv 1]
+set pass [lindex $argv 2]
+set cmd [lindex $argv 3]
+
+# connect to server via ssh, login, and su to root
+spawn ssh $user@$server
+
+#login handles cases:
+#   login with keys (no user/pass)
+#   user/pass
+#   login with keys (first time verification)
+expect {
+	"> " { }
+	"$ " { }
+	"assword: " { 
+		login $pass
+	}
+	"(yes/no)? " { 
+		send "yes\n"
+		expect {
+			"> " { }
+			"$ " { }
+			"assword: " { 
+				login $pass
+			}
+		}
+	}
+	default {
+		send_user "\n*ERROR ** Login failed ********\n"
+		exit
+	}
+}
+
+#send command
+log_user 1
+send "$cmd\n"
+expect {
+	"> " {}
+	"$ " { }
+	default {}
+}
+log_user 0
+
+#login out
+send "exit\n"
+expect {
+	"> " {}
+	"$ " { }
+	default {}
+}

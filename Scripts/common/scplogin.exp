@@ -1,21 +1,41 @@
-#!/bin/bash
-# This script uses a program called "expect" to install
-# this program run "sudo apt-get install expect"
+#!/usr/bin/expect -f
+set timeout 60
 
-HOST=$1
-USER=$2
-PASS=$3
-FROM=$4
-TO=$5
+proc login {password} {
+	send "$password\n" 
+	expect {
+		"> " { }
+		"$ " { }
+		"assword: " {
+			send_user "\n*ERROR ** Incorrect password ********\n"
+			exit			
+		}
+	}
+}
 
-#echo $CMD
-VAR=$(expect -c "
-spawn scp -p $FROM $USER@$HOST:$TO
-match_max 100000
-expect \"*?assword:*\"
-send -- \"$PASS\r\"
-send -- \"\r\"
-expect eof
-")
-#echo "==============="
-#echo "$VAR"
+#example of getting arguments passed from command line..
+#not necessarily the best practice for passwords though...
+set server [lindex $argv 0]
+set user [lindex $argv 1]
+set pass [lindex $argv 2]
+set from [lindex $argv 3]
+set to [lindex $argv 4]
+
+# connect to server via ssh, login, and su to root
+#send_user "connecting to $server\n"
+spawn scp -p $from $user@$server:$to
+
+#login handles cases:
+#   login with keys (no user/pass)
+#   user/pass
+expect {
+	"> " { }
+	"$ " { }
+	"assword: " { 
+		login $pass
+	}
+	default {
+		send_user "\n*ERROR ** Login failed ********\n"
+		exit
+	}
+}
