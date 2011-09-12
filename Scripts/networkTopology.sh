@@ -39,7 +39,7 @@ echo "Creating file $fileName"
 mkdir -p $saveDir
 
 echo "digraph G {" > "$fileName"
-echo "node [fontsize=24]" >> "$fileName"
+#echo "node [fontsize=24]" >> "$fileName"
 echo "overlap=\"scale\"" >> "$fileName"
 
 exec 3<&0
