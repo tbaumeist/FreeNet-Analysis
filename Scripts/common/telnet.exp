@@ -13,13 +13,9 @@ spawn telnet $server $port
 #   login with keys (no user/pass)
 #   user/pass
 expect {
-		">" 
-		{
-			send "$command\n"
-		}
-	}
+	">" { send "$command\n" }
 	default {
-		send_user "\n*ERROR ** Processing commands ********\n"
+		send_user "\n*ERROR ** Login failed ********\n"
 		exit
 	}
 }
