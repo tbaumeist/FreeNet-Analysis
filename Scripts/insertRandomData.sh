@@ -10,6 +10,7 @@ _wordInserted="_randomFreenetWords.dat"
 #Parameters
 #1 Remote Server IP
 #2 Count
+#3 File
 function InsertData
 {
 	#Number of lines in $_wordfile
@@ -33,7 +34,7 @@ function InsertData
 		if [[ -n "$returned" ]]
 		then
 			local doctored=$(echo $returned | sed -e 's/URI//g' -e 's/Double//g' -e 's/\r//g')
-			echo "$word $doctored" >> $saveDir$_wordInserted
+			echo "$word $doctored" >> $3
 		fi
 	done
 }
@@ -51,14 +52,16 @@ declare configFile
 declare randomCount
 declare insertHost
 declare saveDir
+declare fileName
 
 ParameterScriptWelcome "insertRandomData.sh"
 ParameterRandomCount randomCount "How many random words to insert? " $1
 ParameterEnterHost insertHost "Enter host to perform insert from: " $2
 ParameterSaveDirectoryGeneral saveDir $3
+ParameterFileName fileName $_wordInserted $4
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
-InsertData $insertHost $randomCount
+InsertData $insertHost $randomCount "$saveDir$fileName"
 
 echo "********** Insert Complete ***************"
