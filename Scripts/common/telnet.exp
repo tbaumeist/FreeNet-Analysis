@@ -1,0 +1,25 @@
+#!/usr/bin/expect -f
+set timeout 60
+
+#example of getting arguments passed from command line..
+#not necessarily the best practice for passwords though...
+set server [lindex $argv 0]
+set port [lindex $argv 1]
+set command [lindex $argv 2]
+
+spawn telnet $server $port
+
+#login handles cases:
+#   login with keys (no user/pass)
+#   user/pass
+expect {
+		">" 
+		{
+			send "$command\n"
+		}
+	}
+	default {
+		send_user "\n*ERROR ** Processing commands ********\n"
+		exit
+	}
+}
