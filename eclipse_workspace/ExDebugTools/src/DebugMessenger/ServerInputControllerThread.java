@@ -49,7 +49,11 @@ public class ServerInputControllerThread extends Thread {
             String inputString = "";
             _output.print("CMD>");
             while ((inputString = _input.readLine()) != null) {
-                processLine(inputString.toLowerCase().trim());
+            	try {
+            		processLine(inputString.toLowerCase().trim());
+            	} catch (Exception e) {
+                	_output.println("EXCEPTION: "+e.getMessage());
+                }
                 _output.print("CMD>");
             }
         } catch (Exception e) {

@@ -38,7 +38,7 @@ public class ClientBase {
             }
         });
 		_listener.start();
-		Thread.sleep(1000); // sleep giving server setup time
+		Thread.sleep(2000); // sleep giving server setup time
 	}
 
 	@After
