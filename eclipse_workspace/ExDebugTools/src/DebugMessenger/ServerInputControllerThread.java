@@ -50,7 +50,7 @@ public class ServerInputControllerThread extends Thread {
             _output.print("CMD>");
             while ((inputString = _input.readLine()) != null) {
             	try {
-            		processLine(inputString.toLowerCase().trim());
+            		processLine(inputString.toLowerCase().trim(), inputString.trim());
             	} catch (Exception e) {
                 	_output.println("EXCEPTION: "+e.getMessage());
                 }
@@ -68,7 +68,7 @@ public class ServerInputControllerThread extends Thread {
         }
     }
 
-    private void processLine(String line) throws Exception {
+    private void processLine(String line, String orig) throws Exception {
         String[] parsedInput = line.split(" ");
         if (parsedInput.length < 1) 
             return;
@@ -83,7 +83,7 @@ public class ServerInputControllerThread extends Thread {
         }else if (cmd.equalsIgnoreCase(commands[ARCHIVECHKCMD][CMD_CMD])) {
         	if (parsedInput.length < 2) 
                 return;
-        	_ctrl.onArchiveChkMessages(parsedInput[1]);
+        	_ctrl.onArchiveChkMessages(orig.split(" ")[1]);
         }else if (cmd.equalsIgnoreCase(commands[TELNETCMD][CMD_CMD])) {
         	_ctrl.onClose();
         }
