@@ -18,7 +18,7 @@ public class ServerTest {
 
 	private int _port = 8889, _telnetPort = 8887;
 	private String _ip = "127.0.0.1";
-	private String _tmpFile = "/tmp/exdebugtool.dat";
+	private String _tmpFile = "/tmp/ex/ext/exdebugtool.dat";
 	private Process _client = null;
 	private Thread _clientListener = null;
 	private PrintWriter _sender = null;

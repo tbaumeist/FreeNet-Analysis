@@ -77,6 +77,11 @@ public class DebugMessengerServer {
 			return;
 		
 		File f = new File(fileName);
+		try
+		{
+			f.getParentFile().mkdirs();
+		}catch(Exception e)
+		{}
 		f.createNewFile();
 		_archiveOutput = new PrintStream(f);
 	}
