@@ -5,23 +5,24 @@ set timeout 60
 #not necessarily the best practice for passwords though...
 set server [lindex $argv 0]
 set port [lindex $argv 1]
-set command [lindex $argv 2]
+set exp [lindex $argv 2]
+set command [lindex $argv 3]
 
 spawn telnet $server $port
-
-#login handles cases:
-#   login with keys (no user/pass)
-#   user/pass
 expect {
-	">" { }
+	"$exp" { }
 	default {
 		send_user "\n*ERROR ** connection failure ********\n"
 		exit
 	}
 }
+
 send "$command\n"
 expect {
-	">" {}
-	default {}
+	"$exp" {}
+	default {
+		send_user "\n*ERROR ** Unexpected expect value ********\n"
+		exit	
+	}
 }
 exit

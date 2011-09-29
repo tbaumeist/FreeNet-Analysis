@@ -5,6 +5,7 @@ _defaultPort=2323
 _sshScript=./common/sshlogin.exp
 _wordfile="/usr/share/dict/words"
 _wordInserted="_randomFreenetWords.dat"
+_telnetScript=./common/telnet.exp
 
 
 #Parameters
@@ -20,15 +21,7 @@ function InsertData
 		local rnum=$((RANDOM%$tL+1))
 		local word=$(sed -n "$rnum p" $_wordfile)
 		echo "Inserting: $word"
-		local returned=$(expect -c "
-		spawn telnet $1 $_defaultPort
-		match_max 100000
-		expect \"*TMCI>*\"
-		send -- \"PUT:$word\r\"
-		expect eof
-		send -- \"QUIT\r\"
-		interact timeout 30 return 
-		" | egrep "URI:|Double:")
+		local returned=$($_telnetScript "$1" "$_defaultPort" "TMCI> " "PUT:$word" | egrep "URI:|Double:")
 		echo $returned
 		
 		if [[ -n "$returned" ]]
