@@ -150,10 +150,16 @@ do
 			then
 				if [ "$toNode" != "$fromNode" ]
 				then
-					let "skipLines=2"
+					#let "skipLines=2"
+					junk="Skipping disabled.."
 				fi
 			else
-				outputLine="$location $fromNode "
+				if [ "$location" = "" ]
+				then
+					outputLine="UNKNOWN $currentKey $fromNode "
+				else
+					outputLine="$location $fromNode "
+				fi
 			fi
 		else
 			toNode=$(echo $archiveLine | cut -d' ' -f1)
@@ -162,7 +168,7 @@ do
 
 		prevhtl=$htl
 
-	done < $archiveFile"-$i"
+	done < "$archiveFile-$i"
 
 	echo $outputLine >> $fullFileName
 	echo $outputLine
