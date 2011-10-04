@@ -6,6 +6,8 @@ _netTopology=./networkTopology.sh
 _wordInserted="_exp_1_randomFreenetWords.dat"
 _telnetPort=8887
 _telnetScript=./common/telnet.exp
+_netTopology=./networkTopology.sh
+_topCheckInterval=5
 
 
 #Parameters
@@ -14,6 +16,25 @@ function reset
 {
 	$_telnetScript "localhost" $_telnetPort "CMD>" "reset"
 	$_telnetScript "localhost" $_telnetPort "CMD>" "archivechks $1"
+}
+
+
+#Parameters
+#1 count
+function saveTopology
+{
+	#save topology
+	$_netTopology $configFile $password "$saveDir" "top-$1.dot"
+	let "prev=$1-$_topCheckInterval"
+	if [ $prev -gt 0 ]
+	then
+		local dif=$(diff "$saveDir""top-$prev.dot" "$saveDir""top-$1.dot" | wc -m)
+		if [ $dif -eq 0 ]
+		then
+			rm "$saveDir""top-$prev.dot"
+			rm "$saveDir""top-$prev.dot.png"
+		fi
+	fi
 }
 
 
@@ -75,16 +96,29 @@ lineCount=`awk 'NF!=0 {++c} END {print c}' $configFile`
 # setup the archive file on the debug server
 reset $archiveFile
 
+wordCount=1
+
 for i in `seq $lineCount`
 do
 	line=$(sed -n "$i p" $configFile)
 	remoteMachine=$(echo $line | cut -d',' -f1)
 
-	# insert the random word
-	$_insertRandomWord $randomCount $remoteMachine  $saveDir $_wordInserted
+	
+	for h in `seq $randomCount`
+	do
+		let "saveCheck=$h%$_topCheckInterval"
+		if [ $saveCheck -eq 0 ]
+		then
+			saveTopology $wordCount
 
+			# insert the random word
+			$_insertRandomWord $_topCheckInterval $remoteMachine  $saveDir $_wordInserted
+		fi
+		let "wordCount=$wordCount+1"
+	done
+	
 	# process the data to find the final path taken
-	grep "message_chk:freenet.keys.nodechk" $archiveFile > $archiveFile"-$i" 
+	grep "message_chk:freenet.keys.nodechk" $archiveFile > $archiveFile"-$wordCount" 
 
 	reset $archiveFile
 	
@@ -168,7 +202,7 @@ do
 
 		prevhtl=$htl
 
-	done < "$archiveFile-$i"
+	done < "$archiveFile-$wordCount"
 
 	echo $outputLine >> $fullFileName
 	echo $outputLine
