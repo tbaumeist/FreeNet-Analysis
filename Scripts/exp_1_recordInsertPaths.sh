@@ -127,23 +127,14 @@ do
 	fromNode=""
 	toNode=""
 	count=0
-	skipLines=0
 	ignoreKey=""
 	outputLine=""
 	location=-1
-	fromLineMod=1
+	grep "Sent" "$archiveFile-$wordCount" > "$archiveFile-tmp"
+
 	while read archiveLine
 	do
 		let "count=$count+1"
-		let "skipLines=$skipLines-1"
-
-		#echo "$count : $fromNode : $toNode : $outputLine"
-
-		# line skip
-		if [ $skipLines -ge 0 ]
-		then
-			continue
-		fi
 
 		currentKey=$(echo $archiveLine | cut -d'@' -f3 | cut -d':' -f1)
 		htl=$(echo $archiveLine | cut -d':' -f8 | cut -d',' -f1)
@@ -153,11 +144,16 @@ do
 		then
 			echo $outputLine >> $fullFileName
 			echo $outputLine
-			let "fromLineMod=$count%2"
 			location=$(cat "$saveDir$_wordInserted" | grep -i "$currentKey" | cut -d':' -f3)
+			if [ "$location" = "" ]
+			then
+				outputLine="UNKNOWN $currentKey "
+			else
+				outputLine="$location "
+			fi
+			
 			fromNode=""
 			toNode=""
-			outputLine=""
 			ignoreKey=""
 			prevhtl=$htl
 		fi
@@ -167,42 +163,28 @@ do
 		if [ $htl -gt $prevhtl ]
 		then
 			#echo "ignoring a key"
+			if [ "$ignoreKey" != "$currentKey" ]
+			then
+				outputLine="$outputLine $toNode 0 "
+			fi
 			ignoreKey=$currentKey
 		fi
 
-		if [ "$ignoreKey"  = "$currentKey" ]
+		if [ "$ignoreKey" = "$currentKey" ]
 		then
 			#echo "ignored entry"
 			continue
 		fi
 
-		let "countMod=$count%2"
-		if [ $countMod -eq $fromLineMod ]
-		then
-			fromNode=$(echo $archiveLine | cut -d' ' -f1)
-			if [ "$toNode" != "" ]
-			then
-				if [ "$toNode" != "$fromNode" ]
-				then
-					#let "skipLines=2"
-					junk="Skipping disabled.."
-				fi
-			else
-				if [ "$location" = "" ]
-				then
-					outputLine="UNKNOWN $currentKey $fromNode "
-				else
-					outputLine="$location $fromNode "
-				fi
-			fi
-		else
-			toNode=$(echo $archiveLine | cut -d' ' -f1)
-			outputLine="$outputLine $toNode"
-		fi
+		fromNode=$(echo $archiveLine | cut -d' ' -f1)
+		toNode=$(echo $archiveLine | cut -d':' -f8 | cut -d' ' -f5)
+
+		outputLine="$outputLine $fromNode $htl "
 
 		prevhtl=$htl
 
-	done < "$archiveFile-$wordCount"
+	done < "$archiveFile-tmp"
+	rm "$archiveFile-tmp"
 
 	echo $outputLine >> $fullFileName
 	echo $outputLine
