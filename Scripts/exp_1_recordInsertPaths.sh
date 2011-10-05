@@ -3,7 +3,7 @@
 # Variables
 _insertRandomWord=./insertRandomData.sh
 _netTopology=./networkTopology.sh
-_wordInserted="_exp_1_randomFreenetWords.dat"
+_wordInserted="_randomFreenetWords.dat"
 _telnetPort=8887
 _telnetScript=./common/telnet.exp
 _netTopology=./networkTopology.sh
