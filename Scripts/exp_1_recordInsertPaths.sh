@@ -162,11 +162,6 @@ do
 		# repeat section of the data file
 		if [ $htl -gt $prevhtl ]
 		then
-			#echo "ignoring a key"
-			if [ "$ignoreKey" != "$currentKey" ]
-			then
-				outputLine="$outputLine $toNode 0 "
-			fi
 			ignoreKey=$currentKey
 		fi
 
@@ -179,7 +174,7 @@ do
 		fromNode=$(echo $archiveLine | cut -d' ' -f1)
 		toNode=$(echo $archiveLine | cut -d':' -f8 | cut -d' ' -f5)
 
-		outputLine="$outputLine $fromNode $htl "
+		outputLine="$outputLine $fromNode $toNode $htl "
 
 		prevhtl=$htl
 
