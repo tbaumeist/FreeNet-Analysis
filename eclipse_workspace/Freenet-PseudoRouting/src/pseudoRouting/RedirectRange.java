@@ -89,6 +89,14 @@ public class RedirectRange implements Comparable<Object> {
 
 		return ranges;
 	}
+	
+	public RedirectRange getIntersection(RedirectRange rr){
+		double start = Math.max(this.rangeStart, rr.rangeStart);
+		double myStop = wrapsAround() ? this.rangeStop + 1 : this.rangeStop;
+		double thereStop = rr.wrapsAround() ? rr.rangeStop + 1 : rr.rangeStop;
+		double stop = Math.min(myStop, thereStop);
+		return new RedirectRange(this.toNode, start, stop % 1, this.tieCount);
+	}
 
 	@Override
 	public String toString() {

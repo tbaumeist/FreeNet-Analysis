@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import pseudoRouting.Intersect.*;
+
 public class Main {
 
 	private final int TOP_FLAG_I = 0;
@@ -18,9 +20,9 @@ public class Main {
 	private final String[][] PROG_ARGS = {
 			{ "-t", "(required) topology file location." },
 			{ "-o", "(required) output file." },
-			{ "-a", "(default = p)action to perform. {p = predict insert and request paths}"},
+			{ "-a",	"(default = p)action to perform. {p = predict insert and request paths, i = find intersect nodes}" },
 			{ "-m", "(default = A) prediction model to use. {A}" },
-			{ "-s", "(default = all nodes) start nodes to run path predictions on. Comma delimited list." },
+			{ "-s",	"(default = all nodes) start nodes to run path predictions on. Comma delimited list." },
 			{ "-h", "help command. Prints available arguments." } };
 
 	public static void main(String[] args) {
@@ -30,13 +32,13 @@ public class Main {
 	private Main(String[] args) {
 		try {
 			List<String> lwArgs = Arrays.asList(args);
-			
-			if(lwArgs.contains(Util.getArgName(PROG_ARGS, HELP_FLAG_I))){
+
+			if (lwArgs.contains(Util.getArgName(PROG_ARGS, HELP_FLAG_I))) {
 				System.out.println(Util.toStringArgs(PROG_ARGS));
 				return;
 			}
 
-			//// Arguments ////
+			// // Arguments ////
 			File outputFile = new File(Util.getRequiredArg(Util.getArgName(
 					PROG_ARGS, OUT_FLAG_I), lwArgs));
 			PrintStream writer = new PrintStream(outputFile);
@@ -45,27 +47,37 @@ public class Main {
 					PROG_ARGS, TOP_FLAG_I), lwArgs);
 			Topology topology = new Topology(topologyFileName);
 
-			String routingModel = Util.getArg(Util.getArgName(PROG_ARGS, MODEL_FLAG_I), lwArgs, "A");
+			String routingModel = Util.getArg(Util.getArgName(PROG_ARGS,
+					MODEL_FLAG_I), lwArgs, "A");
 			RoutingManager manager = new RoutingManager(routingModel);
-			
+
 			List<Double> startNodes = getStartNodes(lwArgs);
-			String action = Util.getArg(Util.getArgName(PROG_ARGS, ACTION_FLAG_I), lwArgs, "p").toUpperCase();
-			//// End Arguments ////
-			
+			String action = Util.getArg(
+					Util.getArgName(PROG_ARGS, ACTION_FLAG_I), lwArgs, "p")
+					.toUpperCase();
+			// // End Arguments ////
+
 			// actions
-			if(action.equals("P")){
-				List<PathSet> pathInsertSets = manager.calculateRoutesFromNodes(
-						startNodes, topology, true);
+			if (action.equals("P")) {
+				List<PathSet> pathInsertSets = manager
+						.calculateRoutesFromNodes(startNodes, topology, true);
 				writer.println("Insert Paths:\n\n");
-				for(PathSet p : pathInsertSets){
+				for (PathSet p : pathInsertSets) {
 					writer.println(p);
 				}
-				
-				List<PathSet> pathRequestSets = manager.calculateRoutesFromNodes(
-						startNodes, topology, false);
+
+				List<PathSet> pathRequestSets = manager
+						.calculateRoutesFromNodes(startNodes, topology, false);
 				writer.println("Request Paths:\n\n");
-				for(PathSet p : pathRequestSets){
+				for (PathSet p : pathRequestSets) {
 					writer.println(p);
+				}
+			} else if (action.equals("I")) {
+
+				List<NodeIntersect> nodeIntersects = manager
+						.calculateNodeIntersects(startNodes, topology);
+				for (NodeIntersect n : nodeIntersects) {
+					writer.println(n);
 				}
 			}
 

@@ -55,10 +55,34 @@ public class Path implements Comparable<Object> {
 	}
 
 	public int getTieCount() {
+		return getTieCountToNode(null);
+	}
+	
+	public int getTieCountToNode(Node stopNode){
 		int tie = 0;
-		for (RedirectRange rr : this.ranges)
+		int size = 0;
+		for (RedirectRange rr : this.ranges){
 			tie += rr.getTieCount();
-		return tie - this.ranges.size() + 1;
+			size++;
+			
+			if(rr.getNode().equals(stopNode))
+				break;
+		}
+		return tie - size + 1;
+	}
+	
+	public Node getProbableStoreNode(){
+		for( int i = 0 ; i < this.htls.size(); i++){
+			if( this.htls.get(i) == 1) // first node with htl of 1
+				return this.ranges.get(i).getNode();
+		}
+		return null;
+	}
+	
+	public Node getStartNode(){
+		if( this.ranges.isEmpty())
+			return null;
+		return this.ranges.get(0).getNode();
 	}
 
 	@Override
@@ -83,6 +107,16 @@ public class Path implements Comparable<Object> {
 			out += this.ranges.get(i).getNode() + "(Tie="
 					+ this.ranges.get(i).getTieCount() + ")(HTL="
 					+ this.htls.get(i) + "), ";
+		}
+
+		return out;
+	}
+	
+	public String toStringSimple(){
+		String out = "";
+
+		for (int i = 0; i < this.ranges.size(); i++) {
+			out += this.ranges.get(i).getNode().getID() +", ";
 		}
 
 		return out;

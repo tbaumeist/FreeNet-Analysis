@@ -3,6 +3,8 @@ package pseudoRouting;
 import java.util.ArrayList;
 import java.util.List;
 
+import pseudoRouting.Intersect.*;
+
 public class RoutingManager {
 
 	private NetworkRouter networkRouter;
@@ -17,12 +19,9 @@ public class RoutingManager {
 
 	public List<PathSet> calculateRoutesFromNodes(List<Double> startNodes,
 			Topology top, boolean isInsertPath) throws Exception {
+
 		List<PathSet> pathSets = new ArrayList<PathSet>();
-		if (startNodes == null) { // all nodes
-			startNodes = new ArrayList<Double>();
-			for (Node n : top.getAllNodes())
-				startNodes.add(n.getLocation());
-		}
+		startNodes = checkStartNodes(startNodes, top);
 
 		for (double startNode : startNodes) {
 			pathSets.add(calculateRoutesFromNode(startNode, top, isInsertPath));
@@ -30,10 +29,38 @@ public class RoutingManager {
 		return pathSets;
 	}
 
-	private PathSet calculateRoutesFromNode(double startNode, Topology top, boolean isInsertPath)
-			throws Exception {
+	public List<NodeIntersect> calculateNodeIntersects(List<Double> startNodes,
+			Topology top) throws Exception {
+
+		startNodes = checkStartNodes(startNodes, top);
+		List<NodeIntersect> nodeIntersects = new ArrayList<NodeIntersect>();
+
+		List<PathSet> pathInsertSets = calculateRoutesFromNodes(startNodes,
+				top, true);
+		List<PathSet> pathRequestSets = calculateRoutesFromNodes(startNodes,
+				top, false);
+		
+		for( PathSet ps : pathInsertSets ){
+			nodeIntersects.add(new NodeIntersect(ps, pathRequestSets));
+		}
+
+		return nodeIntersects;
+	}
+
+	private List<Double> checkStartNodes(List<Double> startNodes, Topology top) {
+		if (startNodes == null) { // all nodes
+			startNodes = new ArrayList<Double>();
+			for (Node n : top.getAllNodes())
+				startNodes.add(n.getLocation());
+		}
+		return startNodes;
+	}
+
+	private PathSet calculateRoutesFromNode(double startNode, Topology top,
+			boolean isInsertPath) throws Exception {
 		PathSet pathSet = new PathSet(top.findNode(startNode));
-		pathSet.addPaths(this.networkRouter.findPaths(top, startNode, isInsertPath));
+		pathSet.addPaths(this.networkRouter.findPaths(top, startNode,
+				isInsertPath));
 		return pathSet;
 	}
 }
