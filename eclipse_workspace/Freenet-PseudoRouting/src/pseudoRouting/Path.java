@@ -101,7 +101,7 @@ public class Path implements Comparable<Object> {
 		String out = "";
 		if (!getSuccess())
 			out += "FAILED ";
-		out += "| 1/" + getTieCount() + " | ";
+		out += "| 1/" + getTieCount() + " "+1.0/getTieCount()+" | ";
 		out += getRange() + " -> ";
 		for (int i = 0; i < this.ranges.size(); i++) {
 			out += this.ranges.get(i).getNode() + "(Tie="

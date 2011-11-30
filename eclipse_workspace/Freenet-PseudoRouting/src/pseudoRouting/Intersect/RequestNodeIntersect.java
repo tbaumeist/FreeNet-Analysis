@@ -4,7 +4,7 @@ import java.util.*;
 
 import pseudoRouting.*;
 
-public class RequestNodeIntersect {
+public class RequestNodeIntersect implements Comparable<Object> {
 	private Path requestPath;
 	private double confidence;
 	private RedirectRange intersectionRange;
@@ -35,7 +35,8 @@ public class RequestNodeIntersect {
 
 	@Override
 	public String toString() {
-		String s = "Range: " + this.intersectionRange + ", Request Node: " + getRequestNode();
+		String s = "Intersect Range: " + this.intersectionRange + ", Request Node: " + getRequestNode();
+		s += ", Request Range: " + this.requestPath.getRange();
 		s += ", Path: " + this.requestPath.toStringSimple();
 		s += ", Target Nodes: {";
 		for (Node n : this.possibleAttackNodes) {
@@ -45,5 +46,17 @@ public class RequestNodeIntersect {
 		s += "}, Confidence: " + this.confidence;
 
 		return s;
+	}
+	
+
+	@Override
+	public int compareTo(Object obj) {
+		if (obj == null)
+			return 1;
+		if (!(obj instanceof RequestNodeIntersect))
+			return 1;
+
+		RequestNodeIntersect node = (RequestNodeIntersect) obj;
+		return new Double(node.confidence).compareTo(new Double(this.confidence));
 	}
 }

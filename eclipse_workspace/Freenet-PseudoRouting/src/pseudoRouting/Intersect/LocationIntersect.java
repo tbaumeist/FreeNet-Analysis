@@ -2,6 +2,7 @@ package pseudoRouting.Intersect;
 
 import java.util.*;
 
+
 import pseudoRouting.*;
 
 public class LocationIntersect {
@@ -29,8 +30,8 @@ public class LocationIntersect {
 	public String toString() {
 		String s = "Range: " + getRange() + ", Storage Node: "
 				+ this.insertionNode;
-		s += ", Path: " + this.insertPath.toStringSimple();
 		s += ", Confidence: " + this.confidence;
+		s += ", Path: " + this.insertPath.toStringSimple();
 
 		for (RequestNodeIntersect req : this.requestNodes) {
 			s += "\n\t\t" + req;
@@ -64,6 +65,7 @@ public class LocationIntersect {
 				this.requestNodes.add(new RequestNodeIntersect(this.insertPath, p, this.insertionNode));
 			}
 		}
+		Collections.sort(this.requestNodes);
 	}
 	
 	private boolean hasTargetNodes(Path insertPath, Path requestPath, Node intersect){

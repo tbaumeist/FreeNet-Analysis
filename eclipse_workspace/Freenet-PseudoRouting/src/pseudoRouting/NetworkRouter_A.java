@@ -14,40 +14,42 @@ public class NetworkRouter_A extends NetworkRouter {
 	}
 
 	@Override
-	public List<Path> findPaths(Topology top, double startNode, boolean isInsertPath)
-			throws Exception {
+	public List<Path> findPaths(Topology top, double startNode,
+			boolean isInsertPath) throws Exception {
 
 		Node start = top.findNode(startNode);
 		if (start == null)
 			throw new Exception("Unable to find specified start node");
+		
 		List<Path> paths = new ArrayList<Path>();
 		List<Node> visited = new ArrayList<Node>();
-
-		visited.add(start);
 		Path currentPath = new Path();
 		RedirectRange startRange = new RedirectRange(start, 0, 0);
-		currentPath.addNodeAsRR(startRange, maxHopsToLive);
-		
 		int resetHop = -1;
-		if(isInsertPath)
+
+		if (isInsertPath) {
+			visited.add(start);
+			currentPath.addNodeAsRR(startRange, maxHopsToLive);
+
 			resetHop = this.maxHopsToLive - (this.insertResetHop + 1);
 
-		_findPaths(paths, currentPath, visited, startRange,
-				maxHopsToLive-1, resetHop);
+			_findPaths(paths, currentPath, visited, startRange,
+					maxHopsToLive - 1, resetHop);
 
-		currentPath.removeLastNode();
-		assert (currentPath.getNodes().isEmpty());
-		
-		///////////////////////////////////////////////////////////
+			currentPath.removeLastNode();
+			assert (currentPath.getNodes().isEmpty());
+		}
+
+		// /////////////////////////////////////////////////////////
 		// now at max htl -1
 		visited = new ArrayList<Node>();
-		
+
 		visited.add(start);
 		currentPath = new Path();
 		currentPath.addNodeAsRR(startRange, maxHopsToLive - 1);
 
-		_findPaths(paths, currentPath, visited, startRange,
-				maxHopsToLive - 2, resetHop);
+		_findPaths(paths, currentPath, visited, startRange, maxHopsToLive - 2,
+				resetHop);
 
 		currentPath.removeLastNode();
 		assert (currentPath.getNodes().isEmpty());
@@ -58,8 +60,8 @@ public class NetworkRouter_A extends NetworkRouter {
 	}
 
 	private boolean _findPaths(List<Path> paths, Path currentPath,
-			List<Node> visited, RedirectRange range, int hopsToLive, int resetHop)
-			throws Exception {
+			List<Node> visited, RedirectRange range, int hopsToLive,
+			int resetHop) throws Exception {
 
 		currentPath.setRange(range);
 		if (shouldStop(hopsToLive)) {
@@ -120,27 +122,26 @@ public class NetworkRouter_A extends NetworkRouter {
 
 		List<RedirectRange> ranges = getRangesSimple(range, visited);
 		List<Node> visitedOnlyMe = new ArrayList<Node>();
-		if(visited.size() > 1) // prev node
-			visitedOnlyMe.add(visited.get(visited.size()-2));
+		if (visited.size() > 1) // prev node
+			visitedOnlyMe.add(visited.get(visited.size() - 2));
 		visitedOnlyMe.add(range.getNode()); // currnet node
-		List<RedirectRange> allRanges = getRangesSimple(range,
-				visitedOnlyMe);
-		
-		for(RedirectRange rr : allRanges){
-			if(visited.contains(rr.getNode()))
+		List<RedirectRange> allRanges = getRangesSimple(range, visitedOnlyMe);
+
+		for (RedirectRange rr : allRanges) {
+			if (visited.contains(rr.getNode()))
 				ranges = splitRanges(rr, ranges);
 		}
-		
-		for( RedirectRange rr : ranges ){
-			for( RedirectRange rr2 : allRanges){
-				if(visited.contains(rr2.getNode())){
-					if(rr.overlaps(rr2)){
+
+		for (RedirectRange rr : ranges) {
+			for (RedirectRange rr2 : allRanges) {
+				if (visited.contains(rr2.getNode())) {
+					if (rr.overlaps(rr2)) {
 						rr.setIsRetry(true);
 					}
 				}
 			}
 		}
-		
+
 		return ranges;
 	}
 
@@ -169,14 +170,14 @@ public class NetworkRouter_A extends NetworkRouter {
 		return newRanges;
 	}
 
-//	private boolean noDuplicatePaths(List<Path> paths) {
-//		for (int i = 0; i < paths.size() - 1; i++) {
-//			for (int j = i + 1; j < paths.size(); j++) {
-//				if (paths.get(i).getRange().overlaps(paths.get(j).getRange()))
-//					return false;
-//			}
-//		}
-//		return true;
-//	}
+	// private boolean noDuplicatePaths(List<Path> paths) {
+	// for (int i = 0; i < paths.size() - 1; i++) {
+	// for (int j = i + 1; j < paths.size(); j++) {
+	// if (paths.get(i).getRange().overlaps(paths.get(j).getRange()))
+	// return false;
+	// }
+	// }
+	// return true;
+	// }
 
 }
