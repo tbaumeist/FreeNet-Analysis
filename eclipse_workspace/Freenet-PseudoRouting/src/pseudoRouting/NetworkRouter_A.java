@@ -7,16 +7,17 @@ import java.util.List;
 public class NetworkRouter_A extends NetworkRouter {
 
 	private int maxHopsToLive = 5;
-	private int insertResetHop = 3;
+	private final int insertResetHop = 3;
 
 	public NetworkRouter_A() {
 
 	}
 
 	@Override
-	public List<Path> findPaths(Topology top, double startNode,
+	public List<Path> findPaths(int htl, Topology top, double startNode,
 			boolean isInsertPath) throws Exception {
-
+		this.maxHopsToLive = htl;
+		
 		Node start = top.findNode(startNode);
 		if (start == null)
 			throw new Exception("Unable to find specified start node");

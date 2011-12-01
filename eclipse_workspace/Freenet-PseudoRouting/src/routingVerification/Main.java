@@ -14,16 +14,20 @@ public class Main {
 
 	private final int TOP_FLAG_I = 0;
 	private final int OUT_FLAG_I = 1;
-	private final int DATA_FLAG_I = 2;
-	private final int DATA_MAP_FLAG_I = 3;
-	private final int MODEL_FLAG_I = 4;
-	private final int HELP_FLAG_I = 5;
+	private final int HTL_FLAG_I = 2;
+	private final int DATA_FLAG_I = 3;
+	private final int DATA_MAP_FLAG_I = 4;
+	private final int DATA_WORD_FLAG_I = 5;
+	private final int MODEL_FLAG_I = 6;
+	private final int HELP_FLAG_I = 7;
 
 	private final String[][] PROG_ARGS = {
 			{ "-t", "(required) topology file location." },
 			{ "-o", "(required) output file." },
-			{ "-d", "(required) actual insert paths data file location." },
+			{ "-htl", "(required) Hops to live count." },
+			{ "-d", "(Optional, required for full path analysis) actual insert paths data file location." },
 			{ "-dm", "(required) word insertions into freenet data file location." },
+			{ "-dw", "(required) inserted word meta data, insert origin." },
 			{ "-m", "(default = A) prediction model to use. {A}" },
 			{ "-h", "help command. Prints available arguments." } };
 
@@ -55,19 +59,33 @@ public class Main {
 
 			String dataMapFileName = Util.getRequiredArg(Util.getArgName(
 					PROG_ARGS, DATA_MAP_FLAG_I), lwArgs);
-			DataMapFileReader mapReader = new DataMapFileReader(dataMapFileName);
+			String dataWordFileName = Util.getRequiredArg(Util.getArgName(
+					PROG_ARGS, DATA_WORD_FLAG_I), lwArgs);
+			DataMapFileReader mapReader = new DataMapFileReader(dataMapFileName, dataWordFileName);
 
-			String dataFileName = Util.getRequiredArg(Util.getArgName(
-					PROG_ARGS, DATA_FLAG_I), lwArgs);
+			int htl  =Integer.parseInt( Util.getRequiredArg(Util.getArgName(
+					PROG_ARGS, HTL_FLAG_I), lwArgs));
+			
+			// use insert path only here
+			List<PathSet> pathSets = manager.calculateRoutesFromNodes(htl, null,
+					topology, true);
+			
+			List<ActualData> theData = mapReader.readData(writer);
+			
+			String dataFileName = Util.getArg(Util.getArgName(
+					PROG_ARGS, DATA_FLAG_I), lwArgs, "");
+			
+			if(dataFileName.isEmpty()){
+				// only have actual stored nodes
+				PathComparer comp = new PathComparer();
+				comp.compareStorageNodes(writer, topology, theData, pathSets);
+				return;
+			}
+			
 			DataFileReader reader = new DataFileReader(dataFileName);
 			// // End Arguments ////
-
-			List<ActualData> theData = mapReader.readData();
+			
 			List<ActualPathSet> actPathSets = reader.readData(theData);
-
-			// use insert path only here
-			List<PathSet> pathSets = manager.calculateRoutesFromNodes(null,
-					topology, true);
 
 			writer.println("Using network topology:");
 			writer.println(topology.toString());

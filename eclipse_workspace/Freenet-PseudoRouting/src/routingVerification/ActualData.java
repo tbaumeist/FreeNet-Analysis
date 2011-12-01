@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActualData {
-	private String location, word;
+	private String location, word, originNode;
 	private List<String> nodes = new ArrayList<String>();
 	
-	public ActualData(String loc, String word, List<String> nodes){
+	public ActualData(String origin, String loc, String word, List<String> nodes){
+		this.originNode = origin;
 		this.location = loc;
 		this.word = word;
 		this.nodes.addAll(nodes);
+	}
+	
+	public String getOriginNode(){
+		return this.originNode;
 	}
 	
 	public String getLocation(){
@@ -23,7 +28,7 @@ public class ActualData {
 	
 	@Override
 	public String toString(){
-		String s = this.location + " " + this.word;
+		String s = this.location + " Org:" + this.originNode + " Word:"+ this.word;
 		for(String n : this.nodes){
 			s += " " + n;
 		}

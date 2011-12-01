@@ -7,6 +7,7 @@ import java.util.List;
 import pseudoRouting.Node;
 import pseudoRouting.Path;
 import pseudoRouting.PathSet;
+import pseudoRouting.Topology;
 
 public class PathComparer {
 	private int total = 0;
@@ -18,68 +19,107 @@ public class PathComparer {
 	private int startsAtFour = 0;
 	private int storageLocation = 0;
 
+	public void compareStorageNodes(PrintStream writer, Topology topology,
+			List<ActualData> theData, List<PathSet> pathSets) {
+		for (ActualData data : theData) {
+			this.total++;
+			try {
+				PathSet ps = findPathSet(data.getOriginNode(), pathSets);
+				if (ps == null)
+					continue;
+
+				List<Path> paths = findPaths(Double.parseDouble(data
+						.getLocation()), ps);
+				for(Path p : paths){
+					if(data.getNodes().contains(p.getProbableStoreNode().getID()))
+						this.storageLocation++;
+				}
+			} catch (Exception e) {
+
+			}
+		}
+		writer.println("Total inserts: "+ this.total);
+		writer.println("Total correct predictions: "+ this.storageLocation);
+		writer.println("Percentage: "+ ((double)this.storageLocation/(double)this.total)*100.0);
+	}
+
 	public void compare(PrintStream writer, List<ActualPathSet> actPathSets,
 			List<PathSet> pseudoPathSets) {
-		
+
 		compareSimplePaths(writer, actPathSets, pseudoPathSets);
-		
-		for(ActualPathSet actPS : actPathSets){
+
+		for (ActualPathSet actPS : actPathSets) {
 			PathSet ps = findEqualPathSet(actPS, pseudoPathSets);
-			if(ps == null){
+			if (ps == null) {
 				writer.println("Skipping " + actPS.getStartNode());
 				continue;
 			}
-			
+
 			writer.println("Using path set:");
 			writer.println(ps);
 			writer.println();
-			
-			for(ActualPath actPath : actPS.getPaths()){
-				try
-				{
-					if(!actPath.isFullPath())
+
+			for (ActualPath actPath : actPS.getPaths()) {
+				try {
+					if (!actPath.isFullPath())
 						continue;
-					
-					double dataLocation = Double.parseDouble(actPath.getDataLocation());
+
+					double dataLocation = Double.parseDouble(actPath
+							.getDataLocation());
 					List<Path> paths = findPaths(dataLocation, ps);
-					if(paths.isEmpty())
+					if (paths.isEmpty())
 						continue;
-					
+
 					// have pseudo route and actual now
-					if(equalPaths(actPath, paths))
+					if (equalPaths(actPath, paths))
 						this.completeMatch++;
-					if(equalPathsWithMissed(actPath, paths, 1))
+					if (equalPathsWithMissed(actPath, paths, 1))
 						this.missedOne++;
-					if(equalPathsWithMissed(actPath, paths, 2))
+					if (equalPathsWithMissed(actPath, paths, 2))
 						this.missedTwo++;
-					if(equalPathLengths(actPath, paths))
+					if (equalPathLengths(actPath, paths))
 						this.correctLength++;
-					if(equalPathsFirstX(actPath, paths, 3))
+					if (equalPathsFirstX(actPath, paths, 3))
 						this.firstThree++;
-					if(actPath.getPath().size() > 0 && actPath.getPath().get(0).getHTL() == 4)
+					if (actPath.getPath().size() > 0
+							&& actPath.getPath().get(0).getHTL() == 4)
 						this.startsAtFour++;
-					if(containsNode( getPossibleEndNode(paths) , actPath.getData().getNodes()))
+					if (containsNode(getPossibleEndNode(paths), actPath
+							.getData().getNodes()))
 						this.storageLocation++;
 					this.total++;
 					writer.println(actPath);
-					for(Path path : paths){
+					for (Path path : paths) {
 						writer.println(path);
 					}
 					writer.println();
-				}catch(Exception e)
-				{
-					//writer.println("");
+				} catch (Exception e) {
+					// writer.println("");
 				}
 			}
 		}
-		
-		System.out.println("Matched Completely "+ this.completeMatch + "/"+ this.total+" ("+ this.completeMatch/(double)this.total+")");
-		System.out.println("Matched Missed One "+ this.missedOne + "/"+ this.total+" ("+ this.missedOne/(double)this.total+")");
-		System.out.println("Matched Missed Two "+ this.missedTwo + "/"+ this.total+" ("+ this.missedTwo/(double)this.total+")");
-		System.out.println("Matched Length "+ this.correctLength + "/"+ this.total+" ("+ this.correctLength/(double)this.total+")");
-		System.out.println("Matched first 3 "+ this.firstThree + "/"+ this.total+" ("+ this.firstThree/(double)this.total+")");
-		System.out.println("Starts at 4 "+ this.startsAtFour + "/"+ this.total+" ("+ this.startsAtFour/(double)this.total+")");
-		System.out.println("Has actual storage location "+ this.storageLocation + "/"+ this.total+" ("+ this.storageLocation/(double)this.total+")");
+
+		System.out.println("Matched Completely " + this.completeMatch + "/"
+				+ this.total + " (" + this.completeMatch / (double) this.total
+				+ ")");
+		System.out.println("Matched Missed One " + this.missedOne + "/"
+				+ this.total + " (" + this.missedOne / (double) this.total
+				+ ")");
+		System.out.println("Matched Missed Two " + this.missedTwo + "/"
+				+ this.total + " (" + this.missedTwo / (double) this.total
+				+ ")");
+		System.out.println("Matched Length " + this.correctLength + "/"
+				+ this.total + " (" + this.correctLength / (double) this.total
+				+ ")");
+		System.out.println("Matched first 3 " + this.firstThree + "/"
+				+ this.total + " (" + this.firstThree / (double) this.total
+				+ ")");
+		System.out.println("Starts at 4 " + this.startsAtFour + "/"
+				+ this.total + " (" + this.startsAtFour / (double) this.total
+				+ ")");
+		System.out.println("Has actual storage location "
+				+ this.storageLocation + "/" + this.total + " ("
+				+ this.storageLocation / (double) this.total + ")");
 	}
 
 	private void compareSimplePaths(PrintStream writer,
@@ -226,4 +266,13 @@ public class PathComparer {
 		}
 		return paths;
 	}
+
+	private PathSet findPathSet(String node, List<PathSet> sets) {
+		for (PathSet s : sets) {
+			if (s.getStartNode().getID().equals(node))
+				return s;
+		}
+		return null;
+	}
+
 }

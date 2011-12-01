@@ -113,14 +113,14 @@ do
 			StartRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir "" ""
 		fi
 
-		if [ "$remoteType" = "SEED" ]
-		then	
+		#if [ "$remoteType" = "SEED" ]
+		#then	
 			# space out starting seed nodes			
 			sleep 30
-		fi
+		#fi
 	else
 		echo "Stopping Freenet on $remoteMachine"
-		StopRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir
+		StopRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir &
 	fi
 done
 exec 0<&3

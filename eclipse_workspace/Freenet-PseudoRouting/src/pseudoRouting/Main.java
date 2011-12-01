@@ -12,14 +12,16 @@ public class Main {
 
 	private final int TOP_FLAG_I = 0;
 	private final int OUT_FLAG_I = 1;
-	private final int ACTION_FLAG_I = 2;
-	private final int MODEL_FLAG_I = 3;
-	private final int START_NODES_FLAG_I = 4;
-	private final int HELP_FLAG_I = 5;
+	private final int HTL_FLAG_I = 2;
+	private final int ACTION_FLAG_I = 3;
+	private final int MODEL_FLAG_I = 4;
+	private final int START_NODES_FLAG_I = 5;
+	private final int HELP_FLAG_I = 6;
 
 	private final String[][] PROG_ARGS = {
 			{ "-t", "(required) topology file location." },
 			{ "-o", "(required) output file." },
+			{ "-htl", "(required) Hops to live count." },
 			{ "-a",	"(default = p)action to perform. {p = predict insert and request paths, i = find intersect nodes}" },
 			{ "-m", "(default = A) prediction model to use. {A}" },
 			{ "-s",	"(default = all nodes) start nodes to run path predictions on. Comma delimited list." },
@@ -55,19 +57,22 @@ public class Main {
 			String action = Util.getArg(
 					Util.getArgName(PROG_ARGS, ACTION_FLAG_I), lwArgs, "p")
 					.toUpperCase();
+			
+			int htl  =Integer.parseInt( Util.getRequiredArg(Util.getArgName(
+					PROG_ARGS, HTL_FLAG_I), lwArgs));
 			// // End Arguments ////
 
 			// actions
 			if (action.equals("P")) {
 				List<PathSet> pathInsertSets = manager
-						.calculateRoutesFromNodes(startNodes, topology, true);
+						.calculateRoutesFromNodes(htl, startNodes, topology, true);
 				writer.println("Insert Paths:\n\n");
 				for (PathSet p : pathInsertSets) {
 					writer.println(p);
 				}
 
 				List<PathSet> pathRequestSets = manager
-						.calculateRoutesFromNodes(startNodes, topology, false);
+						.calculateRoutesFromNodes(htl, startNodes, topology, false);
 				writer.println("Request Paths:\n\n");
 				for (PathSet p : pathRequestSets) {
 					writer.println(p);
@@ -75,7 +80,7 @@ public class Main {
 			} else if (action.equals("I")) {
 
 				List<NodeIntersect> nodeIntersects = manager
-						.calculateNodeIntersects(startNodes, topology);
+						.calculateNodeIntersects(htl, startNodes, topology);
 				for (NodeIntersect n : nodeIntersects) {
 					writer.println(n);
 				}
