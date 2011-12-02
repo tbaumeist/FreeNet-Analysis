@@ -75,7 +75,7 @@ done < "$configFile"
 # wait for all peers to respond
 wait
 
-sort "$fileName"
+sort "$fileName" | "$fileName"
 
 echo "digraph G {" > "$fileName.dot"
 #echo "node [fontsize=24]" >> "$fileName.dot"
