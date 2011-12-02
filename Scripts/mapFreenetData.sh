@@ -117,8 +117,6 @@ fileName=$saveDir$fileName
 unset _dataArrayWordIndex
 readMasterList $saveDir
 
-exec 3<&0
-exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -128,8 +126,7 @@ do
        
 	echo $remoteMachine
 	GetData $remoteMachine $remoteInstallDir
-done
-exec 0<&3
+done < "$configFile"
 
 printMasterList $fileName
 

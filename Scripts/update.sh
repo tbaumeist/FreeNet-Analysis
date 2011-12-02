@@ -125,8 +125,6 @@ then
 	$_assignLocations $configFile $password
 fi
 
-exec 3<&0
-exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -139,6 +137,6 @@ do
 	echo "Checking files on $remoteMachine as user $remoteUser in directory $remoteInstallDir ..."
 	GetLocalData $localInstallDir
 	CheckRemoteData $remoteMachine $remoteUser $password $remoteInstallDir $localInstallDir
-done
-exec 0<&3
+done < "$configFile"
+
 echo "********** Update Complete ***************"

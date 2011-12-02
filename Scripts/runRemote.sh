@@ -93,8 +93,6 @@ then
 	remoteDebugPID=$!
 fi
 
-exec 3<&0
-exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -122,8 +120,10 @@ do
 		echo "Stopping Freenet on $remoteMachine"
 		StopRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir &
 	fi
-done
-exec 0<&3
+done < "$configFile"
+
+#wait for the stop machine command to finish
+wait
 
 if [ "$controlAfter" = "l" ]	
 then
