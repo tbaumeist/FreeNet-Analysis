@@ -4,6 +4,27 @@
 _sshScript=./common/sshlogin.exp
 _scpScript=./common/scplogin.exp
 
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+#5 Remote Machine Type
+function MasterClean
+{
+	echo "Cleaning files on $1"
+	CleanRemoteMachinePeers $1 $2 $3 $4
+	CleanRemoteMachineThrottleData $1 $2 $3 $4
+	CleanRemoteMachinePackets $1 $2 $3 $4
+	CleanRemoteMachineExtraData $1 $2 $3 $4
+	CleanRemoteMachinePersistentData $1 $2 $3 $4
+	CleanRemoteMachineLogs $1 $2 $3 $4
+	CleanRemoteMachineDatastore $1 $2 $3 $4
+	if [ "$5" = "NODE" ]
+	then	
+		CleanRemoteMachineOpennet $1 $2 $3 $4
+	fi
+}
 
 #Parameters
 #1 Remote Server IP
@@ -154,8 +175,7 @@ ParameterPassword password $2
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
-exec 3<&0
-exec 0<$configFile
+
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -163,19 +183,10 @@ do
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
        
-	echo "Cleaning files on $remoteMachine"
-	CleanRemoteMachinePeers $remoteMachine $remoteUser $password $remoteInstallDir
-	CleanRemoteMachineThrottleData $remoteMachine $remoteUser $password $remoteInstallDir
-	CleanRemoteMachinePackets $remoteMachine $remoteUser $password $remoteInstallDir
-	CleanRemoteMachineExtraData $remoteMachine $remoteUser $password $remoteInstallDir
-	CleanRemoteMachinePersistentData $remoteMachine $remoteUser $password $remoteInstallDir
-	CleanRemoteMachineLogs $remoteMachine $remoteUser $password $remoteInstallDir
-	CleanRemoteMachineDatastore $remoteMachine $remoteUser $password $remoteInstallDir
-	if [ "$remoteType" = "NODE" ]
-	then	
-		CleanRemoteMachineOpennet $remoteMachine $remoteUser $password $remoteInstallDir
-	fi
+	MasterClean $remoteMachine $remoteUser $password $remoteInstallDir $remoteType &
 
-done
-exec 0<&3
+done < "$configFile"
+
+wait # wait for everyone to finish
+
 echo "********** Clean Complete ***************"

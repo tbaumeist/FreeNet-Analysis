@@ -7,6 +7,24 @@ _scpScript=./common/scplogin.exp
 _scpScriptCopyFrom=./common/scplogin_copyFrom.exp
 _tmpDir="/tmp/"
 
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+function GenerateLocation
+{
+	# random location
+	radNumber=$[$RANDOM%1000]
+	local location=$(echo "scale=4;$radNumber / 1000" | bc)
+	# add leading zero on
+	location="0$location"
+	
+	echo "Changing location on $1 to location $location"
+	unset _dataArrayRemote
+	GetRemoteData $1 $2 $3 $4
+	Changelocation $1 $2 $3 $4 $location
+}
 
 #Parameters
 #1 Remote Server IP
@@ -111,16 +129,10 @@ do
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
 
-	# random location
-	radNumber=$[$RANDOM%1000]
-	location=$(echo "scale=4;$radNumber / 1000" | bc)
-	# add leading zero on
-	location="0$location"
-	
-	echo "Changing location on $remoteMachine to location $location"
-	unset _dataArrayRemote
-	GetRemoteData $remoteMachine $remoteUser $password $remoteInstallDir
-	Changelocation $remoteMachine $remoteUser $password $remoteInstallDir $location
-done
-exec 0<&3
+	GenerateLocation $remoteMachine $remoteUser $password $remoteInstallDir &
+
+done < "$configFile"
+
+wait #wait for everyone
+
 echo "********** Clean Complete ***************"

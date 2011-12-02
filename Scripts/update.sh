@@ -133,12 +133,10 @@ read control
 if [ "$control" = "r" ]	
 then
 	#clean all of the peer info since, copying the ini will invalidate it
-	$_cleanScript $configFile $password &
-	wait
+	$_cleanScript $configFile $password 
 
 	# change the node location of all the nodes
-	$_assignLocations $configFile $password &
-	wait
+	$_assignLocations $configFile $password
 fi
 
 while read line
