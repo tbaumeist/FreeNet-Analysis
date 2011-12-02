@@ -20,7 +20,7 @@ function GetPeers
 	$_sshScript $1 $2 $3 "$runCommand"
        
 	echo "Getting peers from $1"
-	$_telnetScript "$1" "$_defaultPort" "TMCI> " "PEERFILE:CONNECTED"
+	local returned=$($_telnetScript "$1" "$_defaultPort" "TMCI> " "PEERFILE:CONNECTED")
 	
 	rm $saveDir$1"peers.txt"
 	$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"peers.txt" $saveDir$1"peers.txt"
