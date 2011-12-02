@@ -75,15 +75,16 @@ done < "$configFile"
 # wait for all peers to respond
 wait
 
-sort "$fileName" | "$fileName"
+sort "$fileName" > "$fileName.srt"
 
 echo "digraph G {" > "$fileName.dot"
 #echo "node [fontsize=24]" >> "$fileName.dot"
 echo "overlap=\"scale\"" >> "$fileName.dot"
 
-cat "$fileName" >> "$fileName.dot"
+cat "$fileName.srt" >> "$fileName.dot"
 
 echo "}" >> "$fileName.dot"
+rm "$fileName.srt"
 rm "$fileName"
 
 circo -Tpng "$fileName.dot" -o "$fileName.png"
