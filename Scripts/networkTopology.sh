@@ -16,14 +16,14 @@ _telnetScript=./common/telnet.exp
 function GetPeers
 {
 	#remove peer file from remote machine if it already exists
-	runCommand="rm $4peers.txt"
-	$_sshScript $1 $2 $3 "$runCommand"
+	#runCommand="rm $4peers.txt"
+	#$_sshScript $1 $2 $3 "$runCommand"
        
 	echo "Getting peers from $1"
-	local returned=$($_telnetScript "$1" "$_defaultPort" "TMCI> " "PEERFILE:CONNECTED")
+	$_telnetScript "$1" "$_defaultPort" "TMCI> " "PEERFILE:CONNECTED" | grep "^\"" > $saveDir$1"peers.txt"
 	
-	rm $saveDir$1"peers.txt"
-	$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"peers.txt" $saveDir$1"peers.txt"
+	#rm $saveDir$1"peers.txt"
+	#$_scpScriptCopyFrom $remoteMachine $remoteUser $password $remoteInstallDir"peers.txt" $saveDir$1"peers.txt"
 	cat $saveDir$1"peers.txt" | sed "s/192.168.0.1//g" | sed "s/:[0-9]*//g"  >> "$5"
 	rm $saveDir$1"peers.txt"
 }
