@@ -12,18 +12,13 @@ _tmpDir="/tmp/"
 #2 Remote User Name
 #3 Remote User Password
 #4 Remote Install Directory
+#5 New Location
 function GenerateLocation
 {
-	# random location
-	radNumber=$[$RANDOM%1000]
-	local location=$(echo "scale=4;$radNumber / 1000" | bc)
-	# add leading zero on
-	location="0$location"
-	
-	echo "Changing location on $1 to location $location"
+	echo "Changing location on $1 to location $5"
 	unset _dataArrayRemote
 	GetRemoteData $1 $2 $3 $4
-	Changelocation $1 $2 $3 $4 $location
+	Changelocation $1 $2 $3 $4 $5
 }
 
 #Parameters
@@ -129,7 +124,13 @@ do
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
 
-	GenerateLocation $remoteMachine $remoteUser $password $remoteInstallDir &
+	# random location
+	radNumber=$[$RANDOM%1000]
+	location=$(echo "scale=4;$radNumber / 1000" | bc)
+	# add leading zero on
+	location="0$location"
+
+	GenerateLocation $remoteMachine $remoteUser $password $remoteInstallDir $location &
 
 done < "$configFile"
 
