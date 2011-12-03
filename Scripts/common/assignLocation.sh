@@ -83,7 +83,7 @@ function Changelocation
 	#echo "Array count = ${#_dataArrayRemote[@]}"
 	for (( j = 1 ; j < ${#_dataArrayRemote[@]} ; j = j+3 ))
 	do
-		local localFile="$_tmpDir${_dataArrayRemote[$j]}"
+		local localFile="$_tmpDir$1${_dataArrayRemote[$j]}"
 		local remoteFile="$4${_dataArrayRemote[$j]}"
 		echo "remote $remoteFile"
 		echo "local $localFile and loc $5"
