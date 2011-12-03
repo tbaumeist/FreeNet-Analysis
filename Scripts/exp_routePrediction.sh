@@ -80,6 +80,8 @@ ParameterFileName fileName $_wordInserted $5
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
+mkdir -p $saveDir
+
 _topCheckInterval=$randomCount
 totalWordCount=0
 
