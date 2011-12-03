@@ -44,7 +44,7 @@ declare password
 declare saveDir
 declare fileName
 
-defFileName="network-topology $(date --rfc-3339=seconds)"
+defFileName="network-topology $(date --rfc-3339=seconds).dot"
 defFileName=$(echo $defFileName | sed -e 's/ /_/g' -e 's/:/\-/g')
 
 ParameterScriptWelcome "networkTopology.sh"
@@ -77,16 +77,15 @@ wait
 
 sort "$fileName" > "$fileName.srt"
 
-echo "digraph G {" > "$fileName.dot"
-#echo "node [fontsize=24]" >> "$fileName.dot"
-echo "overlap=\"scale\"" >> "$fileName.dot"
+echo "digraph G {" > "$fileName"
+#echo "node [fontsize=24]" >> "$fileName"
+echo "overlap=\"scale\"" >> "$fileName"
 
-cat "$fileName.srt" >> "$fileName.dot"
+cat "$fileName.srt" >> "$fileName"
 
-echo "}" >> "$fileName.dot"
+echo "}" >> "$fileName"
 rm "$fileName.srt"
-rm "$fileName"
 
-circo -Tpng "$fileName.dot" -o "$fileName.png"
+circo -Tpng "$fileName" -o "$fileName.png"
 
 echo "********** Graph Complete ***************"
