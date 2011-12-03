@@ -115,8 +115,6 @@ ParameterScriptWelcomeEnd
 
 location=0.0
 
-exec 3<&0
-exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -129,7 +127,7 @@ do
 	location=$(echo "scale=4;$radNumber / 1000" | bc)
 	# add leading zero on
 	location="0$location"
-
+	#echo $location
 	GenerateLocation $remoteMachine $remoteUser $password $remoteInstallDir $location &
 
 done < "$configFile"
