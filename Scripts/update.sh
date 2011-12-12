@@ -7,6 +7,20 @@ _scpScript=./common/scplogin.exp
 _cleanScript=./clean.sh
 _assignLocations=./common/assignLocation.sh
 
+#Parameters
+#1 Remote Machine
+#2 Remote User
+#3 Password
+#4 Remote Install Dir
+#5 Local Install Dir
+function UpdateMachine
+{
+	unset _dataArrayLocal
+	echo "Checking files on $1 as user $2 in directory $4 ..."
+	GetLocalData $5
+	CheckRemoteData $1 $2 $3 $4 $5
+}
+
 
 #Parameters
 #1 Local Install Directory
@@ -57,11 +71,17 @@ function CheckRemoteData
 {
 	echo "Deleting old Freenet.jar files"
 	$_sshScript $1 $2 $3 "rm $4freenet*"
+	
+	local runCommand="mkdir -p $4"
+	echo "Creating directory $4"
+	$_sshScript $1 $2 $3 "$runCommand"
+	echo "Copying file from $from to $to"
+	$_scpScript $1 $2 $3 "$5*" "$4"
 
 
-	for (( i = 1 ; i < ${#_dataArrayLocal[@]} ; i = i+3 ))
-	do
-		local fileCopy=true
+	#for (( i = 1 ; i < ${#_dataArrayLocal[@]} ; i = i+3 ))
+	#do
+		#local fileCopy=true
 		# just blindly copy the files no matter if they are the same, much faster
 		#for (( j = 1 ; j < ${#_dataArrayRemote[@]} ; j = j+3 ))
 		#do
@@ -80,18 +100,18 @@ function CheckRemoteData
 		#done
 
 		# File not found copy it
-		if [ $fileCopy = true ]
-		then
-			local from="$5${_dataArrayLocal[$i]}"
-			local to="$4${_dataArrayLocal[$i]}"
-			local toDir=$(dirname "$to")
-			local runCommand="mkdir -p $toDir"
-			echo "Creating directory $toDir"
-			$_sshScript $1 $2 $3 "$runCommand"
-			echo "Copying file from $from to $to"
-			$_scpScript $1 $2 $3 "$from" "$toDir"
-		fi
-	done
+		#if [ $fileCopy = true ]
+		#then
+		#	local from="$5${_dataArrayLocal[$i]}"
+		#	local to="$4${_dataArrayLocal[$i]}"
+		#	local toDir=$(dirname "$to")
+		#	local runCommand="mkdir -p $toDir"
+		#	echo "Creating directory $toDir"
+		#	$_sshScript $1 $2 $3 "$runCommand"
+		#	echo "Copying file from $from to $to"
+		#	$_scpScript $1 $2 $3 "$from" "$toDir"
+		#fi
+	#done
 }
 
 
@@ -119,14 +139,12 @@ read control
 if [ "$control" = "r" ]	
 then
 	#clean all of the peer info since, copying the ini will invalidate it
-	$_cleanScript $configFile $password
+	$_cleanScript $configFile $password 
 
 	# change the node location of all the nodes
 	$_assignLocations $configFile $password
 fi
 
-exec 3<&0
-exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -134,11 +152,11 @@ do
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
 	localInstallDir=$(echo $line | cut -d',' -f5)
+	
+	UpdateMachine "$remoteMachine" "$remoteUser" "$password" "$remoteInstallDir" "$localInstallDir" &
 
-	unset _dataArrayLocal
-	echo "Checking files on $remoteMachine as user $remoteUser in directory $remoteInstallDir ..."
-	GetLocalData $localInstallDir
-	CheckRemoteData $remoteMachine $remoteUser $password $remoteInstallDir $localInstallDir
-done
-exec 0<&3
+done < "$configFile"
+
+wait
+
 echo "********** Update Complete ***************"
