@@ -93,8 +93,6 @@ then
 	remoteDebugPID=$!
 fi
 
-exec 3<&0
-exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -113,17 +111,19 @@ do
 			StartRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir "" ""
 		fi
 
-		if [ "$remoteType" = "SEED" ]
-		then	
+		#if [ "$remoteType" = "SEED" ]
+		#then	
 			# space out starting seed nodes			
 			sleep 30
-		fi
+		#fi
 	else
 		echo "Stopping Freenet on $remoteMachine"
-		StopRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir
+		StopRemoteMachine $remoteMachine $remoteUser $password $remoteInstallDir &
 	fi
-done
-exec 0<&3
+done < "$configFile"
+
+#wait for the stop machine command to finish
+wait
 
 if [ "$controlAfter" = "l" ]	
 then

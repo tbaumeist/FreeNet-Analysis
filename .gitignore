@@ -35,6 +35,17 @@
 /eclipse_workspace/SimpleTrace_XMLParser/*.iws
 /eclipse_workspace/SimpleTrace_XMLParser/.*
 /eclipse_workspace/SimpleTrace_XMLParser/*~
+/eclipse_workspace/Freenet-PseudoRouting/bin
+/eclipse_workspace/Freenet-PseudoRouting/build
+/eclipse_workspace/Freenet-PseudoRouting/dist
+/eclipse_workspace/Freenet-PseudoRouting/freenet-*
+/eclipse_workspace/Freenet-PseudoRouting/javadoc
+/eclipse_workspace/Freenet-PseudoRouting/*.swp
+/eclipse_workspace/Freenet-PseudoRouting/*.iml
+/eclipse_workspace/Freenet-PseudoRouting/*.ipr
+/eclipse_workspace/Freenet-PseudoRouting/*.iws
+/eclipse_workspace/Freenet-PseudoRouting/.*
+/eclipse_workspace/Freenet-PseudoRouting/*~
 /eclipse_workspace/.*
 /override.properties
 !/eclipse_workspace/FreeNet-Source/.externalToolBuilders

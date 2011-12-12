@@ -7,6 +7,19 @@ _scpScript=./common/scplogin.exp
 _scpScriptCopyFrom=./common/scplogin_copyFrom.exp
 _tmpDir="/tmp/"
 
+#Parameters
+#1 Remote Server IP
+#2 Remote User Name
+#3 Remote User Password
+#4 Remote Install Directory
+#5 New Location
+function GenerateLocation
+{
+	echo "Changing location on $1 to location $5"
+	unset _dataArrayRemote
+	GetRemoteData $1 $2 $3 $4
+	Changelocation $1 $2 $3 $4 $5
+}
 
 #Parameters
 #1 Remote Server IP
@@ -70,7 +83,7 @@ function Changelocation
 	#echo "Array count = ${#_dataArrayRemote[@]}"
 	for (( j = 1 ; j < ${#_dataArrayRemote[@]} ; j = j+3 ))
 	do
-		local localFile="$_tmpDir${_dataArrayRemote[$j]}"
+		local localFile="$_tmpDir$1${_dataArrayRemote[$j]}"
 		local remoteFile="$4${_dataArrayRemote[$j]}"
 		echo "remote $remoteFile"
 		echo "local $localFile and loc $5"
@@ -102,8 +115,6 @@ ParameterScriptWelcomeEnd
 
 location=0.0
 
-exec 3<&0
-exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -116,11 +127,11 @@ do
 	location=$(echo "scale=4;$radNumber / 1000" | bc)
 	# add leading zero on
 	location="0$location"
-	
-	echo "Changing location on $remoteMachine to location $location"
-	unset _dataArrayRemote
-	GetRemoteData $remoteMachine $remoteUser $password $remoteInstallDir
-	Changelocation $remoteMachine $remoteUser $password $remoteInstallDir $location
-done
-exec 0<&3
+	#echo $location
+	GenerateLocation $remoteMachine $remoteUser $password $remoteInstallDir $location &
+
+done < "$configFile"
+
+wait #wait for everyone
+
 echo "********** Clean Complete ***************"
