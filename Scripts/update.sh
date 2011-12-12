@@ -7,6 +7,20 @@ _scpScript=./common/scplogin.exp
 _cleanScript=./clean.sh
 _assignLocations=./common/assignLocation.sh
 
+#Parameters
+#1 Remote Machine
+#2 Remote User
+#3 Password
+#4 Remote Install Dir
+#5 Local Install Dir
+function UpdateMachine
+{
+	unset _dataArrayLocal
+	echo "Checking files on $1 as user $2 in directory $4 ..."
+	GetLocalData $5
+	CheckRemoteData $1 $2 $3 $4 $5
+}
+
 
 #Parameters
 #1 Local Install Directory
@@ -119,14 +133,12 @@ read control
 if [ "$control" = "r" ]	
 then
 	#clean all of the peer info since, copying the ini will invalidate it
-	$_cleanScript $configFile $password
+	$_cleanScript $configFile $password 
 
 	# change the node location of all the nodes
 	$_assignLocations $configFile $password
 fi
 
-exec 3<&0
-exec 0<$configFile
 while read line
 do
 	remoteMachine=$(echo $line | cut -d',' -f1)
@@ -134,11 +146,11 @@ do
 	remoteUser=$(echo $line | cut -d',' -f3)
 	remoteInstallDir=$(echo $line | cut -d',' -f4)
 	localInstallDir=$(echo $line | cut -d',' -f5)
+	
+	UpdateMachine "$remoteMachine" "$remoteUser" "$password" "$remoteInstallDir" "$localInstallDir" &
 
-	unset _dataArrayLocal
-	echo "Checking files on $remoteMachine as user $remoteUser in directory $remoteInstallDir ..."
-	GetLocalData $localInstallDir
-	CheckRemoteData $remoteMachine $remoteUser $password $remoteInstallDir $localInstallDir
-done
-exec 0<&3
+done < "$configFile"
+
+wait
+
 echo "********** Update Complete ***************"
