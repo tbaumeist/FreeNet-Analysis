@@ -4,7 +4,7 @@ import java.util.List;
 
 public abstract class NetworkRouter {
 
-	public abstract List<Path> findPaths(int htl, Topology top, double startNode, boolean isInsertPath) throws Exception;
+	public abstract List<Path> findPaths(int htl, Topology top, double startNode, String startNodeId, boolean isInsertPath) throws Exception;
 	
 	protected abstract boolean shouldStop(int hopsToLive);
 	

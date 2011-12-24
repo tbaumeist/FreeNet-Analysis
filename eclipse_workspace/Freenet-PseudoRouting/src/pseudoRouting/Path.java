@@ -53,6 +53,10 @@ public class Path implements Comparable<Object> {
 		p.range = this.range;
 		return p;
 	}
+	
+	public double getPathConfidence(){
+		return 1.0/(double)getTieCount();
+	}
 
 	public int getTieCount() {
 		return getTieCountToNode(null);
@@ -76,6 +80,10 @@ public class Path implements Comparable<Object> {
 			if( this.htls.get(i) == 1) // first node with htl of 1
 				return this.ranges.get(i).getNode();
 		}
+		// There was no htl of 1 so just take the last node
+		if(!this.htls.isEmpty())
+			return this.ranges.get(this.ranges.size()-1).getNode();
+		
 		return null;
 	}
 	

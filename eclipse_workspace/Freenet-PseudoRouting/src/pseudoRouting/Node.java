@@ -49,13 +49,13 @@ public class Node extends INode {
 	public List<RedirectRange> getPathsOut() {
 		List<Node> ignoreNodes = new ArrayList<Node>();
 		ignoreNodes.add(this);
-		return getPathsOut(ignoreNodes);
+		return getPathsOut(ignoreNodes, false);
 	}
 
-	public List<RedirectRange> getPathsOut(List<Node> ignoreNodes) {
+	public List<RedirectRange> getPathsOut(List<Node> ignoreNodes, boolean includeSelf) {
 		List<_Node> allPeers = new CircleList<_Node>();
 		List<Node> directPeers = getNeighbors(ignoreNodes);
-
+		
 		for (Node n : directPeers) {
 			for (Node n2 : n.getNeighbors(ignoreNodes)) {
 				if (!allPeers.contains(n2)) {
@@ -71,6 +71,10 @@ public class Node extends INode {
 		for (Node n : directPeers) {
 			allPeers.add(new _Node(n, n.getLocation()));
 		}
+		
+		// add current node so it can detect when it is the closest
+		if(includeSelf)
+			allPeers.add(new _Node(this, this.getLocation()));
 
 		Collections.sort(allPeers);
 
@@ -84,7 +88,10 @@ public class Node extends INode {
 		List<RedirectRange> rangesList = new CircleList<RedirectRange>();
 		for (int i = 0; i < allPeers.size(); i++) {
 			rangesList.add(new RedirectRange(allPeers.get(i).getNode(),
-					allPeers.get(i - 1).getMid(), allPeers.get(i).getMid(), allPeers.get(i).getTieCount()));
+					allPeers.get(i - 1).getMid(), 
+					allPeers.get(i).getMid(), 
+					allPeers.get(i).getTieCount(), 
+					allPeers.get(i).getNode() == this));
 		}
 		// buildRangeLists(rangesList, allPeers, 0);
 

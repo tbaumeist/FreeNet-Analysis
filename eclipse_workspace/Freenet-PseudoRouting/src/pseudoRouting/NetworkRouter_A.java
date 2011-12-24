@@ -14,11 +14,11 @@ public class NetworkRouter_A extends NetworkRouter {
 	}
 
 	@Override
-	public List<Path> findPaths(int htl, Topology top, double startNode,
+	public List<Path> findPaths(int htl, Topology top, double startNode, String startNodeId,
 			boolean isInsertPath) throws Exception {
-		this.maxHopsToLive = htl;
+		this.maxHopsToLive = htl + 1; // add one to htl because of how the model uses htl
 		
-		Node start = top.findNode(startNode);
+		Node start = top.findNode(startNode, startNodeId);
 		if (start == null)
 			throw new Exception("Unable to find specified start node");
 		
@@ -65,7 +65,9 @@ public class NetworkRouter_A extends NetworkRouter {
 			int resetHop) throws Exception {
 
 		currentPath.setRange(range);
-		if (shouldStop(hopsToLive)) {
+		// stop when htl expires
+		// stop when the next closest node is the same as the previous node (self route)
+		if (shouldStop(hopsToLive) || range.isSelfRoute() ) {
 			paths.add(currentPath.clone());
 			return true;
 		}
@@ -76,12 +78,12 @@ public class NetworkRouter_A extends NetworkRouter {
 			visited.add(range.getNode());
 		}
 
-		List<RedirectRange> allRanges = getRanges(range, visited);
+		List<RedirectRange> allRanges = getRanges(range, visited, hopsToLive <= resetHop);
 
 		int pathsFound = 0;
 
 		for (RedirectRange rr : allRanges) {
-			if (range.overlaps(rr)) {
+			if (range.overlaps(rr)) {				
 				int hopMod = 0;
 				if (rr.getIsRetry()) {
 					hopMod++;
@@ -91,8 +93,8 @@ public class NetworkRouter_A extends NetworkRouter {
 				currentPath.addNodeAsRR(rr, hopsToLive);
 				if (_findPaths(paths, currentPath, visited, rr, hopsToLive - 1
 						+ hopMod, resetHop)) {
-					visited.removeAll(visited.subList(visited.indexOf(rr
-							.getNode()), visited.size()));
+					
+					removeFromEndUpTo(visited, rr.getNode());
 				}
 				currentPath.removeLastNode();
 			}
@@ -108,25 +110,34 @@ public class NetworkRouter_A extends NetworkRouter {
 
 		return pathsFound > 0;
 	}
+	
+	private void removeFromEndUpTo(List<Node> visited, Node n){
+		for(int i = visited.size() -1; i >= 0; i--){
+			boolean found = visited.get(i).equals(n);
+			visited.remove(i);
+			if(found)
+				return;
+		}
+	}
 
 	private List<RedirectRange> getRangesSimple(RedirectRange range,
-			List<Node> visited) {
+			List<Node> visited, boolean includeSelf) {
 
-		List<RedirectRange> ranges = range.getNode().getPathsOut(visited);
+		List<RedirectRange> ranges = range.getNode().getPathsOut(visited, includeSelf);
 		ranges = splitRanges(range, ranges);
 
 		return ranges;
 	}
 
 	private List<RedirectRange> getRanges(RedirectRange range,
-			List<Node> visited) {
+			List<Node> visited, boolean includeSelf) {
 
-		List<RedirectRange> ranges = getRangesSimple(range, visited);
+		List<RedirectRange> ranges = getRangesSimple(range, visited, includeSelf);
 		List<Node> visitedOnlyMe = new ArrayList<Node>();
 		if (visited.size() > 1) // prev node
 			visitedOnlyMe.add(visited.get(visited.size() - 2));
 		visitedOnlyMe.add(range.getNode()); // currnet node
-		List<RedirectRange> allRanges = getRangesSimple(range, visitedOnlyMe);
+		List<RedirectRange> allRanges = getRangesSimple(range, visitedOnlyMe, includeSelf);
 
 		for (RedirectRange rr : allRanges) {
 			if (visited.contains(rr.getNode()))

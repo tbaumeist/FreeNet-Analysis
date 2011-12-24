@@ -76,9 +76,18 @@ public class Main {
 					PROG_ARGS, DATA_FLAG_I), lwArgs, "");
 			
 			if(dataFileName.isEmpty()){
+				File fullDataFile = new File(outputFile.getAbsoluteFile() + ".fulldat");
+				PrintStream fullWriter = new PrintStream(fullDataFile);
+				
+				File predictDataFile = new File(outputFile.getAbsoluteFile() + ".pred");
+				PrintStream predictWriter = new PrintStream(predictDataFile);
+				predictWriter.println(topology);
+				for(PathSet s : pathSets )
+					predictWriter.println(s);
 				// only have actual stored nodes
+				//writer.println(pathSets.get(0));
 				PathComparer comp = new PathComparer();
-				comp.compareStorageNodes(writer, topology, theData, pathSets);
+				comp.compareStorageNodes(writer, fullWriter, topology, theData, pathSets);
 				return;
 			}
 			

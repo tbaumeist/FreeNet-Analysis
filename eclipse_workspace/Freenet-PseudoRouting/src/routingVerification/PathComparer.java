@@ -18,9 +18,14 @@ public class PathComparer {
 	private int firstThree = 0;
 	private int startsAtFour = 0;
 	private int storageLocation = 0;
+	private int storageLocationActual = 0;
+	private int totalGuesses = 0;
 
-	public void compareStorageNodes(PrintStream writer, Topology topology,
+	public void compareStorageNodes(PrintStream writer, PrintStream fullData, Topology topology,
 			List<ActualData> theData, List<PathSet> pathSets) {
+		
+		printFullDataHeader(fullData);
+		
 		for (ActualData data : theData) {
 			this.total++;
 			try {
@@ -30,17 +35,31 @@ public class PathComparer {
 
 				List<Path> paths = findPaths(Double.parseDouble(data
 						.getLocation()), ps);
+				int foundCnt = 0;
+				double guessConvidence = 0.0;
+				String storageNodes ="";
 				for(Path p : paths){
+					guessConvidence += p.getPathConfidence() / (double)paths.size();
+					storageNodes+= p.getProbableStoreNode().getID()+" ";
+					this.totalGuesses++;
 					if(data.getNodes().contains(p.getProbableStoreNode().getID()))
-						this.storageLocation++;
+					{
+						this.storageLocationActual++;
+						foundCnt++;
+					}
 				}
+				printFullData(fullData, foundCnt, data, guessConvidence, storageNodes);
+				
+				if(foundCnt > 0)
+					this.storageLocation++;
 			} catch (Exception e) {
 
 			}
 		}
 		writer.println("Total inserts: "+ this.total);
-		writer.println("Total correct predictions: "+ this.storageLocation);
-		writer.println("Percentage: "+ ((double)this.storageLocation/(double)this.total)*100.0);
+		writer.println("Total correct predictions: "+ this.storageLocation +" "+ ((double)this.storageLocation/(double)this.total)*100.0+"%");
+		writer.println("Total guesses: "+ this.totalGuesses);
+		writer.println("Total correct predictions (each guess): "+ this.storageLocationActual +" "+ ((double)this.storageLocationActual/(double)this.totalGuesses)*100.0);
 	}
 
 	public void compare(PrintStream writer, List<ActualPathSet> actPathSets,
@@ -120,6 +139,15 @@ public class PathComparer {
 		System.out.println("Has actual storage location "
 				+ this.storageLocation + "/" + this.total + " ("
 				+ this.storageLocation / (double) this.total + ")");
+	}
+	private void printFullDataHeader(PrintStream writer){
+		writer.println("Word, Location, Insert Node, Guessed Storage Nodes, Confidence, Hit, Hit Count");
+	}
+	private void printFullData(PrintStream writer, int foundCnt, ActualData data, double guessConvidence,
+			String storageNodes){
+		// word, location, insert node, guessed storage nodes, confidence, hit, hit count
+		writer.println(data.getWord()+","+data.getLocation()+","+data.getOriginNode()+","+storageNodes
+				+","+guessConvidence+","+(foundCnt > 0?"TRUE":"FALSE")+","+foundCnt);
 	}
 
 	private void compareSimplePaths(PrintStream writer,

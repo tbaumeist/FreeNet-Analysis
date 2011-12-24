@@ -9,16 +9,22 @@ public class RedirectRange implements Comparable<Object> {
 	private double rangeStart, rangeStop;
 	private boolean isRetry = false;
 	private int tieCount = 0;
+	private boolean isSelfRoute = false;
 
-	public RedirectRange(Node toNode, double rangeStart, double rangeStop, int tieCount){
+	public RedirectRange(Node toNode, double rangeStart, double rangeStop, int tieCount, boolean isSelfRoute){
 		this(toNode, rangeStart, rangeStop);
 		this.tieCount = tieCount;
+		this.isSelfRoute = isSelfRoute;
 	}
 	public RedirectRange(Node toNode, double rangeStart, double rangeStop) {
 		this.toNode = toNode;
 		this.rangeStart = Node.round(rangeStart);
 		this.rangeStop = Node.round(rangeStop);
 		this.tieCount++;
+	}
+	
+	public boolean isSelfRoute(){
+		return this.isSelfRoute;
 	}
 
 	public Node getNode() {
@@ -72,7 +78,7 @@ public class RedirectRange implements Comparable<Object> {
 
 		if (range.isEntireRange()) { // special case
 			ranges.add(new RedirectRange(range.getNode(), this.rangeStart,
-					this.rangeStop, range.tieCount));
+					this.rangeStop, range.tieCount, range.isSelfRoute()));
 			return ranges;
 		}
 
@@ -82,10 +88,10 @@ public class RedirectRange implements Comparable<Object> {
 
 		double prev = range.rangeStart;
 		for (double d : edges) {
-			ranges.add(new RedirectRange(range.getNode(), prev, d, range.tieCount));
+			ranges.add(new RedirectRange(range.getNode(), prev, d, range.tieCount, range.isSelfRoute()));
 			prev = d;
 		}
-		ranges.add(new RedirectRange(range.getNode(), prev, range.rangeStop, range.tieCount));
+		ranges.add(new RedirectRange(range.getNode(), prev, range.rangeStop, range.tieCount, range.isSelfRoute()));
 
 		return ranges;
 	}
@@ -95,7 +101,7 @@ public class RedirectRange implements Comparable<Object> {
 		double myStop = wrapsAround() ? this.rangeStop + 1 : this.rangeStop;
 		double thereStop = rr.wrapsAround() ? rr.rangeStop + 1 : rr.rangeStop;
 		double stop = Math.min(myStop, thereStop);
-		return new RedirectRange(this.toNode, start, stop % 1, this.tieCount);
+		return new RedirectRange(this.toNode, start, stop % 1, this.tieCount, this.isSelfRoute());
 	}
 
 	@Override

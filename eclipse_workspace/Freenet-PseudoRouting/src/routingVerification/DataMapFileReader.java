@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class DataMapFileReader {
 	private File dataFile;
@@ -29,7 +31,9 @@ public class DataMapFileReader {
 			String[] parsed = wordLine.split(":");
 			if(parsed.length < 4)
 				continue;
-			WordOriginPair w = new WordOriginPair(parsed[0].trim(), parsed[3].trim());
+			String key = parsed[1].trim();
+			key = key.split("@")[1].split(",")[0];
+			WordOriginPair w = new WordOriginPair(parsed[0].trim(), key, parsed[3].trim(), parsed[2].trim());
 			if(!words.contains(w))
 				words.add(w);
 			else
@@ -43,70 +47,61 @@ public class DataMapFileReader {
 		}
 		
 		// read other data file
-		List<ActualData> datas = new ArrayList<ActualData>();
+		Hashtable<String, List<String>> storedWords = new Hashtable<String, List<String>>();
 		
 		BufferedReader reader = new BufferedReader(new FileReader(this.dataFile));
-		
 		String line = "";
-		int lineCount = 0;
 		while((line = reader.readLine()) != null){
-			lineCount++;
-			if(lineCount <= 1) // skip header line
-				continue;
-			
 			line = line.replace("192.168.0.1", "").replace("\t", " ");
-			String[] parsed = line.split(" ");
-			
-			if(parsed.length < 2){
+			String[] parsed = line.split(":");
+			if(parsed.length < 4)
 				continue;
-			}
-			String location = null;
-			String word = null;
-			List<String> nodes = new ArrayList<String>();
-			for(int i =0; i < parsed.length; i++){
-				String s = parsed[i];
-
-				if(s.isEmpty())
-					continue;
-				if(location == null){
-					location = s.trim();
-					continue;
-				}
-				if(word == null){
-					word = s.trim();
-					continue;
-				}
-				nodes.add(s.trim());
-				i++; // skip extra location info
-			}
-			String origin = findWordOrigin(word, words);
+			String key = parsed[1].split("@")[2].trim();
+			String nodeId = parsed[3].trim();
+			if(!storedWords.containsKey(key))
+				storedWords.put(key, new ArrayList<String>());
+			storedWords.get(key).add(nodeId);
+		}
+		
+		List<ActualData> datas = new ArrayList<ActualData>();
+		
+		for(Map.Entry<String, List<String>> entry : storedWords.entrySet()){
+			WordOriginPair origin = findWordOriginPair(entry.getKey(), words);
 			if(origin == null)
 				continue;
-			datas.add(new ActualData(origin, location, word, nodes));
+			datas.add(new ActualData(origin.getOrigin(), origin.getLocation(), origin.getWord(), entry.getValue()));
 		}
 		
 		return datas;
 	}
 	
-	private String findWordOrigin(String word, List<WordOriginPair> list){
+	private WordOriginPair findWordOriginPair(String word, List<WordOriginPair> list){
 		for(WordOriginPair w : list){
-			if(w.getWord().equals(word))
-				return w.getOrigin();
+			if(w.getKey().equals(word))
+				return w;
 		}
 		return null;
 	}
 	
 	class WordOriginPair{
-		private String word, origin;
-		public WordOriginPair(String w, String o){
+		private String word, origin, key, location;
+		public WordOriginPair(String w, String k, String o, String l){
 			this.word = w;
+			this.key = k;
 			this.origin = o.replace("192.168.0.1", "");
+			this.location = l;
 		}
 		public String getWord(){
 			return this.word;
 		}
 		public String getOrigin(){
 			return this.origin;
+		}
+		public String getKey(){
+			return this.key;
+		}
+		public String getLocation(){
+			return this.location;
 		}
 		@Override
 		public boolean equals(Object obj) {

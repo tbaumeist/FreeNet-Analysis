@@ -2,7 +2,7 @@ package pseudoRouting;
 
 public abstract class INode implements Comparable<Object>{
 	protected double location;
-	protected String id;
+	protected String id = "";
 	
 	public double getLocation(){ return this.location; }
 	public String getID(){ return this.id; }
@@ -17,7 +17,9 @@ public abstract class INode implements Comparable<Object>{
 		if (!(obj instanceof INode))
 			return false;
 		INode node = (INode) obj;
-		return node.getLocation() == getLocation();
+		if(node.getID().isEmpty() || getID().isEmpty())
+			return node.getLocation() == getLocation();
+		return node.getLocation() == getLocation() && node.getID().equals(getID());
 	}
 
 	@Override

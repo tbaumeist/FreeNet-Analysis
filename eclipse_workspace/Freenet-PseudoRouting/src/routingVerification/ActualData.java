@@ -14,6 +14,10 @@ public class ActualData {
 		this.nodes.addAll(nodes);
 	}
 	
+	public String getWord(){
+		return this.word;
+	}
+	
 	public String getOriginNode(){
 		return this.originNode;
 	}

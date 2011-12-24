@@ -14,8 +14,8 @@ public class Topology {
 		clearOneWayConnections();
 	}
 
-	public Node findNode(double location) {
-		Node tmp = new Node(location, "");
+	public Node findNode(double location, String id) {
+		Node tmp = new Node(location, id);
 		if (!this.nodes.contains(tmp))
 			return null;
 
@@ -85,14 +85,16 @@ public class Topology {
 					continue;
 
 				double locA = Double.parseDouble(parsed[1].split(" ")[0]);
+				String idA	=	parsed[1].split(" ")[1];
 				double locB = Double.parseDouble(parsed[3].split(" ")[0]);
+				String idB = parsed[3].split(" ")[1];
 
-				Node nodeA = findNode(locA);
-				Node nodeB = findNode(locB);
+				Node nodeA = findNode(locA, idA);
+				Node nodeB = findNode(locB, idB);
 				if (nodeA == null)
-					nodeA = new Node(locA, parsed[1].split(" ")[1]);
+					nodeA = new Node(locA, idA);
 				if (nodeB == null)
-					nodeB = new Node(locB, parsed[3].split(" ")[1]);
+					nodeB = new Node(locB, idB);
 
 				addNode(nodeA);
 				addNode(nodeB);
@@ -100,7 +102,7 @@ public class Topology {
 				nodeA.addNeighbor(nodeB);
 			}
 		} catch (Exception ex) {
-			throw new Exception("Error reading topology file. Improperly formatted.");
+			throw new Exception("Error reading topology file. Improperly formatted. "+ ex.getMessage());
 		}
 	}
 }

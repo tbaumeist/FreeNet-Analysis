@@ -24,7 +24,7 @@ public class Main {
 			{ "-htl", "(required) Hops to live count." },
 			{ "-a",	"(default = p)action to perform. {p = predict insert and request paths, i = find intersect nodes}" },
 			{ "-m", "(default = A) prediction model to use. {A}" },
-			{ "-s",	"(default = all nodes) start nodes to run path predictions on. Comma delimited list." },
+			{ "-s",	"(default = all nodes) start nodes to run path predictions on. Comma delimited list. format: location-id,location-id,..." },
 			{ "-h", "help command. Prints available arguments." } };
 
 	public static void main(String[] args) {
@@ -53,7 +53,7 @@ public class Main {
 					MODEL_FLAG_I), lwArgs, "A");
 			RoutingManager manager = new RoutingManager(routingModel);
 
-			List<Double> startNodes = getStartNodes(lwArgs);
+			List<Pair<Double, String>> startNodes = getStartNodes(lwArgs);
 			String action = Util.getArg(
 					Util.getArgName(PROG_ARGS, ACTION_FLAG_I), lwArgs, "p")
 					.toUpperCase();
@@ -93,9 +93,9 @@ public class Main {
 		}
 	}
 
-	private List<Double> getStartNodes(List<String> args) throws Exception {
+	private List<Pair<Double, String>> getStartNodes(List<String> args) throws Exception {
 
-		List<Double> startNodes = new ArrayList<Double>();
+		List<Pair<Double, String>> startNodes = new ArrayList<Pair<Double, String>>();
 		String startNodesArg = Util.getArg(Util.getArgName(PROG_ARGS,
 				START_NODES_FLAG_I), args, "");
 		if (startNodesArg.isEmpty())
@@ -104,7 +104,7 @@ public class Main {
 		try {
 			String[] startNode = startNodesArg.split(",");
 			for (String s : startNode)
-				startNodes.add(Double.parseDouble(s));
+				startNodes.add(new Pair<Double, String>(Double.parseDouble(s.split("-")[0]), s.split("-")[1]));
 		} catch (Exception e) {
 			throw new Exception("Error parsing list of start nodes.");
 		}
