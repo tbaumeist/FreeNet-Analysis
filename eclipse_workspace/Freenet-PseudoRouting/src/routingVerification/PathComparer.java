@@ -29,12 +29,12 @@ public class PathComparer {
 		for (ActualData data : theData) {
 			this.total++;
 			try {
-				PathSet ps = findPathSet(data.getOriginNode(), pathSets);
+				PathSet ps = PathSet.findPathSet(data.getOriginNode(), pathSets);
 				if (ps == null)
 					continue;
 
-				List<Path> paths = findPaths(Double.parseDouble(data
-						.getLocation()), ps);
+				List<Path> paths = ps.findPaths(Double.parseDouble(data
+						.getLocation()));
 				int foundCnt = 0;
 				double guessConvidence = 0.0;
 				String storageNodes ="";
@@ -42,7 +42,7 @@ public class PathComparer {
 					guessConvidence += p.getPathConfidence() / (double)paths.size();
 					storageNodes+= p.getProbableStoreNode().getID()+" ";
 					this.totalGuesses++;
-					if(data.getNodes().contains(p.getProbableStoreNode().getID()))
+					if(data.getActualStorageNodes().contains(p.getProbableStoreNode().getID()))
 					{
 						this.storageLocationActual++;
 						foundCnt++;
@@ -85,7 +85,7 @@ public class PathComparer {
 
 					double dataLocation = Double.parseDouble(actPath
 							.getDataLocation());
-					List<Path> paths = findPaths(dataLocation, ps);
+					List<Path> paths = ps.findPaths(dataLocation);
 					if (paths.isEmpty())
 						continue;
 
@@ -104,7 +104,7 @@ public class PathComparer {
 							&& actPath.getPath().get(0).getHTL() == 4)
 						this.startsAtFour++;
 					if (containsNode(getPossibleEndNode(paths), actPath
-							.getData().getNodes()))
+							.getData().getActualStorageNodes()))
 						this.storageLocation++;
 					this.total++;
 					writer.println(actPath);
@@ -141,13 +141,14 @@ public class PathComparer {
 				+ this.storageLocation / (double) this.total + ")");
 	}
 	private void printFullDataHeader(PrintStream writer){
-		writer.println("Word, Location, Insert Node, Guessed Storage Nodes, Confidence, Hit, Hit Count");
+		writer.println("Word, Location, Insert Node, Guessed Storage Nodes, Confidence, Hit, Hit Count, Actual Storage Nodes");
 	}
 	private void printFullData(PrintStream writer, int foundCnt, ActualData data, double guessConvidence,
 			String storageNodes){
-		// word, location, insert node, guessed storage nodes, confidence, hit, hit count
+		
+		// word, location, insert node, guessed storage nodes, confidence, hit, hit count, actual storage nodes
 		writer.println(data.getWord()+","+data.getLocation()+","+data.getOriginNode()+","+storageNodes
-				+","+guessConvidence+","+(foundCnt > 0?"TRUE":"FALSE")+","+foundCnt);
+				+","+guessConvidence+","+(foundCnt > 0?"TRUE":"FALSE")+","+foundCnt+","+data.getActualStorageNodesToString());
 	}
 
 	private void compareSimplePaths(PrintStream writer,
@@ -171,7 +172,7 @@ public class PathComparer {
 
 					double dataLocation = Double.parseDouble(actPath
 							.getDataLocation());
-					List<Path> paths = findPaths(dataLocation, ps);
+					List<Path> paths = ps.findPaths(dataLocation);
 					if (paths.isEmpty())
 						continue;
 
@@ -282,23 +283,6 @@ public class PathComparer {
 			if (ps.getStartNode().getID().equals(actPS.getStartNode())) {
 				return ps;
 			}
-		}
-		return null;
-	}
-
-	private List<Path> findPaths(double dataLocation, PathSet ps) {
-		List<Path> paths = new ArrayList<Path>();
-		for (Path p : ps.getPaths()) {
-			if (p.getRange().containsPoint(dataLocation))
-				paths.add(p);
-		}
-		return paths;
-	}
-
-	private PathSet findPathSet(String node, List<PathSet> sets) {
-		for (PathSet s : sets) {
-			if (s.getStartNode().getID().equals(node))
-				return s;
 		}
 		return null;
 	}

@@ -1,5 +1,6 @@
 package pseudoRouting;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Util {
@@ -44,5 +45,23 @@ public class Util {
 	
 	public static String getArgName(String[][] args, int index){
 		return args[index][0];
+	}
+	
+	public static List<Pair<Double, String>> getStartNodes(List<String> args, String argName) throws Exception {
+
+		List<Pair<Double, String>> startNodes = new ArrayList<Pair<Double, String>>();
+		String startNodesArg = Util.getArg(argName, args, "");
+		if (startNodesArg.isEmpty())
+			return null;
+
+		try {
+			String[] startNode = startNodesArg.split(",");
+			for (String s : startNode)
+				startNodes.add(new Pair<Double, String>(Double.parseDouble(s.split("-")[0]), s.split("-")[1]));
+		} catch (Exception e) {
+			throw new Exception("Error parsing list of start nodes.");
+		}
+
+		return startNodes;
 	}
 }

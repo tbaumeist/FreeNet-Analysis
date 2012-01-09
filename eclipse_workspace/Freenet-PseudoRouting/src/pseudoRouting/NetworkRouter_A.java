@@ -7,7 +7,7 @@ import java.util.List;
 public class NetworkRouter_A extends NetworkRouter {
 
 	private int maxHopsToLive = 5;
-	private final int insertResetHop = 3;
+	private final int insertResetHop = 4;
 
 	public NetworkRouter_A() {
 
@@ -32,7 +32,7 @@ public class NetworkRouter_A extends NetworkRouter {
 			visited.add(start);
 			currentPath.addNodeAsRR(startRange, maxHopsToLive);
 
-			resetHop = this.maxHopsToLive - (this.insertResetHop + 1);
+			resetHop = this.maxHopsToLive - this.insertResetHop;
 
 			_findPaths(paths, currentPath, visited, startRange,
 					maxHopsToLive - 1, resetHop);
@@ -78,7 +78,7 @@ public class NetworkRouter_A extends NetworkRouter {
 			visited.add(range.getNode());
 		}
 
-		List<RedirectRange> allRanges = getRanges(range, visited, hopsToLive <= resetHop);
+		List<RedirectRange> allRanges = getRanges(range, visited, hopsToLive < resetHop);
 
 		int pathsFound = 0;
 
@@ -159,7 +159,7 @@ public class NetworkRouter_A extends NetworkRouter {
 
 	@Override
 	protected boolean shouldStop(int hopsToLive) {
-		if (hopsToLive <= 0)
+		if (hopsToLive < 0)
 			return true;
 
 		return false;

@@ -35,4 +35,21 @@ public class PathSet {
 		}
 		return s;
 	}
+	
+	public List<Path> findPaths(double dataLocation) {
+		List<Path> paths = new ArrayList<Path>();
+		for (Path p : this.getPaths()) {
+			if (p.getRange().containsPoint(dataLocation))
+				paths.add(p);
+		}
+		return paths;
+	}
+	
+	public static PathSet findPathSet(String node, List<PathSet> sets) {
+		for (PathSet s : sets) {
+			if (s.getStartNode().getID().equals(node))
+				return s;
+		}
+		return null;
+	}
 }

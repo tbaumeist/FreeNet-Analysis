@@ -41,6 +41,58 @@ public class Node extends INode {
 		return ns;
 	}
 
+	public Node getNextClosestNeighborExcluding(double loc,
+			List<Node> excludeNodes, boolean onlyCloserThenMe) {
+
+		List<_Node> neighbors = new ArrayList<_Node>();
+		// 1 hop neighbors
+		for (Node n : getNeighbors(excludeNodes)) {
+			neighbors.add(new _Node(n, n.getLocation()));
+		}
+
+		// 2 hop neighbors
+		getTwoHopNeighbors(excludeNodes, neighbors);
+
+		_Node closest = null;
+		double closestDiff = 1;
+		for (_Node n : neighbors) {
+			double diff = Util.getDistance(n.getLocation(), loc);
+
+			if (closest == null) {
+				closest = n;
+				closestDiff = diff;
+				continue;
+			}
+			if (diff < closestDiff) {
+				closest = n;
+				closestDiff = diff;
+			}
+		}
+
+		if (closest == null)
+			return null;
+		if (onlyCloserThenMe
+				&& closestDiff > Util.getDistance(this.getLocation(), loc))
+			return null;
+
+		return closest.getNode();
+	}
+
+	private void getTwoHopNeighbors(List<Node> excludeNodes,
+			List<_Node> neighbors) {
+		for (Node n : getNeighbors(excludeNodes)) {
+			for (Node n2 : n.getNeighbors(excludeNodes)) {
+				Node tmp = new Node(n2.getLocation(), "");
+				if (!neighbors.contains(tmp)) {
+					neighbors.add(new _Node(n, tmp.getLocation()));
+				} else {
+					// increment tie counter
+					neighbors.get(neighbors.indexOf(tmp)).tie();
+				}
+			}
+		}
+	}
+
 	@Override
 	public String toString() {
 		return this.getLocation() + " {" + this.id + "}";
@@ -52,28 +104,22 @@ public class Node extends INode {
 		return getPathsOut(ignoreNodes, false);
 	}
 
-	public List<RedirectRange> getPathsOut(List<Node> ignoreNodes, boolean includeSelf) {
+	public List<RedirectRange> getPathsOut(List<Node> ignoreNodes,
+			boolean includeSelf) {
 		List<_Node> allPeers = new CircleList<_Node>();
 		List<Node> directPeers = getNeighbors(ignoreNodes);
-		
-		for (Node n : directPeers) {
-			for (Node n2 : n.getNeighbors(ignoreNodes)) {
-				if (!allPeers.contains(n2)) {
-					allPeers.add(new _Node(n, n2.getLocation())); // peer's													// peers
-				} else {
-					allPeers.get(allPeers.indexOf(n2)).tie(); // increment tie counter
-				}
-			}
-		}
+
+		// 2 hop neighbors
+		getTwoHopNeighbors(ignoreNodes, allPeers);
 
 		// direct peers get preference or peer of peer
 		allPeers.removeAll(directPeers); // remove peer of peer entry
 		for (Node n : directPeers) {
 			allPeers.add(new _Node(n, n.getLocation()));
 		}
-		
+
 		// add current node so it can detect when it is the closest
-		if(includeSelf)
+		if (includeSelf)
 			allPeers.add(new _Node(this, this.getLocation()));
 
 		Collections.sort(allPeers);
@@ -88,9 +134,8 @@ public class Node extends INode {
 		List<RedirectRange> rangesList = new CircleList<RedirectRange>();
 		for (int i = 0; i < allPeers.size(); i++) {
 			rangesList.add(new RedirectRange(allPeers.get(i).getNode(),
-					allPeers.get(i - 1).getMid(), 
-					allPeers.get(i).getMid(), 
-					allPeers.get(i).getTieCount(), 
+					allPeers.get(i - 1).getMid(), allPeers.get(i).getMid(),
+					allPeers.get(i).getTieCount(),
 					allPeers.get(i).getNode() == this));
 		}
 		// buildRangeLists(rangesList, allPeers, 0);
@@ -150,12 +195,12 @@ public class Node extends INode {
 			this(l);
 			this.node = n;
 		}
-		
-		public void tie(){
+
+		public void tie() {
 			this.ties++;
 		}
-		
-		public int getTieCount(){
+
+		public int getTieCount() {
 			return this.ties;
 		}
 

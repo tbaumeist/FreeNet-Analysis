@@ -2,7 +2,6 @@ package pseudoRouting;
 
 import java.io.File;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class Main {
 					MODEL_FLAG_I), lwArgs, "A");
 			RoutingManager manager = new RoutingManager(routingModel);
 
-			List<Pair<Double, String>> startNodes = getStartNodes(lwArgs);
+			List<Pair<Double, String>> startNodes = Util.getStartNodes(lwArgs, Util.getArgName(PROG_ARGS, START_NODES_FLAG_I));
 			String action = Util.getArg(
 					Util.getArgName(PROG_ARGS, ACTION_FLAG_I), lwArgs, "p")
 					.toUpperCase();
@@ -91,24 +90,5 @@ public class Main {
 			System.out.println(ex.getMessage());
 			System.out.println("!!!Error closing program!!!");
 		}
-	}
-
-	private List<Pair<Double, String>> getStartNodes(List<String> args) throws Exception {
-
-		List<Pair<Double, String>> startNodes = new ArrayList<Pair<Double, String>>();
-		String startNodesArg = Util.getArg(Util.getArgName(PROG_ARGS,
-				START_NODES_FLAG_I), args, "");
-		if (startNodesArg.isEmpty())
-			return null;
-
-		try {
-			String[] startNode = startNodesArg.split(",");
-			for (String s : startNode)
-				startNodes.add(new Pair<Double, String>(Double.parseDouble(s.split("-")[0]), s.split("-")[1]));
-		} catch (Exception e) {
-			throw new Exception("Error parsing list of start nodes.");
-		}
-
-		return startNodes;
 	}
 }

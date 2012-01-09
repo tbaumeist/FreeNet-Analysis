@@ -53,44 +53,58 @@ public class Path implements Comparable<Object> {
 		p.range = this.range;
 		return p;
 	}
-	
-	public double getPathConfidence(){
-		return 1.0/(double)getTieCount();
+
+	public double getPathConfidence() {
+		return 1.0 / (double) getTieCount();
 	}
 
 	public int getTieCount() {
 		return getTieCountToNode(null);
 	}
-	
-	public int getTieCountToNode(Node stopNode){
+
+	public int getTieCountToNode(Node stopNode) {
 		int tie = 0;
 		int size = 0;
-		for (RedirectRange rr : this.ranges){
+		for (RedirectRange rr : this.ranges) {
 			tie += rr.getTieCount();
 			size++;
-			
-			if(rr.getNode().equals(stopNode))
+
+			if (rr.getNode().equals(stopNode))
 				break;
 		}
 		return tie - size + 1;
 	}
-	
-	public Node getProbableStoreNode(){
-		for( int i = 0 ; i < this.htls.size(); i++){
-			if( this.htls.get(i) == 1) // first node with htl of 1
+
+	public Node getProbableStoreNode() {
+		for (int i = 0; i < this.htls.size(); i++) {
+			if (this.htls.get(i) == 1) // first node with htl of 1
 				return this.ranges.get(i).getNode();
 		}
 		// There was no htl of 1 so just take the last node
-		if(!this.htls.isEmpty())
-			return this.ranges.get(this.ranges.size()-1).getNode();
-		
+		if (!this.htls.isEmpty())
+			return this.ranges.get(this.ranges.size() - 1).getNode();
+
 		return null;
 	}
-	
-	public Node getStartNode(){
-		if( this.ranges.isEmpty())
+
+	public Node getStartNode() {
+		if (this.ranges.isEmpty())
 			return null;
 		return this.ranges.get(0).getNode();
+	}
+
+	public boolean equalPath(Path cmp) {
+		if (cmp == null)
+			return false;
+		if (this.getNodes().size() != cmp.getNodes().size())
+			return false;
+		for (int i = 0; i < this.getNodes().size(); i++) {
+			if (!this.getNodes().get(i).getID().equals(
+					cmp.getNodes().get(i).getID())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -109,7 +123,7 @@ public class Path implements Comparable<Object> {
 		String out = "";
 		if (!getSuccess())
 			out += "FAILED ";
-		out += "| 1/" + getTieCount() + " "+1.0/getTieCount()+" | ";
+		out += "| 1/" + getTieCount() + " " + 1.0 / getTieCount() + " | ";
 		out += getRange() + " -> ";
 		for (int i = 0; i < this.ranges.size(); i++) {
 			out += this.ranges.get(i).getNode() + "(Tie="
@@ -119,12 +133,12 @@ public class Path implements Comparable<Object> {
 
 		return out;
 	}
-	
-	public String toStringSimple(){
+
+	public String toStringSimple() {
 		String out = "";
 
 		for (int i = 0; i < this.ranges.size(); i++) {
-			out += this.ranges.get(i).getNode().getID() +", ";
+			out += this.ranges.get(i).getNode().getID() + ", ";
 		}
 
 		return out;

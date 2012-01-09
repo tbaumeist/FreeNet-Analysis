@@ -26,16 +26,22 @@ public class ActualData {
 		return this.location;
 	}
 	
-	public List<String> getNodes(){
+	public List<String> getActualStorageNodes(){
 		return this.nodes;
+	}
+	
+	public String getActualStorageNodesToString(){
+		String s = "";
+		for(String n : this.nodes){
+			s += n + " ";
+		}
+		return s;
 	}
 	
 	@Override
 	public String toString(){
 		String s = this.location + " Org:" + this.originNode + " Word:"+ this.word;
-		for(String n : this.nodes){
-			s += " " + n;
-		}
+		s += " "+ getActualStorageNodesToString();
 		return s;
 	}
 }

@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
+import pseudoRouting.Pair;
 import pseudoRouting.PathSet;
 import pseudoRouting.RoutingManager;
 import pseudoRouting.Topology;
@@ -19,7 +20,8 @@ public class Main {
 	private final int DATA_MAP_FLAG_I = 4;
 	private final int DATA_WORD_FLAG_I = 5;
 	private final int MODEL_FLAG_I = 6;
-	private final int HELP_FLAG_I = 7;
+	private final int START_NODES_FLAG_I = 7;
+	private final int HELP_FLAG_I = 8;
 
 	private final String[][] PROG_ARGS = {
 			{ "-t", "(required) topology file location." },
@@ -29,6 +31,7 @@ public class Main {
 			{ "-dm", "(required) word insertions into freenet data file location." },
 			{ "-dw", "(required) inserted word meta data, insert origin." },
 			{ "-m", "(default = A) prediction model to use. {A}" },
+			{ "-s",	"(default = all nodes) start nodes to run path predictions on. Comma delimited list. format: location-id,location-id,..." },
 			{ "-h", "help command. Prints available arguments." } };
 
 	public static void main(String[] args) {
@@ -66,8 +69,10 @@ public class Main {
 			int htl  =Integer.parseInt( Util.getRequiredArg(Util.getArgName(
 					PROG_ARGS, HTL_FLAG_I), lwArgs));
 			
+			List<Pair<Double, String>> startNodes = Util.getStartNodes(lwArgs, Util.getArgName(PROG_ARGS, START_NODES_FLAG_I));
+			
 			// use insert path only here
-			List<PathSet> pathSets = manager.calculateRoutesFromNodes(htl, null,
+			List<PathSet> pathSets = manager.calculateRoutesFromNodes(htl, startNodes,
 					topology, true);
 			
 			List<ActualData> theData = mapReader.readData(writer);
