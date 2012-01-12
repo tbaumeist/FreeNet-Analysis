@@ -15,23 +15,27 @@ _topCheckInterval=5
 #1 Remote Server IP
 #2 Count
 #3 File
+#4 MaxHTL
 function InsertData
 {
 	#Number of lines in $_wordfile
 	local tL=`awk 'NF!=0 {++c} END {print c}' $_wordfile`
 	for i in `seq $2`
 	do
-		local rnum=$((RANDOM%$tL+1))
-		local word=$(sed -n "$rnum p" $_wordfile)
-		echo "Inserting: $word"
-		local returned=$($_telnetScript "$1" "$_defaultPort" "TMCI> " "PUT:$word" | egrep "URI:|Double:")
-		echo $returned
+		for k in `seq $4`
+		do
+			local rnum=$((RANDOM%$tL+1))
+			local word=$(sed -n "$rnum p" $_wordfile)
+			echo "Inserting: $word, htl=$k"
+			local returned=$($_telnetScript "$1" "$_defaultPort" "TMCI> " "PUTHTL:$k:$word" | egrep "URI:|Double:")
+			echo $returned
 		
-		if [[ -n "$returned" ]]
-		then
-			local doctored=$(echo $returned | sed -e 's/URI//g' -e 's/Double//g' -e 's/\r//g')
-			echo "$word $doctored : $1" >> $3
-		fi
+			if [[ -n "$returned" ]]
+			then
+				local doctored=$(echo $returned | sed -e 's/URI//g' -e 's/Double//g' -e 's/\r//g')
+				echo "$word $doctored : $1" >> $3
+			fi
+		done
 	done
 }
 
@@ -68,15 +72,17 @@ source ./common/parameters.sh
 declare configFile
 declare password
 declare randomCount
+declare htlCount
 declare saveDir
 declare fileName
 
 ParameterScriptWelcome "exp_routePrediction.sh"
 ParameterRandomCount randomCount "How many random words to insert at each node? " $1
-ParameterConfigurationFile configFile $2
-ParameterPassword password $3
-ParameterSaveDirectoryGeneral saveDir $4
-ParameterFileName fileName $_wordInserted $5
+ParameterRandomCount htlCount "Max HTL? " $2
+ParameterConfigurationFile configFile $3
+ParameterPassword password $4
+ParameterSaveDirectoryGeneral saveDir $5
+ParameterFileName fileName $_wordInserted $6
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
@@ -92,7 +98,7 @@ do
 	let "totalWordCount=$totalWordCount + $randomCount"
 
 	saveTopology $totalWordCount
-	InsertData $remoteMachine $randomCount "$saveDir$fileName"
+	InsertData $remoteMachine $randomCount "$saveDir$fileName" $htlCount
 	
 done < "$configFile"
 
