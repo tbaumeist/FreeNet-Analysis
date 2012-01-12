@@ -33,7 +33,7 @@ function InsertData
 			if [[ -n "$returned" ]]
 			then
 				local doctored=$(echo $returned | sed -e 's/URI//g' -e 's/Double//g' -e 's/\r//g')
-				echo "$word $doctored : $1" >> $3
+				echo "$word $doctored : $1 : $4" >> $3
 			fi
 		done
 	done
