@@ -24,6 +24,10 @@ function InsertData
 	do
 		for k in `seq $4`
 		do
+			if [ $k -le 1 ]
+			then
+				break
+			fi
 			local rnum=$((RANDOM%$tL+1))
 			local word=$(sed -n "$rnum p" $_wordfile)
 			echo "Inserting: $word, htl=$k"
