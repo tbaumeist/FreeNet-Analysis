@@ -26,7 +26,7 @@ function InsertData
 		do
 			if [ $k -le 1 ]
 			then
-				break
+				continue
 			fi
 			local rnum=$((RANDOM%$tL+1))
 			local word=$(sed -n "$rnum p" $_wordfile)
