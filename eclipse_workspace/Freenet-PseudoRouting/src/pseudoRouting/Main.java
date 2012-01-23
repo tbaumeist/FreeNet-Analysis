@@ -63,18 +63,22 @@ public class Main {
 
 			// actions
 			if (action.equals("P")) {
-				List<PathSet> pathInsertSets = manager
+				List<PathSet[]> pathInsertSets = manager
 						.calculateRoutesFromNodes(htl, startNodes, topology, true);
 				writer.println("Insert Paths:\n\n");
-				for (PathSet p : pathInsertSets) {
-					writer.println(p);
+				for (PathSet[] pArray : pathInsertSets) {
+					for(PathSet p : pArray){
+						writer.println(p);
+					}
 				}
 
-				List<PathSet> pathRequestSets = manager
+				List<PathSet[]> pathRequestSets = manager
 						.calculateRoutesFromNodes(htl, startNodes, topology, false);
 				writer.println("Request Paths:\n\n");
-				for (PathSet p : pathRequestSets) {
-					writer.println(p);
+				for (PathSet[] pArray : pathRequestSets) {
+					for(PathSet p : pArray){
+						writer.println(p);
+					}
 				}
 			} else if (action.equals("I")) {
 

@@ -33,7 +33,10 @@ public class DataMapFileReader {
 				continue;
 			String key = parsed[1].trim();
 			key = key.split("@")[1].split(",")[0];
-			WordOriginPair w = new WordOriginPair(parsed[0].trim(), key, parsed[3].trim(), parsed[2].trim());
+			String htl = "1"; // default to 1
+			if(parsed.length >= 5)
+				htl = parsed[4].trim();
+			WordOriginPair w = new WordOriginPair(parsed[0].trim(), key, parsed[3].trim(), parsed[2].trim(), htl);
 			if(!words.contains(w))
 				words.add(w);
 			else
@@ -69,7 +72,7 @@ public class DataMapFileReader {
 			WordOriginPair origin = findWordOriginPair(entry.getKey(), words);
 			if(origin == null)
 				continue;
-			datas.add(new ActualData(origin.getOrigin(), origin.getLocation(), origin.getWord(), entry.getValue()));
+			datas.add(new ActualData(origin.getOrigin(), origin.getLocation(), origin.getWord(), origin.getHtl(), entry.getValue()));
 		}
 		
 		return datas;
@@ -84,15 +87,21 @@ public class DataMapFileReader {
 	}
 	
 	class WordOriginPair{
-		private String word, origin, key, location;
-		public WordOriginPair(String w, String k, String o, String l){
+		private String word, origin, key, location, htl;
+		public WordOriginPair(String w, String k, String o, String l, String htl){
 			this.word = w;
 			this.key = k;
 			this.origin = o.replace("192.168.0.1", "");
 			this.location = l;
+			this.htl = htl;
 		}
 		public String getWord(){
 			return this.word;
+		}
+		public int getHtl(){
+			if(this.htl.isEmpty())
+				return 1;
+			return Integer.parseInt(this.htl);
 		}
 		public String getOrigin(){
 			return this.origin;

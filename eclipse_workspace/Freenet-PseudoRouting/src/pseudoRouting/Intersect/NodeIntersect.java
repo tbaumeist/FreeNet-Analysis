@@ -9,7 +9,7 @@ public class NodeIntersect {
 	private Node node;
 	private List<LocationIntersect> locIntersects = new ArrayList<LocationIntersect>();
 
-	public NodeIntersect(PathSet pathInsertSet, List<PathSet> pathRequestSets) {
+	public NodeIntersect(PathSet pathInsertSet, List<PathSet[]> pathRequestSets) {
 		this.node = pathInsertSet.getStartNode();
 
 		for (Path p : pathInsertSet.getPaths()) {

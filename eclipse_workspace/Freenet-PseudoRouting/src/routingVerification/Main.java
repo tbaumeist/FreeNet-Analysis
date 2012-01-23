@@ -26,7 +26,7 @@ public class Main {
 	private final String[][] PROG_ARGS = {
 			{ "-t", "(required) topology file location." },
 			{ "-o", "(required) output file." },
-			{ "-htl", "(required) Hops to live count." },
+			{ "-htl", "(required) Max hops to live count." },
 			{ "-d", "(Optional, required for full path analysis) actual insert paths data file location." },
 			{ "-dm", "(required) word insertions into freenet data file location." },
 			{ "-dw", "(required) inserted word meta data, insert origin." },
@@ -72,7 +72,7 @@ public class Main {
 			List<Pair<Double, String>> startNodes = Util.getStartNodes(lwArgs, Util.getArgName(PROG_ARGS, START_NODES_FLAG_I));
 			
 			// use insert path only here
-			List<PathSet> pathSets = manager.calculateRoutesFromNodes(htl, startNodes,
+			List<PathSet[]> pathSets = manager.calculateRoutesFromNodes(htl, startNodes,
 					topology, true);
 			
 			List<ActualData> theData = mapReader.readData(writer);
@@ -87,8 +87,10 @@ public class Main {
 				File predictDataFile = new File(outputFile.getAbsoluteFile() + ".pred");
 				PrintStream predictWriter = new PrintStream(predictDataFile);
 				predictWriter.println(topology);
-				for(PathSet s : pathSets )
-					predictWriter.println(s);
+				for(PathSet[] sArray : pathSets ){
+					for(PathSet s : sArray)
+						predictWriter.println(s);
+				}
 				// only have actual stored nodes
 				//writer.println(pathSets.get(0));
 				PathComparer comp = new PathComparer();
@@ -96,16 +98,16 @@ public class Main {
 				return;
 			}
 			
-			DataFileReader reader = new DataFileReader(dataFileName);
+			//DataFileReader reader = new DataFileReader(dataFileName);
 			// // End Arguments ////
 			
-			List<ActualPathSet> actPathSets = reader.readData(theData);
+			//List<ActualPathSet> actPathSets = reader.readData(theData);
 
-			writer.println("Using network topology:");
-			writer.println(topology.toString());
+			//writer.println("Using network topology:");
+			//writer.println(topology.toString());
 
-			PathComparer comp = new PathComparer();
-			comp.compare(writer, actPathSets, pathSets);
+			//PathComparer comp = new PathComparer();
+			//comp.compare(writer, actPathSets, pathSets);
 
 		} catch (Exception ex) {
 			System.out.println(Util.toStringArgs(PROG_ARGS));

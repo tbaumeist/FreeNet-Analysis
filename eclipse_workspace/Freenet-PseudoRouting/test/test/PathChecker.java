@@ -32,7 +32,7 @@ public class PathChecker {
 
 			Topology topology = new Topology(topPath);
 			RoutingManager manager = new RoutingManager("A");
-			List<PathSet> pathSets = manager.calculateRoutesFromNodes(htl,
+			List<PathSet[]> pathSets = manager.calculateRoutesFromNodes(htl,
 					null, topology, true);
 			
 			int total = 0;
@@ -45,7 +45,7 @@ public class PathChecker {
 					Path p = single.routeInsertPath(topology, startNode, step, htl);
 					if(p == null)
 						continue;
-					PathSet ps = PathSet.findPathSet(n.getID(), pathSets);
+					PathSet ps = PathSet.findPathSet(n.getID(), htl, pathSets);
 					if(ps == null)
 						continue;
 					List<Path> pLst = ps.findPaths(step);

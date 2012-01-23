@@ -17,9 +17,9 @@ public class RoutingManager {
 					"invalid routing model. Unknown network routing model given.");
 	}
 
-	public List<PathSet> calculateRoutesFromNodes(int htl, List<Pair<Double, String>> startNodes,
+	public List<PathSet[]> calculateRoutesFromNodes(int htl, List<Pair<Double, String>> startNodes,
 			Topology top, boolean isInsertPath) throws Exception {
-		List<PathSet> pathSets = new ArrayList<PathSet>();
+		List<PathSet[]> pathSets = new ArrayList<PathSet[]>();
 		startNodes = checkStartNodes(startNodes, top);
 
 		for (Pair<Double, String> startNode : startNodes) {
@@ -34,13 +34,16 @@ public class RoutingManager {
 		startNodes = checkStartNodes(startNodes, top);
 		List<NodeIntersect> nodeIntersects = new ArrayList<NodeIntersect>();
 
-		List<PathSet> pathInsertSets = calculateRoutesFromNodes(htl, startNodes,
+		List<PathSet[]> pathInsertSets = calculateRoutesFromNodes(htl, startNodes,
 				top, true);
-		List<PathSet> pathRequestSets = calculateRoutesFromNodes(htl, startNodes,
+		List<PathSet[]> pathRequestSets = calculateRoutesFromNodes(htl, startNodes,
 				top, false);
 		
-		for( PathSet ps : pathInsertSets ){
-			nodeIntersects.add(new NodeIntersect(ps, pathRequestSets));
+		for( PathSet[] psArray : pathInsertSets ){
+			for(PathSet ps : psArray)
+			{
+				nodeIntersects.add(new NodeIntersect(ps, pathRequestSets));
+			}
 		}
 
 		return nodeIntersects;
@@ -55,11 +58,16 @@ public class RoutingManager {
 		return startNodes;
 	}
 
-	private PathSet calculateRoutesFromNode(int htl, double startNode, String startNodeId, Topology top,
+	private PathSet[] calculateRoutesFromNode(int htl, double startNode, String startNodeId, Topology top,
 			boolean isInsertPath) throws Exception {
-		PathSet pathSet = new PathSet(top.findNode(startNode, startNodeId));
-		pathSet.addPaths(this.networkRouter.findPaths(htl, top, startNode, startNodeId,
+		PathSet[] pathSetByHTL = new PathSet[htl];
+		for(int i= 0; i < htl; i++)
+		{
+			PathSet pathSet = new PathSet(top.findNode(startNode, startNodeId), i+1);
+			pathSet.addPaths(this.networkRouter.findPaths(i+1, top, startNode, startNodeId,
 				isInsertPath));
-		return pathSet;
+			pathSetByHTL[i] = pathSet;
+		}
+		return pathSetByHTL;
 	}
 }

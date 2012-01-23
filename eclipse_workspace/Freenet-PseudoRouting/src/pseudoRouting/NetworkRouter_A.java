@@ -6,56 +6,39 @@ import java.util.List;
 
 public class NetworkRouter_A extends NetworkRouter {
 
-	private int maxHopsToLive = 5;
-	private final int insertResetHop = 4;
+	private int maxHopsToLive = 0;
+	private final int insertResetHop = 3;
 
 	public NetworkRouter_A() {
 
 	}
 
 	@Override
-	public List<Path> findPaths(int htl, Topology top, double startNode, String startNodeId,
-			boolean isInsertPath) throws Exception {
-		this.maxHopsToLive = htl + 1; // add one to htl because of how the model uses htl
-		
+	public List<Path> findPaths(int htl, Topology top, double startNode,
+			String startNodeId, boolean isInsertPath) throws Exception {
+		this.maxHopsToLive = htl;
+
 		Node start = top.findNode(startNode, startNodeId);
 		if (start == null)
 			throw new Exception("Unable to find specified start node");
-		
+
 		List<Path> paths = new ArrayList<Path>();
 		List<Node> visited = new ArrayList<Node>();
 		Path currentPath = new Path();
 		RedirectRange startRange = new RedirectRange(start, 0, 0);
 		int resetHop = -1;
 
-		if (isInsertPath) {
-			visited.add(start);
-			currentPath.addNodeAsRR(startRange, maxHopsToLive);
-
-			resetHop = this.maxHopsToLive - this.insertResetHop;
-
-			_findPaths(paths, currentPath, visited, startRange,
-					maxHopsToLive - 1, resetHop);
-
-			currentPath.removeLastNode();
-			assert (currentPath.getNodes().isEmpty());
-		}
-
-		// /////////////////////////////////////////////////////////
-		// now at max htl -1
-		visited = new ArrayList<Node>();
+		if (isInsertPath) // reset hop only used for inserts
+			resetHop = this.maxHopsToLive - this.insertResetHop ;
 
 		visited.add(start);
-		currentPath = new Path();
-		currentPath.addNodeAsRR(startRange, maxHopsToLive - 1);
+		currentPath.addNodeAsRR(startRange, maxHopsToLive);
 
-		_findPaths(paths, currentPath, visited, startRange, maxHopsToLive - 2,
+		_findPaths(paths, currentPath, visited, startRange, maxHopsToLive - 1,
 				resetHop);
 
 		currentPath.removeLastNode();
 		assert (currentPath.getNodes().isEmpty());
-
-		Collections.sort(paths);
 
 		return paths;
 	}
@@ -66,8 +49,9 @@ public class NetworkRouter_A extends NetworkRouter {
 
 		currentPath.setRange(range);
 		// stop when htl expires
-		// stop when the next closest node is the same as the previous node (self route)
-		if (shouldStop(hopsToLive) || range.isSelfRoute() ) {
+		// stop when the next closest node is the same as the previous node
+		// (self route)
+		if (shouldStop(hopsToLive) || range.isSelfRoute()) {
 			paths.add(currentPath.clone());
 			return true;
 		}
@@ -78,12 +62,13 @@ public class NetworkRouter_A extends NetworkRouter {
 			visited.add(range.getNode());
 		}
 
-		List<RedirectRange> allRanges = getRanges(range, visited, hopsToLive < resetHop);
+		List<RedirectRange> allRanges = getRanges(range, visited,
+				hopsToLive < resetHop);
 
 		int pathsFound = 0;
 
 		for (RedirectRange rr : allRanges) {
-			if (range.overlaps(rr)) {				
+			if (range.overlaps(rr)) {
 				int hopMod = 0;
 				if (rr.getIsRetry()) {
 					hopMod++;
@@ -93,7 +78,7 @@ public class NetworkRouter_A extends NetworkRouter {
 				currentPath.addNodeAsRR(rr, hopsToLive);
 				if (_findPaths(paths, currentPath, visited, rr, hopsToLive - 1
 						+ hopMod, resetHop)) {
-					
+
 					removeFromEndUpTo(visited, rr.getNode());
 				}
 				currentPath.removeLastNode();
@@ -110,12 +95,12 @@ public class NetworkRouter_A extends NetworkRouter {
 
 		return pathsFound > 0;
 	}
-	
-	private void removeFromEndUpTo(List<Node> visited, Node n){
-		for(int i = visited.size() -1; i >= 0; i--){
+
+	private void removeFromEndUpTo(List<Node> visited, Node n) {
+		for (int i = visited.size() - 1; i >= 0; i--) {
 			boolean found = visited.get(i).equals(n);
 			visited.remove(i);
-			if(found)
+			if (found)
 				return;
 		}
 	}
@@ -123,7 +108,8 @@ public class NetworkRouter_A extends NetworkRouter {
 	private List<RedirectRange> getRangesSimple(RedirectRange range,
 			List<Node> visited, boolean includeSelf) {
 
-		List<RedirectRange> ranges = range.getNode().getPathsOut(visited, includeSelf);
+		List<RedirectRange> ranges = range.getNode().getPathsOut(visited,
+				includeSelf);
 		ranges = splitRanges(range, ranges);
 
 		return ranges;
@@ -132,12 +118,14 @@ public class NetworkRouter_A extends NetworkRouter {
 	private List<RedirectRange> getRanges(RedirectRange range,
 			List<Node> visited, boolean includeSelf) {
 
-		List<RedirectRange> ranges = getRangesSimple(range, visited, includeSelf);
+		List<RedirectRange> ranges = getRangesSimple(range, visited,
+				includeSelf);
 		List<Node> visitedOnlyMe = new ArrayList<Node>();
 		if (visited.size() > 1) // prev node
 			visitedOnlyMe.add(visited.get(visited.size() - 2));
 		visitedOnlyMe.add(range.getNode()); // currnet node
-		List<RedirectRange> allRanges = getRangesSimple(range, visitedOnlyMe, includeSelf);
+		List<RedirectRange> allRanges = getRangesSimple(range, visitedOnlyMe,
+				includeSelf);
 
 		for (RedirectRange rr : allRanges) {
 			if (visited.contains(rr.getNode()))

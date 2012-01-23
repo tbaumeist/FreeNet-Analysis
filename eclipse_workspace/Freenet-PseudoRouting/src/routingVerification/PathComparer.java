@@ -19,17 +19,18 @@ public class PathComparer {
 	private int startsAtFour = 0;
 	private int storageLocation = 0;
 	private int storageLocationActual = 0;
-	private int totalGuesses = 0;
+	private double totalStorageNodes = 0;
 
-	public void compareStorageNodes(PrintStream writer, PrintStream fullData, Topology topology,
-			List<ActualData> theData, List<PathSet> pathSets) {
-		
+	public void compareStorageNodes(PrintStream writer, PrintStream fullData,
+			Topology topology, List<ActualData> theData,
+			List<PathSet[]> pathSets) {
+
 		printFullDataHeader(fullData);
-		
+
 		for (ActualData data : theData) {
-			this.total++;
 			try {
-				PathSet ps = PathSet.findPathSet(data.getOriginNode(), pathSets);
+				PathSet ps = PathSet.findPathSet(data.getOriginNode(), data
+						.getHtl(), pathSets);
 				if (ps == null)
 					continue;
 
@@ -37,29 +38,34 @@ public class PathComparer {
 						.getLocation()));
 				int foundCnt = 0;
 				double guessConvidence = 0.0;
-				String storageNodes ="";
-				for(Path p : paths){
-					guessConvidence += p.getPathConfidence() / (double)paths.size();
-					storageNodes+= p.getProbableStoreNode().getID()+" ";
-					this.totalGuesses++;
-					if(data.getActualStorageNodes().contains(p.getProbableStoreNode().getID()))
-					{
+				String storageNodes = "";
+				for (Path p : paths) {
+					guessConvidence += p.getPathConfidence()
+							/ (double) paths.size();
+					storageNodes += p.getProbableStoreNode().getID() + " ";
+					this.total++;
+					if (data.getActualStorageNodes().contains(
+							p.getProbableStoreNode().getID())) {
 						this.storageLocationActual++;
 						foundCnt++;
 					}
+					// should only ever be one path per inserted data
+					printFullData(fullData, foundCnt, data, guessConvidence,
+							storageNodes, p.toStringSimple());
 				}
-				printFullData(fullData, foundCnt, data, guessConvidence, storageNodes);
-				
-				if(foundCnt > 0)
-					this.storageLocation++;
+				this.totalStorageNodes += data.getActualStorageNodes().size();
+
 			} catch (Exception e) {
 
 			}
 		}
-		writer.println("Total inserts: "+ this.total);
-		writer.println("Total correct predictions: "+ this.storageLocation +" "+ ((double)this.storageLocation/(double)this.total)*100.0+"%");
-		writer.println("Total guesses: "+ this.totalGuesses);
-		writer.println("Total correct predictions (each guess): "+ this.storageLocationActual +" "+ ((double)this.storageLocationActual/(double)this.totalGuesses)*100.0);
+		writer.println("Total inserts: " + this.total);
+		writer.println("Total correct predictions: "
+				+ this.storageLocationActual + " "
+				+ ((double) this.storageLocationActual / (double) this.total)
+				* 100.0 + "%");
+		writer.println("Average # actual storage nodes per node: "
+				+ ((double) this.totalStorageNodes / (double) this.total));
 	}
 
 	public void compare(PrintStream writer, List<ActualPathSet> actPathSets,
@@ -140,15 +146,25 @@ public class PathComparer {
 				+ this.storageLocation + "/" + this.total + " ("
 				+ this.storageLocation / (double) this.total + ")");
 	}
-	private void printFullDataHeader(PrintStream writer){
-		writer.println("Word, Location, Insert Node, Guessed Storage Nodes, Confidence, Hit, Hit Count, Actual Storage Nodes");
+
+	private void printFullDataHeader(PrintStream writer) {
+		writer
+				.println("Word, Location, Insert Node, Guessed Storage Nodes, Confidence, Hit, Hit Count, Actual Storage Nodes, Actual Storage Node Count, HTL, Guessed Path");
 	}
-	private void printFullData(PrintStream writer, int foundCnt, ActualData data, double guessConvidence,
-			String storageNodes){
-		
-		// word, location, insert node, guessed storage nodes, confidence, hit, hit count, actual storage nodes
-		writer.println(data.getWord()+","+data.getLocation()+","+data.getOriginNode()+","+storageNodes
-				+","+guessConvidence+","+(foundCnt > 0?"TRUE":"FALSE")+","+foundCnt+","+data.getActualStorageNodesToString());
+
+	private void printFullData(PrintStream writer, int foundCnt,
+			ActualData data, double guessConvidence, String storageNodes,
+			String guessPath) {
+
+		// word, location, insert node, guessed storage nodes, confidence, hit,
+		// hit count, actual storage nodes
+		writer.println(data.getWord() + "," + data.getLocation() + ","
+				+ data.getOriginNode() + "," + storageNodes + ","
+				+ guessConvidence + "," + (foundCnt > 0 ? "TRUE" : "FALSE")
+				+ "," + foundCnt + "," + data.getActualStorageNodesToString()
+				+ "," + data.getActualStorageNodes().size() + ","
+				+ data.getHtl() + ","
+				+ guessPath.replace(",", "->").replace(" ", ""));
 	}
 
 	private void compareSimplePaths(PrintStream writer,
