@@ -39,10 +39,10 @@ declare password
 declare saveDir
 declare fileName
 
-defFileName="debugLogFiles $(date --rfc-3339=seconds).dat"
+defFileName="debugFiles $(date --rfc-3339=seconds).dat"
 defFileName=$(echo $defFileName | sed -e 's/ /_/g' -e 's/:/\-/g')
 
-ParameterScriptWelcome "debugLogFiles.sh"
+ParameterScriptWelcome "collectDebugFiles.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
 ParameterSaveDirectoryTopology saveDir $3
