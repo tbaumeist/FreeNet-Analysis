@@ -115,20 +115,20 @@ function CheckRemoteData
 # parameters
 # 1 Configuration file
 # 2 Password
+# 3 Control Options
 
 source ./common/parameters.sh
 
 declare configFile
 declare password
+declare control
 
 ParameterScriptWelcome "update.sh"
 ParameterConfigurationFile configFile $1
 ParameterPassword password $2
+ParameterRandomQuestion control "Reset Nodes (r)/ No reset (n)? [default is n]:" "n" $3
 ParameterScriptWelcomeEnd
 #===================================================================================================
-
-echo -n "Reset Nodes (r)/ No reset (n) [default is n]:"
-read control 
 
 if [ "$control" = "r" ]	
 then

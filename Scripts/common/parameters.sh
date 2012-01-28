@@ -2,6 +2,7 @@
 
 # default values
 _defaultConfigFile=./config/remoteMachines.dat
+_defaultConfigFolder=./config/configs/
 _defaultSaveDirLogs=~/Desktop/Freenet_Data/Node_Logs/
 _defaultSaveDirTopology=~/Desktop/Freenet_Data/Network_Topology/
 _defaultSaveDirGeneral=~/Desktop/Freenet_Data/
@@ -22,7 +23,7 @@ function ParameterScriptWelcomeEnd
 
 #Parameters
 #1 Variable to write to
-#3 Given value
+#2 Given value
 function ParameterConfigurationFile
 {
 	local _variable=$1
@@ -39,6 +40,29 @@ function ParameterConfigurationFile
 	fi	
 
 	echo -e "\tConfiguration File=$value"
+	eval $_variable="'$value'"
+}
+
+
+#Parameters
+#1 Variable to write to
+#2 Given value
+function ParameterConfigurationFolder
+{
+	local _variable=$1
+	local givenValue=$2
+	local value
+
+	if [[ -n "$givenValue" ]]
+	then
+		# config file was given
+		value="$givenValue"
+	else
+		# use default config file
+		value="$_defaultConfigFolder"
+	fi	
+
+	echo -e "\tConfiguration Folder=$value"
 	eval $_variable="'$value'"
 }
 
@@ -183,6 +207,42 @@ function ParameterFileName
 	fi	
 
 	echo -e "\tFile name=$value"
+	eval $_variable="'$value'"
+}
+
+#Parameters
+#1 Variable to write to
+#2 Question
+#3 Default Value
+#4 Given value
+function ParameterRandomQuestion
+{
+	local _variable=$1
+	local question=$2
+	local defaultValue=$3
+	local givenValue=$4
+	local value
+
+	if [[ -n "$givenValue" ]]
+	then
+		# config file was given
+		value="$givenValue"
+	else
+		# ask question
+		echo -n "$question"
+		read value
+		echo ""
+		if [[ -n "$value" ]]
+		then
+			#use input value
+			echo -n "" #bogus command
+		else
+			# use default config file
+			value="$defaultValue"
+		fi
+	fi	
+
+	echo -e "\t$question=$value"
 	eval $_variable="'$value'"
 }
 
