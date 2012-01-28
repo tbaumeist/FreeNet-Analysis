@@ -64,7 +64,7 @@ public class RoutingManager {
 		for(int i= 0; i < htl; i++)
 		{
 			PathSet pathSet = new PathSet(top.findNode(startNode, startNodeId), i+1);
-			pathSet.addPaths(this.networkRouter.findPaths(i+1, top, startNode, startNodeId,
+			pathSet.addPaths(this.networkRouter.findPaths(htl, i+1, top, startNode, startNodeId,
 				isInsertPath));
 			pathSetByHTL[i] = pathSet;
 		}

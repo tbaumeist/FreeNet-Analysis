@@ -14,9 +14,9 @@ public class NetworkRouter_A extends NetworkRouter {
 	}
 
 	@Override
-	public List<Path> findPaths(int htl, Topology top, double startNode,
+	public List<Path> findPaths(int maxHTL, int htl, Topology top, double startNode,
 			String startNodeId, boolean isInsertPath) throws Exception {
-		this.maxHopsToLive = htl;
+		this.maxHopsToLive = maxHTL;
 
 		Node start = top.findNode(startNode, startNodeId);
 		if (start == null)
@@ -32,9 +32,9 @@ public class NetworkRouter_A extends NetworkRouter {
 			resetHop = this.maxHopsToLive - this.insertResetHop ;
 
 		visited.add(start);
-		currentPath.addNodeAsRR(startRange, maxHopsToLive);
+		currentPath.addNodeAsRR(startRange, htl);
 
-		_findPaths(paths, currentPath, visited, startRange, maxHopsToLive - 1,
+		_findPaths(paths, currentPath, visited, startRange, htl - 1,
 				resetHop);
 
 		currentPath.removeLastNode();
@@ -62,15 +62,16 @@ public class NetworkRouter_A extends NetworkRouter {
 			visited.add(range.getNode());
 		}
 
-		List<RedirectRange> allRanges = getRanges(range, visited,
-				hopsToLive < resetHop);
+		//List<RedirectRange> allRanges = getRanges(range, visited,
+		//		hopsToLive < resetHop);
+		List<RedirectRange> allRanges = getRanges(range, visited, false);
 
 		int pathsFound = 0;
 
 		for (RedirectRange rr : allRanges) {
 			if (range.overlaps(rr)) {
 				int hopMod = 0;
-				if (rr.getIsRetry()) {
+				if (rr.getIsRetry() && hopsToLive <= resetHop) {
 					hopMod++;
 				}
 				pathsFound++;
@@ -147,7 +148,7 @@ public class NetworkRouter_A extends NetworkRouter {
 
 	@Override
 	protected boolean shouldStop(int hopsToLive) {
-		if (hopsToLive < 0)
+		if (hopsToLive <= 0)
 			return true;
 
 		return false;

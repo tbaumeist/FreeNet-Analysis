@@ -73,7 +73,7 @@ public class Main {
 				}
 
 				List<PathSet[]> pathRequestSets = manager
-						.calculateRoutesFromNodes(htl, startNodes, topology, false);
+						.calculateRoutesFromNodes( htl, startNodes, topology, false);
 				writer.println("Request Paths:\n\n");
 				for (PathSet[] pArray : pathRequestSets) {
 					for(PathSet p : pArray){
