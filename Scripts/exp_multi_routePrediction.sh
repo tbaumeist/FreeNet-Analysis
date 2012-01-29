@@ -20,6 +20,8 @@ function reboot
 		$_sshScript $remoteMachine $remoteUser $2 "sudo reboot" &
 	done < "$1"
 
+	sleep 30
+
 	# now we wait
 	while true; do
 		local isUpYet
