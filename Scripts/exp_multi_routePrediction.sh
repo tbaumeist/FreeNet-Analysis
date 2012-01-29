@@ -17,7 +17,8 @@ function reboot
 	do
 		remoteMachine=$(echo $machine | cut -d',' -f1)
 		remoteUser=$(echo $machine | cut -d',' -f3)
-		$_sshScript $remoteMachine $remoteUser $2 "sudo reboot" &
+		$_sshScript $remoteMachine $remoteUser $2 "sudo reboot"
+		sleep 10
 	done < "$1"
 
 	sleep 30
