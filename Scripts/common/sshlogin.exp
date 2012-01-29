@@ -10,7 +10,11 @@ proc login {password} {
 		"> " { }
 		"$ " { }
 		"assword: " {
-			send_user "\n*ERROR ** Incorrect password ********\n"
+			send_user "\n*ERROR ** Incorrect password to ssh ********\n"
+			exit			
+		}
+		"*password for*:" {
+			send_user "\n*ERROR ** Incorrect password to sudo ********\n"
 			exit			
 		}
 	}
@@ -59,6 +63,9 @@ send "$cmd\n"
 expect {
 	"> " {}
 	"$ " { }
+	"*password for*:" { 
+		login $pass
+	}
 	default {}
 }
 log_user 0

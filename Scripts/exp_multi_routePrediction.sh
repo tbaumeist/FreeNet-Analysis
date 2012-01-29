@@ -6,7 +6,20 @@ _seedFile=seednodes.fref
 _updateScript=./update.sh
 _runScript=./runRemote.sh
 _expScript=./exp_routePrediction.sh
+_sshScript=./common/sshlogin.exp
 
+#Parameters
+# 1 config file
+# 2 password
+function reboot
+{
+	while read machine
+	do
+		remoteMachine=$(echo $machine | cut -d',' -f1)
+		remoteUser=$(echo $machine | cut -d',' -f3)
+		$_sshScript $remoteMachine $remoteUser $2 "sudo reboot"
+	done < "$1"
+}
 
 #Parameters
 #1 config file
@@ -17,14 +30,20 @@ function setup
 	echo "Setting up using $1"
 	echo "Updating seed file $3"
 
+	#reboot machines for a fresh start
+	reboot "$1" "$2"
+
+	#wait 5 minutes for everyone to start
+	sleep 300
+
 	#shut down
-	$_runScript $1 $2 "x"
+	$_runScript "$1" "$2" "x"
 	
 	# run update with new config file to distribute ini files
-	$_updateScript $1 $2 "r"
+	$_updateScript "$1" "$2" "r"
 
 	# start the seed nodes for updated node ref
-	$_runScript $1 $2 "seed"
+	$_runScript "$1" "$2" "seed"
 
 	#wait 5 minutes for everyone to start
 	sleep 300
@@ -48,13 +67,13 @@ function setup
 	done < "$1"
 
 	#shut down
-	$_runScript $1 $2 "x"
+	$_runScript "$1" "$2" "x"
 
 	# run update with new seed node ref file
-	$_updateScript $1 $2 "r"
+	$_updateScript "$1" "$2" "r"
 
 	# start the seed nodes for updated node ref
-	$_runScript $1 $2 "s"
+	$_runScript "$1" "$2" "s"
 
 	#wait 5 minutes for everyone to start
 	sleep 300
@@ -88,13 +107,14 @@ ParameterFileName fileName $_wordInserted $7
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
-for file in $configFolder*
+for file in $configFolder*.dat
 do
 	for i in `seq $repeatCount`
 	do
 		configName=$(basename $file | cut -d'.' -f1)
 		outputFolder="$saveDir$configName/$i/"
-	
+		echo "Setting up output folder $outputFolder"	
+		
 		setup "$file" "$password" "$_generalImageFolder$_seedFile"
 
 		$_expScript $randomCount $htlCount "$file" "$password" "$outputFolder" "$fileName"
