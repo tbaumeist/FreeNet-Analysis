@@ -26,6 +26,7 @@ function reboot
 		checkAllUp $1 $2 isUpYet
 		if [[ -n "$isUpYet" ]]
 		then
+			echo "waiting 60 sec..."
 			sleep 60
 		else
 			break
@@ -47,14 +48,14 @@ function checkAllUp
 		remoteMachine=$(echo $machine | cut -d',' -f1)
 		remoteUser=$(echo $machine | cut -d',' -f3)
 		echo -n "CHecking if $remoteMachine is up ... "
-		result=$(echo "test" | nc $remoteMachine 22)
-		echo "$result"
+		result=$(echo "test" | read | nc -w 10 $remoteMachine 22)
 		if [ -z "$result" ] # is empty
 		then
-			echo "$remoteMachine has not started yet!!!!!"
-			echo "waiting"
+			echo "Down"
 			value="wait"
 			break
+		else
+			echo "Running"
 		fi
 	done < "$1"
 	eval $_variable="'$value'"
