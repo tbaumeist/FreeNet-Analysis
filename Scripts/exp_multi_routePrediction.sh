@@ -19,6 +19,43 @@ function reboot
 		remoteUser=$(echo $machine | cut -d',' -f3)
 		$_sshScript $remoteMachine $remoteUser $2 "sudo reboot" &
 	done < "$1"
+
+	# now we wait
+	while true; do
+		local isUpYet
+		checkAllUp $1 $2 isUpYet
+		if [[ -n "$isUpYet" ]]
+		then
+			sleep 60
+		else
+			break
+		fi
+	done
+}
+
+#Parameters
+# 1 config file
+# 2 password
+# 3 return param
+function checkAllUp
+{
+	local _variable=$3
+	local value
+	value=""
+	while read machine
+	do
+		remoteMachine=$(echo $machine | cut -d',' -f1)
+		remoteUser=$(echo $machine | cut -d',' -f3)
+		result=$($_sshScript $remoteMachine $remoteUser $2 | grep "No route to host")
+		if [[ -n "$result" ]]
+		then
+			echo "$remoteMachine has not started yet!!!!!"
+			echo "waiting"
+			value="wait"
+			break
+		fi
+	done < "$1"
+	eval $_variable="'$value'"
 }
 
 #Parameters
@@ -32,9 +69,6 @@ function setup
 
 	#reboot machines for a fresh start
 	reboot "$1" "$2"
-
-	#wait 15 minutes for everyone to start
-	sleep 900
 
 	#shut down
 	$_runScript "$1" "$2" "x"
