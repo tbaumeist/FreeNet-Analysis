@@ -46,8 +46,10 @@ function checkAllUp
 	do
 		remoteMachine=$(echo $machine | cut -d',' -f1)
 		remoteUser=$(echo $machine | cut -d',' -f3)
-		result=$($_sshScript $remoteMachine $remoteUser $2 | grep "No route to host")
-		if [[ -n "$result" ]]
+		echo -n "CHecking if $remoteMachine is up ... "
+		result=$(echo "test" | nc $remoteMachine 22)
+		echo "$result"
+		if [ -z "$result" ] # is empty
 		then
 			echo "$remoteMachine has not started yet!!!!!"
 			echo "waiting"
@@ -57,6 +59,7 @@ function checkAllUp
 	done < "$1"
 	eval $_variable="'$value'"
 }
+
 
 #Parameters
 #1 config file
