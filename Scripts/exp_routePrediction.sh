@@ -8,6 +8,7 @@ _wordInserted="_randomFreenetWords.dat"
 _telnetScript=./common/telnet.exp
 _mapDataScript=./mapFreenetData.sh
 _netTopology=./networkTopology.sh
+_collectDebugLogScript=./collectDebugFiles.sh
 _topCheckInterval=5
 
 
@@ -107,5 +108,6 @@ do
 done < "$configFile"
 
 $_mapDataScript "$configFile" "$password" "$saveDir"
+$_collectDebugLogScript "$configFile" "$password" "$saveDir"
 
 echo "********** Insert Complete ***************"
