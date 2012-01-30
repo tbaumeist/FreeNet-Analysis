@@ -78,7 +78,7 @@ function setup
 	reboot "$1" "$2"
 
 	#shut down
-	$_runScript "$1" "$2" "x"
+	#$_runScript "$1" "$2" "x"
 	
 	# run update with new config file to distribute ini files
 	$_updateScript "$1" "$2" "r"
@@ -159,6 +159,9 @@ do
 		setup "$file" "$password" "$_generalImageFolder$_seedFile"
 
 		$_expScript $randomCount $htlCount "$file" "$password" "$outputFolder" "$fileName"
+
+		#shut down
+		$_runScript "$file" "$password" "x"
 	done
 done
 
