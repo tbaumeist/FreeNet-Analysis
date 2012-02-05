@@ -81,10 +81,10 @@ public class Main {
 					PROG_ARGS, DATA_FLAG_I), lwArgs, "");
 			
 			if(dataFileName.isEmpty()){
-				File fullDataFile = new File(outputFile.getAbsoluteFile() + ".fulldat");
+				File fullDataFile = new File(outputFile.getAbsoluteFile() + ".csv");
 				PrintStream fullWriter = new PrintStream(fullDataFile);
 				
-				File predictDataFile = new File(outputFile.getAbsoluteFile() + ".pred");
+				File predictDataFile = new File(outputFile.getAbsoluteFile() + ".predictions");
 				PrintStream predictWriter = new PrintStream(predictDataFile);
 				predictWriter.println(topology);
 				for(PathSet[] sArray : pathSets ){
