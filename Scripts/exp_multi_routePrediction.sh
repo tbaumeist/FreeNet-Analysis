@@ -50,7 +50,7 @@ function checkAllUp
 	do
 		remoteMachine=$(echo $machine | cut -d',' -f1)
 		remoteUser=$(echo $machine | cut -d',' -f3)
-		echo -n "CHecking if $remoteMachine is up ... "
+		echo -n "Checking if $remoteMachine is up ... "
 		result=$(sleep 2 | nc -w 10 $remoteMachine 22)
 		if [ -z "$result" ] # is empty
 		then

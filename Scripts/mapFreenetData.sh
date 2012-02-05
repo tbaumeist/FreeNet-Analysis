@@ -91,7 +91,7 @@ declare password
 declare saveDir
 declare fileName
 
-defFileName="map-randomwords $(date --rfc-3339=seconds).dat"
+defFileName="map-randomwords $(date --rfc-3339=seconds).map"
 defFileName=$(echo $defFileName | sed -e 's/ /_/g' -e 's/:/\-/g')
 
 ParameterScriptWelcome "mapFreenetData.sh"
