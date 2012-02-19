@@ -107,7 +107,7 @@ workDir="/home/user/FreeNet-Analysis/eclipse_workspace/Freenet-RoutePrediction/b
 frpMain="frp.main"
 
 echo "Node #,Peer #,Max HTL,HTL,Total Inserts #,Complete Hit #,Partial Hit #" > $output
-echo "Node #,Peer #,Max HTL,Attack Group Size,Min Targets,Avg Targets,Max Targets,Min Attack Set,Max Attack Set,Compute Time(ms)" > $outputRTI
+echo "Node #,Peer #,Max HTL,Attack Group Size,Total Node Count,Min Targets,Avg Targets,Max Targets,Min Attack Set,Max Attack Set,Compute Time(ms)" > $outputRTI
 
 traverse $PWD 4 5 6
 
