@@ -59,16 +59,20 @@ function process
 		echo "" > "$1/$comm"
 	fi
 
-	workDir="/home/user/FreeNet-Analysis/eclipse_workspace/Freenet-RoutePrediction/bin"
+	echo "java -cp $workDir $frpMain.fileConverters.GraphFileConverter -i $1/$top"
+	java -cp "$workDir" $frpMain.fileConverters.GraphFileConverter -i "$1/$top"
+	echo ""
 
-	echo "java -cp $workDir frp.fileConverters.GraphFileConverter -i $1/$top"
-	java -cp "$workDir" frp.fileConverters.GraphFileConverter -i "$1/$top"
+	echo "java -cp $workDir $frpMain.predModelEval.ModelEvaluator -o $1/results.out -t $1/$top -map $1/$mapRW -words $1/$randWords -htl $htl -comm $1/$comm"
+	java -cp "$workDir" $frpMain.predModelEval.ModelEvaluator -o "$1/results.out" -t "$1/$top" -map "$1/$mapRW" -words "$1/$randWords" -htl $htl -comm $1/$comm
+	echo ""
 
-	echo "java -cp $workDir frp.predModelEval.ModelEvaluator -o $1/results.out -t $1/$top -map $1/$mapRW -words $1/$randWords -htl $htl -comm $1/$comm"
-	java -cp "$workDir" frp.predModelEval.ModelEvaluator -o "$1/results.out" -t "$1/$top" -map "$1/$mapRW" -words "$1/$randWords" -htl $htl -comm $1/$comm
+	echo "java -cp $workDir $frpMain.rtiAnalysis.RTIAnalysis -o $1/rti-analysis.csv -t $1/$top -htl $htl"
+	java -cp "$workDir" $frpMain.rtiAnalysis.RTIAnalysis -o "$1/rti-analysis.csv" -t "$1/$top" -htl $htl	
 	echo ""
 	echo ""
 	
+	# copy result.out data to central data file
 	local record="false"
 	while read line
 	do
@@ -82,6 +86,12 @@ function process
 		fi
 		
 	done < "$1/results.out"
+
+	# copy rti-analysis data to central data file
+	while read line
+	do
+		echo "$nodes,$peers,$htl,$line" >> $outputRTI			
+	done < "$1/rti-analysis.csv"
 }
 
 
@@ -91,7 +101,13 @@ top="top.dot"
 topPng="top.png"
 comm="commLog.log"
 output="results.csv"
+outputRTI="RTI-Analysis.csv"
+
+workDir="/home/user/FreeNet-Analysis/eclipse_workspace/Freenet-RoutePrediction/bin"
+frpMain="frp.main"
 
 echo "Node #,Peer #,Max HTL,HTL,Total Inserts #,Complete Hit #,Partial Hit #" > $output
+echo "Node #,Peer #,Max HTL,Attack Group Size,Min Targets,Avg Targets,Max Targets,Min Attack Set,Max Attack Set,Compute Time(ms)" > $outputRTI
+
 traverse $PWD 4 5 6
 
