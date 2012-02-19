@@ -67,8 +67,8 @@ function process
 	java -cp "$workDir" $frpMain.predModelEval.ModelEvaluator -o "$1/results.out" -t "$1/$top" -map "$1/$mapRW" -words "$1/$randWords" -htl $htl -comm $1/$comm
 	echo ""
 
-	echo "java -cp $workDir $frpMain.rtiAnalysis.RTIAnalysis -o $1/rti-analysis.csv -t $1/$top -htl $htl"
-	java -cp "$workDir" $frpMain.rtiAnalysis.RTIAnalysis -o "$1/rti-analysis.csv" -t "$1/$top" -htl $htl	
+	echo "java -cp $workDir $frpMain.rtiAnalysis.RTIAnalysis -o $1/rti-analysis.csv -t $1/$top -htl $htl -mags 10"
+	java -cp "$workDir" $frpMain.rtiAnalysis.RTIAnalysis -o "$1/rti-analysis.csv" -t "$1/$top" -htl $htl -mags 10	
 	echo ""
 	echo ""
 	
