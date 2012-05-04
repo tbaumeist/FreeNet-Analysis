@@ -18,6 +18,7 @@ expect {
 }
 
 send "$command\n"
+set timeout 600
 expect {
 	"$exp" {}
 	default {
