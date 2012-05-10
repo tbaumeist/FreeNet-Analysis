@@ -3,6 +3,7 @@
 # Variables
 _prompt_node="TMCI> "
 
+source ./common/depCheck.sh
 
 #Parameters
 #1 telnet script

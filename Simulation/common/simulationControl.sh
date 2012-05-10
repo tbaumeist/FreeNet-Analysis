@@ -5,6 +5,8 @@ _prompt_sim="SIM>"
 _success_value_sim="SUCCESS"
 _status_sim="STATUS:"
 
+source ./common/depCheck.sh
+
 #Parameters
 #1 returned message to evaluate
 function Success

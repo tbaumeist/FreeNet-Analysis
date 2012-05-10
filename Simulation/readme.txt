@@ -5,6 +5,20 @@ See the file test_simulator.sh for an example on how to script
 simulation executions.
 
 -----------------------------------------------------------------------
+Overview
+-----------------------------------------------------------------------
+The Freenet simulator is designed to run a large number of nodes in
+a single process. Each node started will be spawned in a seperate
+thread under the same process. Each node will be assigned a unique
+port number that it can use to communicate with.
+
+Currently the simulation is designed to only communicate with the nodes
+in the same process. 
+
+The largest network size that has been tested and worked successfully
+is 200 nodes.
+
+-----------------------------------------------------------------------
 Locations:
 -----------------------------------------------------------------------
 	FreeNet-Analysis/Simulation
