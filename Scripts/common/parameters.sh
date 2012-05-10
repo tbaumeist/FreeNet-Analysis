@@ -242,7 +242,7 @@ function ParameterRandomQuestion
 		fi
 	fi	
 
-	echo -e "\t$question=$value"
+	echo -e "\t$question = $value"
 	eval $_variable="'$value'"
 }
 

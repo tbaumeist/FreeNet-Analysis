@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Variables
-_prompt="SIM>"
-_successValue="SUCCESS"
-_status="STATUS:"
+_prompt_sim="SIM>"
+_success_value_sim="SUCCESS"
+_status_sim="STATUS:"
 
 #Parameters
 #1 returned message to evaluate
 function Success
 {
 	#echo $1
-	if [[ "$1" == *"$_successValue"* ]]; then
+	if [[ "$1" == *"$_success_value_sim"* ]]; then
 		return 0
 	fi
 	return 1
@@ -37,10 +37,26 @@ function CheckIfRunning
 function StopSimulation
 {
 	#echo "Stopping simulator..."
-	local returned=$($1 "$2" "$3" "$_prompt" "SHUTDOWN" | grep "$_status")
-	sleep 2
+	local returned=$($1 "$2" "$3" "$_prompt_sim" "SHUTDOWN" | grep "$_status_sim")
+	
 	Success "$returned"
-	return $?
+	if [ $? -ne 0 ]
+	then	
+		return 1
+	fi
+
+	# issues shutdown command, can continue as soon as the port has been freed
+	local portCheck=`lsof -iTCP:$3`
+
+	while [ "$portCheck" != "" ]
+	do
+		# Port still being used
+		#echo "sleeping.."
+		sleep 1
+		portCheck=`lsof -iTCP:$3`
+	done
+
+	return 0
 }
 
 
@@ -48,12 +64,15 @@ function StopSimulation
 #1 Jar location of simulator
 #2 Port
 #3 Directory to save run data
+#4 Console output file
+#5 Protocol trace file
 function StartSimulation
 {
 	#echo "storing $3console.dump"
 	mkdir -p "$3"
-	java -cp "$1" freenet.testbed.Simulator "$2" "$3/data" >& "$3/console.dump" 2>&1 &
-	CheckIfRunning $!
+	java -cp "$1" freenet.testbed.Simulator "$2" "$3/data" "$5" >& "$4" 2>&1 &
+	_current_pid_sim=$!
+	CheckIfRunning $_current_pid_sim
 	return $?
 }
 
@@ -66,7 +85,7 @@ function StartSimulation
 #6 HTL
 function CreateNetwork
 {
-	local returned=$($1 "$2" "$3" "$_prompt" "START $4 $5 $6" | grep "$_status")
+	local returned=$($1 "$2" "$3" "$_prompt_sim" "START $4 $5 $6" | grep "$_status_sim")
 	Success "$returned"
 	return $?
 }
@@ -81,7 +100,7 @@ function CreateNetwork
 #7 Network State
 function RestoreNetwork
 {
-	local returned=$($1 "$2" "$3" "$_prompt" "RESTORE $4 $5 $6 $7" | grep "$_status")
+	local returned=$($1 "$2" "$3" "$_prompt_sim" "RESTORE $4 $5 $6 $7" | grep "$_status_sim")
 	Success "$returned"
 	return $?
 }
@@ -94,7 +113,8 @@ function RestoreNetwork
 function GetNetworkState
 {
 	local _variable=$4
-	local returned=$($1 "$2" "$3" "$_prompt" "NETWORKSTATE" | grep "STATE:")
+	eval $_variable="''"
+	local returned=$($1 "$2" "$3" "$_prompt_sim" "NETWORKSTATE" | grep "STATE:")
 
 	local networkState=$(echo $returned | cut -d':' -f2)
 	#echo "Setting State $networkState"
@@ -111,10 +131,10 @@ function GetNetworkState
 function GetTopologyGraph
 {
 	rm -f $4
-	$1 "$2" "$3" "$_prompt" "TOPOLOGY" > "$4.tmp"
+	$1 "$2" "$3" "$_prompt_sim" "TOPOLOGY" > "$4.tmp"
 	
 	# check status
-	local returned=$(cat "$4.tmp" | grep "$_status")
+	local returned=$(cat "$4.tmp" | grep "$_status_sim")
 	Success "$returned"
 	if [ $? -ne 0 ]
 	then	
@@ -135,6 +155,73 @@ function GetTopologyGraph
 
 	rm -f "$4.tmp"
 	rm -f "$4.srt"
+
+	return 0
+}
+
+#Parameters
+#1 telnet script
+#2 machine ip
+#3 port
+#4 Storage File
+function GetStoredData
+{
+	rm -f $4
+	$1 "$2" "$3" "$_prompt_sim" "LISTSTOREDDATA" > "$4.tmp"
+	
+	# check status
+	local returned=$(cat "$4.tmp" | grep "$_status_sim")
+	Success "$returned"
+	if [ $? -ne 0 ]
+	then	
+		rm -f "$4.tmp"
+		return 1
+	fi
+	
+	# get the stored location only data
+	cat "$4.tmp" | grep -P "\t" > "$4"
+
+	rm -f "$4.tmp"
+
+	return 0
+}
+
+#Parameters
+#1 telnet script
+#2 machine ip
+#3 port
+declare -a _sim_control_node_ids
+declare -a _sim_control_node_TMCI
+function GetNodeInfo
+{
+	unset _sim_control_node_ids
+	unset _sim_control_node_TMCI
+
+	local tmp=/tmp/freenet_sim_output_GetNodeInfo
+	rm -f $tmp
+	$1 "$2" "$3" "$_prompt_sim" "LISTNODES" > "$tmp"
+	
+	# check status
+	local returned=$(cat "$tmp" | grep "$_status_sim")
+	Success "$returned"
+	if [ $? -ne 0 ]
+	then	
+		return 1
+	fi
+	
+	# get the topology only data
+	cat "$tmp" | grep -P "\t" > "$tmp.tmp"
+
+	local index=1
+	while read line
+	do
+		_sim_control_node_ids[$index]=$(echo $line | cut -d':' -f1)
+		_sim_control_node_TMCI[$index]=$(echo $line | cut -d':' -f2)
+		let "index += 1"
+	done < "$tmp.tmp"
+
+	rm -f "$tmp"
+	rm -f "$tmp.tmp"
 
 	return 0
 }

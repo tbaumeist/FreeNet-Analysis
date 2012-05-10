@@ -5,8 +5,8 @@ _telS=../Scripts/common/telnet.exp
 
 _simJars="bin/*"
 _defaultrunDir="/tmp/freenet_simulation/"
-_machineName="127.0.0.1"
-_defaultPort=5200
+_machineName="localhost"
+_defaultPort=4600
 
 
 #===================================================================================================
@@ -18,25 +18,50 @@ _defaultPort=5200
 
 #source
 source ./common/simulationControl.sh
+source ./common/simulatedNodeControl.sh
 source ../Scripts/common/parameters.sh
 
 declare port
 declare runDir
+declare mode
 
 ParameterScriptWelcome "test_simulator.sh"
-ParameterRandomQuestion port "Simulator port? Default:[5200] " "$_defaultPort" $1
-ParameterRandomQuestion runDir "Directory to save run data? Default:[$_defaultrunDir] " "$_defaultrunDir" $2
+ParameterRandomQuestion port "Simulator port? Default:[$_defaultPort]" "$_defaultPort" $1
+ParameterRandomQuestion runDir "Directory to save run data? Default:[$_defaultrunDir]" "$_defaultrunDir" $2
+ParameterRandomQuestion mode "Test mode? Quick[q], Full[f]. Default:[q]" "q" $3
 ParameterScriptWelcomeEnd
 #===================================================================================================
+
+# initial clean up
+rm -rf "$runDir"
+
+
+declare tmpPort
+declare tmpLoc
+declare tmpKey
+
+echo "::Simple Control Tests::"
 
 # No connection
 StopSimulation "$_telS" "$_machineName" "$port" && echo "FAILED: No connection" || echo "PASSED: No connection"
 
 # Start the simulation environment
-StartSimulation "$_simJars" "$port" "$runDir" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
+StartSimulation "$_simJars" "$port" "$runDir" "$runDir/console0.dat" "$runDir/prot0.trac" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
+
+# Shutdown
+StopSimulation "$_telS" "$_machineName" "$port" && echo "PASSED: Shutdown" || echo "FAILED: Shutdown"
+
+
+#########################################################################################
+#########################################################################################
+
+echo "::Small Network- All Functions::"
+
+# Start the simulation environment
+StartSimulation "$_simJars" "$port" "$runDir" "$runDir/console1.dat" "$runDir/prot1.trac" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
 
 # Start second simulation environment same port
-StartSimulation "$_simJars" "$port" "$runDir" && echo "FAILED: Don't Start Second Simulation" || echo "PASSED: Don't Start Second Simulation"
+StartSimulation "$_simJars" "$port" "$runDir" "$runDir/console2.dat" "$runDir/prot2.trac" && echo "FAILED: Don't Start Second Simulation" || echo "PASSED: Don't Start Second Simulation"
 
 # Get the network state no network
 declare stateNo
@@ -45,6 +70,31 @@ GetNetworkState "$_telS" "$_machineName" "$port" stateNo && echo "FAILED: Get ne
 
 # Get the topology no network
 GetTopologyGraph "$_telS" "$_machineName" "$port" "$runDir/topno.dat" && echo "FAILED: Get topology no network" || echo "PASSED: Get topology no network"
+
+# Get the stored data no network
+GetStoredData "$_telS" "$_machineName" "$port" "$runDir/datno.dat" && echo "FAILED: Get stored data no network" || echo "PASSED: Get stored data no network"
+
+# Get node info no network
+GetNodeInfo "$_telS" "$_machineName" "$port" && echo "FAILED: Get node information no network" || echo "PASSED: Get node information no network"
+
+# Check node info is empty
+[ ${#_sim_control_node_ids[@]} -eq 0 ] && echo "PASSED: Node info check" || echo "FAILED: Node info check"
+[ ${#_sim_control_node_TMCI[@]} -eq 0 ] && echo "PASSED: Node info check" || echo "FAILED: Node info check"
+
+# Put data no network
+let "tmpPort=$port+3"
+PutData "$_telS" "$_machineName" "$tmpPort" "5" "Test data dude" tmpKey tmpLoc && echo "FAILED: Put data no network" || echo "PASSED: Put data no network"
+
+# check Put Data return values
+[ "$tmpKey" == "" ] && echo "PASSED: Check put data" || echo "FAILED: Check put data"
+[ "$tmpLoc" == "" ] && echo "PASSED: Check put data" || echo "FAILED: Check put data"
+
+# Get data no network
+GetData "$_telS" "$_machineName" "$tmpPort" "notarealkey" && echo "FAILED: Get data no network" || echo "PASSED: Get  data no network"
+
+
+##########################################################################################
+##########################################################################################
 
 # Create small network, 10 nodes, 5 peers, 4 HTL
 CreateNetwork "$_telS" "$_machineName" "$port" "10" "5" "4" && echo "PASSED: Created small network" || echo "FAILED: Created small network"
@@ -57,19 +107,50 @@ GetNetworkState "$_telS" "$_machineName" "$port" stateOne && echo "PASSED: Get n
 # Get the topology
 GetTopologyGraph "$_telS" "$_machineName" "$port" "$runDir/top1.dat" && echo "PASSED: Get topology" || echo "FAILED: Get topology"
 
+# Get the stored data
+GetStoredData "$_telS" "$_machineName" "$port" "$runDir/data1.dat" && echo "PASSED: Get Stored Data" || echo "FAILED: Get Stored Data"
+
+# Get node info
+GetNodeInfo "$_telS" "$_machineName" "$port" && echo "PASSED: Get node information" || echo "FAILED: Get node information"
+
+# Check node info is not empty
+[ ${#_sim_control_node_ids[@]} -eq 10 ] && echo "PASSED: Node info check" || echo "FAILED: Node info check"
+[ ${#_sim_control_node_TMCI[@]} -eq 10 ] && echo "PASSED: Node info check" || echo "FAILED: Node info check"
+
+# Put data
+tmpPort=${_sim_control_node_TMCI[1]}
+PutData "$_telS" "$_machineName" "$tmpPort" "5" "Test data dude" tmpKey tmpLoc && echo "PASSED: Put data" || echo "FAILED: Put data"
+
+# check Put Data return values
+[ "$tmpKey" == "" ] && echo "FAILED: Check put data" || echo "PASSED: Check put data"
+[ "$tmpLoc" == "" ] && echo "FAILED: Check put data" || echo "PASSED: Check put data"
+#echo "key=$tmpKey"
+#echo "loc=$tmpLoc"
+
+# Get data fake key
+tmpPort=${_sim_control_node_TMCI[2]}
+GetData "$_telS" "$_machineName" "$tmpPort" "CHK@jdMUOYBNGwOth~PF3O3bnbnA9SE9AeR3ApuWvrtUwgE,2IpwxlSbRF3n8Ola8SJBgiP7Pgd-Ja2xaz6~SE01zdY,AAIA--8" && echo "FAILED: Get data fake key" || echo "PASSED: Get data fake key"
+
+# Get data real key
+GetData "$_telS" "$_machineName" "$tmpPort" "$tmpKey" && echo "PASSED: Get data" || echo "FAILED: Get data"
+
 # Stop the simulation environment
 StopSimulation "$_telS" "$_machineName" "$port" && echo "PASSED: Stop Simulation" || echo "FAILED: Stop Simulation"
 
+# Exit if running quick tests
+[ "$mode" == "q" ] && exit
 
 
-# give time between shutdown and startup
-echo "    cooling down..."
-sleep 20
+
+##########################################################################################
+##########################################################################################
 
 
+
+echo "::Small Network- Restore::"
 
 # Start the simulation environment
-StartSimulation "$_simJars" "$port" "$runDir" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
+StartSimulation "$_simJars" "$port" "$runDir" "$runDir/console3.dat" "$runDir/prot3.trac" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
 
 # restore small network, 10 nodes, 5 peers, 4 HTL
 RestoreNetwork "$_telS" "$_machineName" "$port" "10" "5" "4" "$stateOne" && echo "PASSED: Restored small network" || echo "FAILED: Restored small network"
@@ -94,14 +175,15 @@ StopSimulation "$_telS" "$_machineName" "$port" && echo "PASSED: Stop Simulation
 
 
 
-# give time between shutdown and startup
-echo "    cooling down..."
-sleep 20
+##########################################################################################
+##########################################################################################
 
 
+
+echo "::Medium Network::"
 
 # Start the simulation environment
-StartSimulation "$_simJars" "$port" "$runDir" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
+StartSimulation "$_simJars" "$port" "$runDir" "$runDir/consoleMed.dat" "$runDir/protMed.trac" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
 
 # Start medium network, 50 nodes, 8 peers, 4 HTL
 CreateNetwork "$_telS" "$_machineName" "$port" "50" "8" "4" && echo "PASSED: Start medium network" || echo "FAILED: Start medium network"
@@ -126,14 +208,15 @@ StopSimulation "$_telS" "$_machineName" "$port" && echo "PASSED: Stop Simulation
 
 
 
-# give time between shutdown and startup
-echo "    cooling down..."
-sleep 20
+##########################################################################################
+##########################################################################################
 
 
+
+echo "::Large Network::"
 
 # Start the simulation environment
-StartSimulation "$_simJars" "$port" "$runDir" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
+StartSimulation "$_simJars" "$port" "$runDir" "$runDir/consoleLarge.dat" "$runDir/protLarge.trac" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
 
 # Start large network, 100 nodes, 10 peers, 5 HTL
 CreateNetwork "$_telS" "$_machineName" "$port" "100" "10" "5" && echo "PASSED: Start large network" || echo "FAILED: Start large network"
@@ -157,14 +240,15 @@ StopSimulation "$_telS" "$_machineName" "$port" && echo "PASSED: Stop Simulation
 
 
 
-# give time between shutdown and startup
-echo "    cooling down..."
-sleep 20
+##########################################################################################
+##########################################################################################
 
 
+
+echo "::Very Large Network::"
 
 # Start the simulation environment
-StartSimulation "$_simJars" "$port" "$runDir" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
+StartSimulation "$_simJars" "$port" "$runDir" "$runDir/consoleVeryLarge.dat" "$runDir/protVeryLarge.trac" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
 
 # Start very large network, 200 nodes, 10 peers, 5 HTL
 CreateNetwork "$_telS" "$_machineName" "$port" "200" "10" "5" && echo "PASSED: Start very large network" || echo "FAILED: Start very large network"
