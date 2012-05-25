@@ -1,13 +1,14 @@
 #!/bin/bash
 
+source ./common/general.sh
+
 # Check that all of the dependant programs are installed
 
 #Parameters
 #1 Program name
 function missingProgram
 {
-	echo "ERROR: The program: $1 is not installed. Please install."
-	exit 1
+	reportErrorExit "The program: $1 is not installed. Please install."
 }
 
 #Parameters

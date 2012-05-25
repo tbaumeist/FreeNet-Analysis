@@ -7,6 +7,7 @@ _status_sim="STATUS:"
 
 source ./common/depCheck.sh
 
+
 #Parameters
 #1 returned message to evaluate
 function Success
