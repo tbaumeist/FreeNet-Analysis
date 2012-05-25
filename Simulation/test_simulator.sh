@@ -180,6 +180,30 @@ StopSimulation "$_telS" "$_machineName" "$port" && echo "PASSED: Stop Simulation
 
 
 
+echo "::Medium Network Topology Only::"
+
+# Start the simulation environment
+StartSimulation "$_simJars" "$port" "$runDir" "$runDir/consoleMedTop.dat" "$runDir/protMedTop.trac" && echo "PASSED: Start Simulation" || echo "FAILED: Start Simulation"
+
+# Start medium network, 50 nodes, 8 peers, 4 HTL
+CreateTopologyOnly "$_telS" "$_machineName" "$port" "50" "8" "4" && echo "PASSED: Topology only medium network" || echo "FAILED: Topology only medium network"
+
+# Get the topology
+GetTopologyGraph "$_telS" "$_machineName" "$port" "$runDir/top3top.dat" && echo "PASSED: Get topology" || echo "FAILED: Get topology"
+
+# Check topologies do not match
+diff "$runDir/top1.dat" "$runDir/top3top.dat" >/dev/null && echo "FAILED: Topologies do not match" || echo "PASSED: Topologies do not match"
+
+# Stop the simulation environment
+StopSimulation "$_telS" "$_machineName" "$port" && echo "PASSED: Stop Simulation" || echo "FAILED: Stop Simulation"
+
+
+
+##########################################################################################
+##########################################################################################
+
+
+
 echo "::Medium Network::"
 
 # Start the simulation environment

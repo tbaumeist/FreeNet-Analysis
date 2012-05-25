@@ -107,6 +107,22 @@ function RestoreNetwork
 	return $?
 }
 
+
+#Parameters
+#1 telnet script
+#2 machine ip
+#3 port
+#4 Node count
+#5 Peer count
+#6 HTL
+function CreateTopologyOnly
+{
+	local returned=$($1 "$2" "$3" "$_prompt_sim" "TOPOLOGYONLY $4 $5 $6" | grep "$_status_sim")
+	Success "$returned"
+	return $?
+}
+
+
 #Parameters
 #1 telnet script
 #2 machine ip
