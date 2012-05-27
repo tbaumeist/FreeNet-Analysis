@@ -49,7 +49,7 @@ function mergeMaster
 #3 HTL
 function generateTopology
 {
-	echo "Topology- node count: $1, peer count: $2, HTL: $3"
+	#echo "Topology- node count: $1, peer count: $2, HTL: $3"
 
 	# Stop the simulation environment (recover from errors)
 	StopSimulation "$_telS" "$_machineName" "$_defaultPort"
@@ -76,8 +76,10 @@ function iterateHTLCount
 	local i=$_startHTL
 	while [ $i -le $_endHTL ] 
 	do
+		echo "Topology- node count: $1, peer count: $2, HTL: $i"
+
 		# Analyse the resulting topology
-		java -cp "$_rtiExDir" frp.main.rti.analysis.RTIAnalysis -t "$_defaultSaveDir/$1-$2-top.dot" -o "$_defaultSaveDir/$1-$2-$i-output" -htl "$i" -dhtl 0
+		java -Xms100m -Xmx2048m -XX:-UseGCOverheadLimit -cp "$_rtiExDir" frp.main.rti.analysis.RTIAnalysis -t "$_defaultSaveDir/$1-$2-top.dot" -o "$_defaultSaveDir/$1-$2-$i-output" -htl "$i" -dhtl 0
 
 		mergeMaster $1 $2 $i "$_defaultSaveDir/$1-$2-$i-output"
 
