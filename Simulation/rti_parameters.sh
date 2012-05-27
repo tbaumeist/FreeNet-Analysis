@@ -12,17 +12,17 @@ _defaultPort=5200
 
 _rtiExDir=~/FreeNet-Analysis/eclipse_workspace/Freenet-RoutePrediction/bin
 
-_startNodeCount=10
+_startNodeCount=25
 _endNodeCount=250
-_stepNodeCount=10
+_stepNodeCount=25
 
 _startPeerCount=4
 _endPeerCount=20
-_stepPeerCount=1
+_stepPeerCount=2
 
 _startHTL=4
 _endHTL=14
-_stepHTL=1
+_stepHTL=2
 
 
 #Parameters
