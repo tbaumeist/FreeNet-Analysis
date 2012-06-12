@@ -5,7 +5,7 @@ _telS=../Scripts/common/telnet.exp
 
 _simJars="bin/*"
 _defaultSaveDir=~/Desktop/Sim/rti_params/
-_masterCVS="$_defaultSaveDir/_masterRTIanalysis.cvs"
+_masterCVS="$_defaultSaveDir/_masterRTIanalysis.csv"
 _defaultRunDir=/tmp/freenetSim/
 _machineName="localhost"
 _defaultPort=5200
