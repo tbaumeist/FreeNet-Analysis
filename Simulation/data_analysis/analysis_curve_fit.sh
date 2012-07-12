@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Variables
-_bestFitScript="./best_fit_algorithm.sh"
-_functionSolver="./function_x_solver.sh"
+_bestFitScript="./_best_fit_algorithm.sh"
+_functionSolver="./_function_x_solver.sh"
 
 
 # Parameters
@@ -13,51 +13,27 @@ _functionSolver="./function_x_solver.sh"
 # 5 node count
 # 6 peer count
 # 7 HTL
+# 8 last x min
+# 9 last x max
 function runDataSet
 {
 	local outFileNameLow="$4$5_$6_$7_min"
 	local outFileNameHigh="$4$5_$6_$7_max"
 	local title="Node $5, Degree $6, HTL $7"
 
-	#local resultLowest=""
-	#local resultHighest=""
-	#local rLowest=0
-	#local rHighest=0
+	local resultLowest=$($_bestFitScript 4 "$1" "$outFileNameLow.png" "$title, Minimum")
+	local resultHighest=$($_bestFitScript 4 "$2" "$outFileNameHigh.png" "$title, Maximum")
 
-	#for i in {2..10}
-	#do
-	#	# fit the equation
-	#	local resultLow=$($_bestFitScript "$i" "$1" "$outFileNameLow$i.png" "$title, Minimum")
-	#	local resultHigh=$($_bestFitScript "$i" "$2" "$outFileNameHigh$i.png" "$title, Maximum")
-
-	#	local rL=$(echo $resultLow | cut -d'|' -f1 | cut -d'=' -f2)
-	#	local rH=$(echo $resultHigh | cut -d'|' -f1 | cut -d'=' -f2)
-
-	#	if [ $(echo "$rL > $rLowest"|bc) ]
-	#	then
-	#		rLowest=$rL
-	#		resultLowest=$resultLow
-	#	fi
-	#	if [ $(echo "$rH > $rHighest"|bc) ]
-	#	then
-	#		rHighest=$rH
-	#		resultHighest=$resultHigh
-	#	fi
-	#	echo "$resultLow"
-	#	echo "$resultLowest"
-	#done
-
-	local resultLowest=$($_bestFitScript 6 "$1" "$outFileNameLow.png" "$title, Minimum")
-	local resultHighest=$($_bestFitScript 6 "$2" "$outFileNameHigh.png" "$title, Maximum")
-
+	local straightLow=$(echo $resultLowest | cut -d'|' -f3)
 	local fLow=$(echo $resultLowest | cut -d'|' -f2 | cut -d'=' -f2)
 	local rLow=$(echo $resultLowest | cut -d'|' -f1 | cut -d'=' -f2)
+	local straightHigh=$(echo $resultHighest | cut -d'|' -f3)
 	local fHigh=$(echo $resultHighest | cut -d'|' -f2 | cut -d'=' -f2)
 	local rHigh=$(echo $resultHighest | cut -d'|' -f1 | cut -d'=' -f2)
 
 	# solve the equation
-	local solutionLow=$($_functionSolver "$fLow")
-	local solutionHigh=$($_functionSolver "$fHigh")
+	local solutionLow=$($_functionSolver "$fLow" "$straightLow")
+	local solutionHigh=$($_functionSolver "$fHigh" "$straightHigh")
 
 	local low25=$(echo $solutionLow | cut -d',' -f1 | cut -d'=' -f2)
 	local low50=$(echo $solutionLow | cut -d',' -f2 | cut -d'=' -f2)
@@ -68,8 +44,29 @@ function runDataSet
 	local high75=$(echo $solutionHigh | cut -d',' -f3 | cut -d'=' -f2)
 	local high100=$(echo $solutionHigh | cut -d',' -f4 | cut -d'=' -f2)
 
+	#error correction
+	[ $(echo "$low25 < 2" | bc) -ne 0 ] && low25=2
+	[ $(echo "$low50 < 2" | bc) -ne 0 ] && low50=2
+	[ $(echo "$low75 < 2" | bc) -ne 0 ] && low75=2
+	[ $(echo "$low100 < 2" | bc) -ne 0 ] && low100=2
+	if [ $(echo "$low100 > $8" | bc) -ne 0 ] 
+	then
+		echo "Correcting 100% low"		
+		low100=$8
+	fi
+	[ $(echo "$high25 < 2" | bc) -ne 0 ] && high25=2
+	[ $(echo "$high50 < 2" | bc) -ne 0 ] && high50=2
+	[ $(echo "$high75 < 2" | bc) -ne 0 ] && high75=2
+	[ $(echo "$high100 < 2" | bc) -ne 0 ] && high100=2
+	if [ $(echo "$high100 > $9" | bc) -ne 0 ]
+	then
+		echo "Correcting 100% high"		
+		high100=$9
+	fi
+
 	# save results
 	echo "$5,$6,$7,$fLow,$rLow,$fHigh,$rHigh,$low25,$low50,$low75,$low100,$high25,$high50,$high75,$high100" >> "$3"
+	echo -e "MIN:\t$low25,$low50,$low75,$low100\t\tMAX:\t$high25,$high50,$high75,$high100"
 }
 
 # Parameters
@@ -80,9 +77,11 @@ function runDataSet
 # 5 node count
 # 6 peer count
 # 7 HTL
+# 8 last x min
+# 9 last x max
 function newDataSet
 {
-	[ -e "$1" ] && runDataSet "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+	[ -e "$1" ] && runDataSet "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
 	rm "$1" >& /dev/null
 	rm "$2" >& /dev/null
 }
@@ -113,6 +112,9 @@ mkdir -p "$outputDirectory"
 tmpDataFileLow="$outputDirectory/tmpDataLow.dat"
 tmpDataFileHigh="$outputDirectory/tmpDataHigh.dat"
 
+rm "$tmpDataFileLow" >& /dev/null
+rm "$tmpDataFileHigh" >& /dev/null
+
 # setup master data file
 masterDataFile="$outputDirectory/$outputFile.csv"
 echo "Node Count,Peer Count,HTL,Min Function,Min R^2,Max Function,Max R^2,Attack Size for Min Victims 25%,Attack Size for Min Victims 50%,Attack Size for Min Victims 75%,Attack Size for Min Victims 100%,Attack Size for Max Victims 25%,Attack Size for Max Victims 50%,Attack Size for Max Victims 75%,Attack Size for Max Victims 100%" > "$masterDataFile"
@@ -124,6 +126,10 @@ HTL=0
 startNewDataSet=1
 
 count=0
+min100Count=0
+max100Count=0
+x_lastMin=0
+x_lastMax=0
 while read line
 do
 	let "count=$count+1"
@@ -134,9 +140,38 @@ do
 	newPeerCount=$(echo $line | cut -d',' -f2)
 	newHTL=$(echo $line | cut -d',' -f3)
 
+	attackSetSize=$(echo $line | cut -d',' -f9)
+	minCoverage=$(echo $line | cut -d',' -f5)
+	maxCoverage=$(echo $line | cut -d',' -f6)
+
+	# skip the entries with attack set size less than 2
+	[ $attackSetSize -lt 2 ] && continue
+
 	# only need to check if last parameter HTL changed (it changes the most frequent)
-	[ "$newHTL" != "$HTL" ] && newDataSet "$tmpDataFileLow" "$tmpDataFileHigh" "$masterDataFile" "$outputDirectory/$outputFile" "$nodes" "$peerCount" "$HTL"
+	if [ "$newHTL" != "$HTL" ] 
+	then
+		min100Count=0
+		max100Count=0
+		newDataSet "$tmpDataFileLow" "$tmpDataFileHigh" "$masterDataFile" "$outputDirectory/$outputFile" "$nodes" "$peerCount" "$HTL" "$x_lastMin" "$x_lastMax"
+		x_lastMin=0
+		x_lastMax=0
+		x_delta=0
+	fi
 	
+	# count how many 100 % coverage we have seen, stop after seeing two consequitive 100s
+	if [  $(echo "$minCoverage == 100" | bc) -ne 0 ]
+	then
+		let "min100Count=$min100Count + 1"
+	else
+		min100Count=0
+	fi
+	if [  $(echo "$maxCoverage == 100" | bc) -ne 0 ]
+	then
+		let "max100Count=$max100Count + 1"
+	else
+		max100Count=0
+	fi
+
 	nodes=$newNodes
 	peerCount=$newPeerCount
 	HTL=$newHTL
@@ -145,14 +180,27 @@ do
 	attackSetSize=$(echo $line | cut -d',' -f4)
 	minTargetSize=$(echo $line | cut -d',' -f5)
 	maxTargetSize=$(echo $line | cut -d',' -f6)
+
+	#echo -e "$attackSetSize\t$minTargetSize" >> "$tmpDataFileLow"
+	#echo -e "$attackSetSize\t$maxTargetSize" >> "$tmpDataFileHigh"	
+
+	# only write data points if we have seen less than 3 consequtive 100s
+	if [ $min100Count -le 4 ]
+	then
+		x_lastMin=$attackSetSize
+		echo -e "$attackSetSize\t$minTargetSize" >> "$tmpDataFileLow"
+	fi
 	
-	echo -e "$attackSetSize\t$minTargetSize" >> "$tmpDataFileLow"
-	echo -e "$attackSetSize\t$maxTargetSize" >> "$tmpDataFileHigh"
+	if [ $max100Count -le 4 ]
+	then
+		x_lastMax=$attackSetSize
+		echo -e "$attackSetSize\t$maxTargetSize" >> "$tmpDataFileHigh"
+	fi
 	
 done < "$inputFile"
 
 # run one more time for the last data set
-newDataSet "$tmpDataFileLow" "$tmpDataFileHigh" "$masterDataFile" "$outputDirectory/$outputFile" "$nodes" "$peerCount" "$HTL"
+newDataSet "$tmpDataFileLow" "$tmpDataFileHigh" "$masterDataFile" "$outputDirectory/$outputFile" "$nodes" "$peerCount" "$HTL" "$x_lastMin" "$x_lastMax"
 
 echo "Complete"
 

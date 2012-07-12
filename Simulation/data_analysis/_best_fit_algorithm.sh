@@ -31,10 +31,21 @@ dev = y - mean(y);          % deviations - measure of spread
 SST = sum(dev.^2);          % total variation to be accounted for
 resid = y - y_fit;          % residuals - measure of mismatch
 SSE = sum(resid.^2);        % variation NOT accounted for
-Rsq = 1 - SSE/SST;          % percent of error explained
+if ( SST > 0)
+  Rsq = 1 - SSE/SST;          % percent of error explained
+else
+  Rsq = 1;
+endif
+
+% check if data is a straight line
+if (y == 100)
+  straight=1;
+else
+  straight=0;
+endif
 
 % Print out the results
-printf("R^2 = %G | %s\n", Rsq, f_str);
+printf("R^2 = %G | %s |%d\n", Rsq, f_str, straight);
 
 % Plots
 hold on;
