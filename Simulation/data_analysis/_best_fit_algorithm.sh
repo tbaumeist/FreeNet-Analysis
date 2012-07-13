@@ -54,6 +54,8 @@ grid("minor","on");
 
 % add informative text
 title(title_name);
+xlabel("% of Total Nodes Affected by RTI Attack");
+ylabel("% of Total Nodes Controlled by Attacker");
 text(30,20, sprintf("R^2 = %G", Rsq));
 text(15,10, f_str);
 line([0,100],[25,25]);

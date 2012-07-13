@@ -45,19 +45,20 @@ function runDataSet
 	local high100=$(echo $solutionHigh | cut -d',' -f4 | cut -d'=' -f2)
 
 	#error correction
-	[ $(echo "$low25 < 2" | bc) -ne 0 ] && low25=2
-	[ $(echo "$low50 < 2" | bc) -ne 0 ] && low50=2
-	[ $(echo "$low75 < 2" | bc) -ne 0 ] && low75=2
-	[ $(echo "$low100 < 2" | bc) -ne 0 ] && low100=2
+	local smallestPossible=$(echo "2/$5*100" | bc -l)
+	[ $(echo "$low25 < $smallestPossible" | bc) -ne 0 ] && low25=$smallestPossible
+	[ $(echo "$low50 < $smallestPossible" | bc) -ne 0 ] && low50=$smallestPossible
+	[ $(echo "$low75 < $smallestPossible" | bc) -ne 0 ] && low75=$smallestPossible
+	[ $(echo "$low100 < $smallestPossible" | bc) -ne 0 ] && low100=$smallestPossible
 	if [ $(echo "$low100 > $8" | bc) -ne 0 ] 
 	then
 		echo "Correcting 100% low"		
 		low100=$8
 	fi
-	[ $(echo "$high25 < 2" | bc) -ne 0 ] && high25=2
-	[ $(echo "$high50 < 2" | bc) -ne 0 ] && high50=2
-	[ $(echo "$high75 < 2" | bc) -ne 0 ] && high75=2
-	[ $(echo "$high100 < 2" | bc) -ne 0 ] && high100=2
+	[ $(echo "$high25 < $smallestPossible" | bc) -ne 0 ] && high25=$smallestPossible
+	[ $(echo "$high50 < $smallestPossible" | bc) -ne 0 ] && high50=$smallestPossible
+	[ $(echo "$high75 < $smallestPossible" | bc) -ne 0 ] && high75=$smallestPossible
+	[ $(echo "$high100 < $smallestPossible" | bc) -ne 0 ] && high100=$smallestPossible
 	if [ $(echo "$high100 > $9" | bc) -ne 0 ]
 	then
 		echo "Correcting 100% high"		
