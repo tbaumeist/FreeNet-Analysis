@@ -16,7 +16,7 @@ function y = f_curve(x)
 endfunction
 
 if (is_straight_line == 1)
-  printf("25%%=2.000000,50%%=2.000000,75%%=2.000000,100%%=2.000000");
+  printf("25%%=-1.000000,50%%=-1.000000,75%%=-1.000000,100%%=-1.000000");
   exit;
 endif
 
@@ -24,18 +24,18 @@ f = @(x)f_curve(x);
  
 % solve for y 25
 y_solve_value=25;
-[x25, info] = fsolve(f, 2);
+[x25, info] = fsolve(f, 0.2);
 
 % solve for y 50
 y_solve_value=50;
-[x50, info] = fsolve(f, 2);
+[x50, info] = fsolve(f, 0.2);
 
 % solve for y 75
 y_solve_value=75;
-[x75, info] = fsolve(f, 2);
+[x75, info] = fsolve(f, 0.2);
 
 % solve for y 100
 y_solve_value=100;
-[x100, info] = fsolve(f, 2);
+[x100, info] = fsolve(f, 0.2);
 
 printf("25%%=%f,50%%=%f,75%%=%f,100%%=%f\n",x25,x50,x75,x100);
