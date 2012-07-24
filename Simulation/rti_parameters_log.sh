@@ -12,9 +12,11 @@ _defaultPort=5200
 
 _rtiExDir=~/FreeNet-Analysis/eclipse_workspace/Freenet-RoutePrediction/bin
 
-_startNodeCount=20
+_startNodeCount=30
 _endNodeCount=150
 _stepNodeCount=5
+
+_peersNear=2
 
 _randomize=5
 
@@ -78,7 +80,7 @@ function iterateRandomized
 		# Analyse the resulting topology
 		java -Xms100m -Xmx2048m -XX:-UseGCOverheadLimit -cp "./bin/RTIEval.jar" frp.main.rti.analysis.RTIAnalysis -t "$_defaultSaveDir/$1-$2-$3-$i-top.dot" -o "$_defaultSaveDir/$1-$2-$3-$i-output" -htl "$3" -dhtl 0
 
-		mergeMaster $1 $2 $3 "$_defaultSaveDir/$1-$2-$3-$i-output"	
+		#mergeMaster $1 $2 $3 "$_defaultSaveDir/$1-$2-$3-$i-output"	
 		rm "$_defaultSaveDir/$1-$2-$3-$i-output"
 	done
 }
@@ -89,7 +91,7 @@ function iterateRandomized
 function iterateHTLCount
 {
 	local i=0
-	for (( i=$2-2; i<=$2+2;i++ ))
+	for (( i=$2; i<=$2+$_peersNear;i++ ))
 	do
 		iterateRandomized $1 $i $2
 	done
@@ -100,9 +102,10 @@ function iterateHTLCount
 #1 Node Count
 function iteratePeerCount
 {
-	local log2=$(echo "l($1)/l(2)" | bc -l)
-	local log2_ceiling=$(echo "($log2 + 1)/1" | bc)
-	iterateHTLCount $1 $log2_ceiling
+	local log=$(echo "(l($1)/l(10))^2" | bc -l)
+	local log_ceiling=$(echo "($log + 1)/1" | bc)
+	#echo "Node $1 HTL = $log_ceiling"
+	iterateHTLCount $1 $log_ceiling
 }
 
 
