@@ -4,6 +4,32 @@
 _bestFitScript="./_best_fit_algorithm.sh"
 _functionSolver="./_function_x_solver.sh"
 
+# Parameters
+# 1 base file name
+# 2 file postfix
+# 3 output file name
+function getFileName
+{
+	local _variable=$3
+	local name=$1
+	local postfix=$2
+	local value
+
+	local count=1
+	while [ 0 ]
+	do
+		value="$name-$count$postfix"
+		if [ -e "$value" ]
+		then
+			let "count=$count+1"
+		else
+			break
+		fi
+	done
+
+	eval $_variable="'$value'"
+}
+
 
 # Parameters
 # 1 tmp data file name (low)
@@ -17,12 +43,15 @@ _functionSolver="./_function_x_solver.sh"
 # 9 last x max
 function runDataSet
 {
-	local outFileNameLow="$4$5_$6_$7_min"
-	local outFileNameHigh="$4$5_$6_$7_max"
+	local outFileNameLow
+	getFileName "$4$5_$6_$7_min" ".png" outFileNameLow
+	local outFileNameHigh
+	getFileName "$4$5_$6_$7_max" ".png" outFileNameHigh
+
 	local title="Node $5, Degree $6, HTL $7"
 
-	local resultLowest=$($_bestFitScript 4 "$1" "$outFileNameLow.png" "$title, Minimum")
-	local resultHighest=$($_bestFitScript 4 "$2" "$outFileNameHigh.png" "$title, Maximum")
+	local resultLowest=$($_bestFitScript 4 "$1" "$outFileNameLow" "$title, Minimum")
+	local resultHighest=$($_bestFitScript 4 "$2" "$outFileNameHigh" "$title, Maximum")
 
 	local straightLow=$(echo $resultLowest | cut -d'|' -f3)
 	local fLow=$(echo $resultLowest | cut -d'|' -f2 | cut -d'=' -f2)
@@ -108,10 +137,12 @@ ParameterRandomQuestion outputFile "Output data file basename? [Default=ex_f_]" 
 ParameterScriptWelcomeEnd
 #===================================================================================================
 
+rm -rf "$outputDirectory" >& /dev/null
 mkdir -p "$outputDirectory"
 
 tmpDataFileLow="$outputDirectory/tmpDataLow.dat"
 tmpDataFileHigh="$outputDirectory/tmpDataHigh.dat"
+
 
 rm "$tmpDataFileLow" >& /dev/null
 rm "$tmpDataFileHigh" >& /dev/null
@@ -124,6 +155,7 @@ echo "Node Count,Peer Count,HTL,Min Function,Min R^2,Max Function,Max R^2,Attack
 nodes=0
 peerCount=0
 HTL=0
+attackSetSize=0
 startNewDataSet=1
 
 count=0
@@ -140,16 +172,17 @@ do
 	newNodes=$(echo $line | cut -d',' -f1)
 	newPeerCount=$(echo $line | cut -d',' -f2)
 	newHTL=$(echo $line | cut -d',' -f3)
+	newAttackSetSize=$(echo $line | cut -d',' -f4)
 
-	attackSetSize=$(echo $line | cut -d',' -f9)
+	attackSetSizeActual=$(echo $line | cut -d',' -f9)
 	minCoverage=$(echo $line | cut -d',' -f5)
 	maxCoverage=$(echo $line | cut -d',' -f6)
 
 	# skip the entries with attack set size less than 2
-	[ $attackSetSize -lt 2 ] && continue
+	[ $attackSetSizeActual -lt 2 ] && continue
 
-	# only need to check if last parameter HTL changed (it changes the most frequent)
-	if [ "$newHTL" != "$HTL" ] 
+	# only need to check if the attack set size reset, if so its a new data set
+	if [ $(echo "$attackSetSize > $newAttackSetSize" | bc) -ne 0 ] 
 	then
 		min100Count=0
 		max100Count=0
@@ -178,7 +211,7 @@ do
 	HTL=$newHTL
 
 	# build up the data files
-	attackSetSize=$(echo $line | cut -d',' -f4)
+	attackSetSize=$newAttackSetSize
 	minTargetSize=$(echo $line | cut -d',' -f5)
 	maxTargetSize=$(echo $line | cut -d',' -f6)
 
