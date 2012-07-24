@@ -80,7 +80,7 @@ function iterateRandomized
 		# Analyse the resulting topology
 		java -Xms100m -Xmx2048m -XX:-UseGCOverheadLimit -cp "./bin/RTIEval.jar" frp.main.rti.analysis.RTIAnalysis -t "$_defaultSaveDir/$1-$2-$3-$i-top.dot" -o "$_defaultSaveDir/$1-$2-$3-$i-output" -htl "$3" -dhtl 0
 
-		#mergeMaster $1 $2 $3 "$_defaultSaveDir/$1-$2-$3-$i-output"	
+		mergeMaster $1 $2 $3 "$_defaultSaveDir/$1-$2-$3-$i-output"	
 		rm "$_defaultSaveDir/$1-$2-$3-$i-output"
 	done
 }
