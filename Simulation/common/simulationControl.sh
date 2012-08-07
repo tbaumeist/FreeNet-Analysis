@@ -7,6 +7,21 @@ _status_sim="STATUS:"
 
 source ./common/depCheck.sh
 
+function HelpControl
+{
+	echo "Simulation Control Script Commands- Command: Parameters"
+	echo -e "\tStopSimulation: telnet_script machine_ip port"
+	echo -e "\tStartSimulation: Jar_location_of_simulator Port [Directory_to_save_run_data] [Console_output_file] [Protocol_trace_file]"
+	echo -e "\tCreateNetwork: telnet_script machine_ip port Node_count Peer_count HTL"
+	echo -e "\tRestoreNetwork: telnet_script machine_ip port Node_count Peer_count HTL Network_state"
+	echo -e "\tCreateTopologyOnly: telnet_script machine_ip port Node_count Peer_count HTL"
+	echo -e "\tGetNetworkState: telnet_script machine_ip port out_network_state"
+	echo -e "\tGetTopologyGraph: telnet_script machine_ip port storage_file"
+	echo -e "\tGetStoredData: telnet_script machine_ip port storage_file"
+	echo -e "\tGetNodeInfo: telnet_script machine_ip port {Output stored in _sim_control_node_ids and _sim_control_node_TMCI"
+	echo -e "\tPrintNodeIds"
+	echo -e "\tPrintNodePorts"
+}
 
 #Parameters
 #1 returned message to evaluate
@@ -243,6 +258,16 @@ function GetNodeInfo
 	rm -f "$tmp.tmp"
 
 	return 0
+}
+
+function PrintNodeIds
+{
+	echo ${_sim_control_node_ids[@]}
+}
+
+function PrintNodePorts
+{
+	echo ${_sim_control_node_TMCI[@]}
 }
 
 

@@ -5,6 +5,13 @@ _prompt_node="TMCI> "
 
 source ./common/depCheck.sh
 
+function HelpNodeControl
+{
+	echo "Simulation Node Control Script Commands- Command: Parameters"
+	echo -e "\tPutData: telnet_script machine_ip Node_port HTL Data out_key out_location"
+	echo -e "\tGetData: telnet_script machine_ip Node_port Key"
+}
+
 #Parameters
 #1 telnet script
 #2 machine ip

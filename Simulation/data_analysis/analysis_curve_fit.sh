@@ -179,7 +179,7 @@ do
 	maxCoverage=$(echo $line | cut -d',' -f6)
 
 	# skip the entries with attack set size less than 2
-	[ $attackSetSizeActual -lt 2 ] && continue
+	[ $(echo "$attackSetSizeActual < 2" | bc) -eq 1 ] && continue
 
 	# only need to check if the attack set size reset, if so its a new data set
 	if [ $(echo "$attackSetSize > $newAttackSetSize" | bc) -ne 0 ] 
