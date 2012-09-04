@@ -4,10 +4,10 @@
 _telS=../Scripts/common/telnet.exp
 
 _simJars="bin/*"
-_defaultSaveDir=~/Desktop/Sim/top_only/
+_defaultSaveDir=~/Desktop/Sim/top_only_htl/
 _defaultRunDir=/tmp/freenetSim/
 _machineName="localhost"
-_defaultPort=5200
+_defaultPort=7200
 
 _firstRun=0
 
@@ -17,7 +17,7 @@ _startNodeCount=50
 _endNodeCount=400
 _stepNodeCount=5
 
-_peersNear=2
+_peersNear=4
 
 _randomize=5
 
@@ -39,7 +39,7 @@ function processTopology
 		appFlag=""
 		_firstRun=1
 	fi 
-	java -cp "bin/*" frp.gephi.rti.AttackNodeAnalysisSingle -t "$5.fixed.dot" -n $1 -p $2 -htl $3 -ds $4 $appFlag -o "$_defaultSaveDir/topologyStats.csv"
+	java -cp "bin/*" frp.gephi.rti.AttackNodeAnalysisSingle -t "$5.fixed.dot" -n $1 -p $2 -htl $3 -ds $4 $appFlag -o "$_defaultSaveDir/topologyStats.csv" -maxhtl 8
 }
 
 #Parameters
@@ -91,10 +91,12 @@ function iterateRandomized
 function iterateHTLCount
 {
 	local i=0
-	for (( i=$2-$_peersNear; i<=$2+$_peersNear;i++ ))
+	for (( i=$2-$_peersNear; i<=$2;i++ ))
 	do
 		[ $i -le 3 ] && continue
 		iterateRandomized $1 $i $2
+		[ $i -eq $2 ] && continue
+		iterateRandomized $1 $2 $i
 	done
 }
 
