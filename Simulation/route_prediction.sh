@@ -96,7 +96,15 @@ do
 
 			GetTopologyGraph "$_telS" "$_machineName" "$_defaultPort" "$currentFileNameBase.dot" || reportErrorExit "FAILED: Get topology"
 
-			RoutePredictionExperiment "$_telS" "$_machineName" "$_defaultPort" "$insertsPerNode" "$currentFileNameBase.csv" || reportErrorExit "FAILED: Running experiment"
+			RoutePredictionExperimentStart "$_telS" "$_machineName" "$_defaultPort" "$insertsPerNode" "$currentFileNameBase.csv" || reportErrorExit "FAILED: Running experiment"
+
+			# wait for the experiment to finish running
+			while [ true ]
+			do
+				RoutePredictionExperimentDone "$_telS" "$_machineName" "$_defaultPort" && break
+				echo -e "\tWaiting for experiment..."
+				sleep 30
+			done			
 
 			StopSimulation "$_telS" "$_machineName" "$_defaultPort" || reportErrorExit "FAILED: Stop Simulation"
 

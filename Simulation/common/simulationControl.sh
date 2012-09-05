@@ -21,7 +21,8 @@ function HelpControl
 	echo -e "\tGetNodeInfo: telnet_script machine_ip port {Output stored in _sim_control_node_ids and _sim_control_node_TMCI"
 	echo -e "\tPrintNodeIds"
 	echo -e "\tPrintNodePorts"
-	echo -e "\tRoutePredictionExperiment: telnet_script machine_ip port number_of_inserts_per_node file_name"
+	echo -e "\RoutePredictionExperimentStart: telnet_script machine_ip port number_of_inserts_per_node file_name"
+	echo -e "\RoutePredictionExperimentDone: telnet_script machine_ip port"
 }
 
 #Parameters
@@ -277,26 +278,26 @@ function PrintNodePorts
 #3 port
 #4 number of inserts per node
 #5 save to file name
-function RoutePredictionExperiment
+function RoutePredictionExperimentStart
 {
 	rm -f $5
-	$1 "$2" "$3" "$_prompt_sim" "EXPERIMENT:ROUTEPREDICTION $4" > "$5.tmp"
-	
-	# check status
-	local returned=$(cat "$5.tmp" | grep "$_status_sim")
+
+	local returned=$($1 "$2" "$3" "$_prompt_sim" "EXPERIMENT:ROUTEPREDSTART $4 $5" | grep "$_status_sim")
 	Success "$returned"
-	if [ $? -ne 0 ]
-	then	
-		rm -f "$5.tmp"
-		return 1
-	fi
-	
-	# get the routing data only
-	cat "$5.tmp" | grep -P "\t" > "$5"
+	return $?
+}
 
-	rm -f "$5.tmp"
+#Parameters
+#1 telnet script
+#2 machine ip
+#3 port
+function RoutePredictionExperimentDone
+{
+	rm -f $5
 
-	return 0
+	local returned=$($1 "$2" "$3" "$_prompt_sim" "EXPERIMENT:ROUTEPREDDONE" | grep "$_status_sim")
+	Success "$returned"
+	return $?
 }
 
 
