@@ -103,7 +103,7 @@ do
 			do
 				RoutePredictionExperimentDone "$_telS" "$_machineName" "$_defaultPort" && break
 				echo -e "\tWaiting for experiment..."
-				sleep 30
+				sleep 60
 			done			
 
 			StopSimulation "$_telS" "$_machineName" "$_defaultPort" || reportErrorExit "FAILED: Stop Simulation"

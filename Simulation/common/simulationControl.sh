@@ -183,7 +183,7 @@ function GetTopologyGraph
 
 	echo "digraph G {" > "$4"
 	#echo "node [fontsize=24]" >> "$4"
-	echo "overlap=\"scale\"" >> "$4"
+	#echo "overlap=\"scale\"" >> "$4"
 
 	cat "$4.srt" >> "$4"
 
