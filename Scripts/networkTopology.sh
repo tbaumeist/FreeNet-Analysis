@@ -79,7 +79,7 @@ sort "$fileName" > "$fileName.srt"
 
 echo "digraph G {" > "$fileName"
 #echo "node [fontsize=24]" >> "$fileName"
-echo "overlap=\"scale\"" >> "$fileName"
+#echo "overlap=\"scale\"" >> "$fileName"
 
 cat "$fileName.srt" >> "$fileName"
 
