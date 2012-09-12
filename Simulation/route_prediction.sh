@@ -66,6 +66,7 @@ csvMaster="$fileNameBase.csv"
 # initial clean up
 rm -rf "$runDir"
 mkdir -p "$runDir"
+rm -rf "$_defaultRunDir" #tmp directory
 mkdir -p "$_defaultRunDir" #tmp directory
 
 [ -d $runDir ] || reportErrorExit "Unable to create the save directory!!"
@@ -102,7 +103,6 @@ do
 			while [ true ]
 			do
 				RoutePredictionExperimentDone "$_telS" "$_machineName" "$_defaultPort" && break
-				echo -e "\tWaiting for experiment..."
 				sleep 60
 			done			
 

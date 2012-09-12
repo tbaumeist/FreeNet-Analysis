@@ -4,6 +4,7 @@
 _prompt_sim="SIM>"
 _success_value_sim="SUCCESS"
 _status_sim="STATUS:"
+_route_sim="ROUTEEXP"
 
 source ./common/depCheck.sh
 
@@ -295,7 +296,8 @@ function RoutePredictionExperimentDone
 {
 	rm -f $5
 
-	local returned=$($1 "$2" "$3" "$_prompt_sim" "EXPERIMENT:ROUTEPREDDONE" | grep "$_status_sim")
+	local returned=$($1 "$2" "$3" "$_prompt_sim" "EXPERIMENT:ROUTEPREDDONE" | grep "$_route_sim")
+	echo "$returned"
 	Success "$returned"
 	return $?
 }
