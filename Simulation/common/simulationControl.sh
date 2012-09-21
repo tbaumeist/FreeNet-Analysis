@@ -22,8 +22,8 @@ function HelpControl
 	echo -e "\tGetNodeInfo: telnet_script machine_ip port {Output stored in _sim_control_node_ids and _sim_control_node_TMCI"
 	echo -e "\tPrintNodeIds"
 	echo -e "\tPrintNodePorts"
-	echo -e "\RoutePredictionExperimentStart: telnet_script machine_ip port number_of_inserts_per_node file_name"
-	echo -e "\RoutePredictionExperimentDone: telnet_script machine_ip port"
+	echo -e "\tRoutePredictionExperimentStart: telnet_script machine_ip port number_of_inserts_per_node file_name"
+	echo -e "\tRoutePredictionExperimentDone: telnet_script machine_ip port"
 }
 
 #Parameters
