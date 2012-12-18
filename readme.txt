@@ -13,14 +13,6 @@ This project is a security analysis of the Freenet protocol (anonymous P2P
 network). Further information and documentation can be found in the ./Documents 
 folder.
 
-Folders
--------
-./Documents - Contains project documentation and how to guilds
-./eclipse_workspace - Contains the source code for the various Freenet projects
-./NodeImages - Contains a set of files for specific Freenet instance types
-		in the Freenet testbed
-./Scripts - Contains various testbed managament related scripts
+To check out this project:
+	git clone --recursive git@github.com:tbaumeist/FreeNet-Analysis.git
 
-
-Please refer to the materials in the ./Documents folder for further project
-explainations.
