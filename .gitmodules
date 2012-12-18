@@ -1,0 +1,12 @@
+[submodule "Source/FreeNet-Route-Prediction"]
+	path = Source/FreeNet-Route-Prediction
+	url = git@github.com:tbaumeist/FreeNet-Route-Prediction.git
+[submodule "Source/DistTaskController"]
+	path = Source/DistTaskController
+	url = git@github.com:tbaumeist/DistTaskController.git
+[submodule "Source/FreeNet-Source"]
+	path = Source/FreeNet-Source
+	url = git@github.com:tbaumeist/FreeNet-Source.git
+[submodule "Source/FreeNet-Simulator"]
+	path = Source/FreeNet-Simulator
+	url = git@github.com:tbaumeist/FreeNet-Simulator.git
