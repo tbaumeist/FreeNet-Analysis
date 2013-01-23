@@ -2,7 +2,7 @@
 
 # Variables
 _telS=../Scripts/common/telnet.exp
-_simJars="bin/*"
+_simJars="../bin/*"
 _defaultRunDir=/tmp/freenetSim/
 _machineName="localhost"
 _defaultPort=5200

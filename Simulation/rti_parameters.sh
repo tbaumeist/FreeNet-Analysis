@@ -3,14 +3,12 @@
 # Variables
 _telS=../Scripts/common/telnet.exp
 
-_simJars="bin/*"
+_simJars="../bin/*"
 _defaultSaveDir=~/Desktop/Sim/rti_params/
 _masterCVS="$_defaultSaveDir/_masterRTIanalysis.csv"
 _defaultRunDir=/tmp/freenetSim/
 _machineName="localhost"
 _defaultPort=5200
-
-_rtiExDir=~/FreeNet-Analysis/eclipse_workspace/Freenet-RoutePrediction/bin
 
 _startNodeCount=100
 _endNodeCount=250
@@ -79,7 +77,7 @@ function iterateHTLCount
 		echo "Topology- node count: $1, peer count: $2, HTL: $i"
 
 		# Analyse the resulting topology
-		java -Xms100m -Xmx2048m -XX:-UseGCOverheadLimit -cp "./bin/RTIEval.jar" frp.main.rti.analysis.RTIAnalysis -t "$_defaultSaveDir/$1-$2-top.dot" -o "$_defaultSaveDir/$1-$2-$i-output" -htl "$i" -dhtl 0
+		java -Xms100m -Xmx2048m -XX:-UseGCOverheadLimit -cp "$_simJars" frp.main.rti.analysis.RTIAnalysis -t "$_defaultSaveDir/$1-$2-top.dot" -o "$_defaultSaveDir/$1-$2-$i-output" -htl "$i" -dhtl 0
 
 		mergeMaster $1 $2 $i "$_defaultSaveDir/$1-$2-$i-output"
 

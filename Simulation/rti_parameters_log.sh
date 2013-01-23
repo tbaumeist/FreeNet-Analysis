@@ -3,14 +3,12 @@
 # Variables
 _telS=../Scripts/common/telnet.exp
 
-_simJars="bin/*"
+_simJars="../bin/*"
 _defaultSaveDir=~/Desktop/Sim/rti_params/
 _masterCVS="$_defaultSaveDir/_masterRTIanalysis.csv"
 _defaultRunDir=/tmp/freenetSim/
 _machineName="localhost"
 _defaultPort=5200
-
-_rtiExDir=~/FreeNet-Analysis/eclipse_workspace/Freenet-RoutePrediction/bin
 
 _startNodeCount=30
 _endNodeCount=150
@@ -78,7 +76,7 @@ function iterateRandomized
 		generateTopology $1 $2 $3 $i
 
 		# Analyse the resulting topology
-		java -Xms100m -Xmx2048m -XX:-UseGCOverheadLimit -cp "./bin/RTIEval.jar" frp.main.rti.analysis.RTIAnalysis -t "$_defaultSaveDir/$1-$2-$3-$i-top.dot" -o "$_defaultSaveDir/$1-$2-$3-$i-output" -htl "$3" -dhtl 0
+		java -Xms100m -Xmx2048m -XX:-UseGCOverheadLimit -cp "$_simJars" frp.main.rti.analysis.RTIAnalysis -t "$_defaultSaveDir/$1-$2-$3-$i-top.dot" -o "$_defaultSaveDir/$1-$2-$3-$i-output" -htl "$3" -dhtl 0
 
 		mergeMaster $1 $2 $3 "$_defaultSaveDir/$1-$2-$3-$i-output"	
 		rm "$_defaultSaveDir/$1-$2-$3-$i-output"

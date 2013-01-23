@@ -3,13 +3,15 @@
 # Variables
 _telS=../Scripts/common/telnet.exp
 
-_simJars="bin/*"
+_simJars="../bin/*"
 _defaultrunDir=~/Desktop/Sim/normal_traffic
 _machineName="localhost"
 _defaultPort=5200
 
 _htl=5
 _peers=5
+_nodeCount=50
+_wordsPer=5
 
 
 #===================================================================================================
@@ -45,7 +47,7 @@ StartSimulation "$_simJars" "$port" "$runDir" "$runDir/console.dat" "$runDir/pro
 
 # Create small network, 100 nodes, 5 peers, 5 HTL
 echo "Creating new network..."
-CreateNetwork "$_telS" "$_machineName" "$port" "100" "$_peers" "$_htl" || exit 1
+CreateNetwork "$_telS" "$_machineName" "$port" "$_nodeCount" "$_peers" "$_htl" || exit 1
 
 # Get the network state
 declare networkState
@@ -61,14 +63,14 @@ echo "Getting node information..."
 GetNodeInfo "$_telS" "$_machineName" "$port" || exit 1
 
 # Check node info is not empty
-[ ${#_sim_control_node_ids[@]} -eq 100 ] || exit 1
-[ ${#_sim_control_node_TMCI[@]} -eq 100 ] || exit 1
+[ ${#_sim_control_node_ids[@]} -eq $_nodeCount ] || exit 1
+[ ${#_sim_control_node_TMCI[@]} -eq $_nodeCount ] || exit 1
 
 declare tmpPort
 declare tmpKey
 declare tmpLoc
 
-for k in `seq 10`
+for k in `seq $_wordsPer`
 do 
 	for i in `seq ${#_sim_control_node_TMCI[@]}`
 	do
