@@ -22,3 +22,6 @@ To check out this project:
 		FreeNet-Source
 	-run git checkout master in each submodule
 
+To do a pull for all the submodules
+	git submodule foreach git pull
+
