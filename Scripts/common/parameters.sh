@@ -1,11 +1,14 @@
 #!/bin/bash
 
+_scriptDir=$(dirname $0)
+_userDir=$(pwd)
+
 # default values
-_defaultConfigFile=./config/remoteMachines.dat
-_defaultConfigFolder=./config/configs/
-_defaultSaveDirLogs=~/Desktop/Freenet_Data/Node_Logs/
-_defaultSaveDirTopology=~/Desktop/Freenet_Data/Network_Topology/
-_defaultSaveDirGeneral=~/Desktop/Freenet_Data/
+_defaultConfigFile="$_scriptDir/config/remoteMachines.dat"
+_defaultConfigFolder="$_scriptDir/config/configs/"
+_defaultSaveDirLogs="$_userDir/Node_Logs/"
+_defaultSaveDirTopology="$_userDir/Network_Topology/"
+_defaultSaveDirGeneral="$_userDir/Freenet_Data/"
 
 
 #Parameters
