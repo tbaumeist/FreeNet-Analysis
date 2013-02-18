@@ -46,7 +46,8 @@ function run
 
 # constant run sub command
 constCommand="--route 500000 --route-hops 10000 --script-output "
-constCommand+="--route-fold-policy NONE --graph-lattice --route-bootstrap"
+constCommand+="--route-fold-policy NONE --graph-lattice --route-bootstrap "
+constCommand+="--route-policy PRECISION_LOSS"
 
 #variables to loop over
 networkSizes="1000 3000 5000"
