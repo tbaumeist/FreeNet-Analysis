@@ -56,7 +56,7 @@ degreeDists="--degree-fixed"
 topTypes="--link-flat --link-ideal"
 lookAheads="1 2 3"
 lookPrecisLosses="0.125 0.25 0.5"
-randomRoutingChances="0 0.1 0.15 0.2"
+randomRoutingChances="0 0.05 0.075 0.1"
 #end variables to loop over
 
 #none-looped variables
