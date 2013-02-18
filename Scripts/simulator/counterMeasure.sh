@@ -50,16 +50,16 @@ constCommand+="--route-fold-policy NONE --graph-lattice --route-bootstrap"
 
 #variables to loop over
 networkSizes="1000 3000 5000"
-degrees="8 11 15 19 26 34 40"
-degreeDists="--degree-fixed --degree-poisson"
+degrees="8 15 26 40"
+degreeDists="--degree-fixed"
 topTypes="--link-flat --link-ideal"
-lookAheads="1 2 3 4 5"
-lookPrecisLosses="0"
-randomRoutingChances="0"
+lookAheads="1 2 3"
+lookPrecisLosses="0.125 0.25 0.5"
+randomRoutingChances="0 0.1 0.15 0.2"
 #end variables to loop over
 
 #none-looped variables
-_experimentNum=1
+_experimentNum=2
 _outputHeader="experimentNumber networkSize degree degreeDist topType "
 _outputHeader+="lookAhead lookAheadPrecisionLoss randomRoutingPrecisionChance"
 
