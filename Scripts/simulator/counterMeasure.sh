@@ -1,6 +1,6 @@
 #!/bin/bash
 
-_scriptDir=$(dirname $0)
+_scriptDir=`dirname ${BASH_SOURCE[0]}`
 _userDir=$(pwd)
 _firstRun=0
 _output="$_userDir/counterMeasure.csv"

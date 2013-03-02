@@ -1,12 +1,14 @@
 #!/bin/bash
 
 # Variables
+_scriptDir=`dirname ${BASH_SOURCE[0]}`
+_userDir=$(pwd)
 _prompt_sim="SIM>"
 _success_value_sim="SUCCESS"
 _status_sim="STATUS:"
 _route_sim="ROUTEEXP"
 
-source ./common/depCheck.sh
+source $_scriptDir/../common/depCheck.sh
 
 function HelpControl
 {

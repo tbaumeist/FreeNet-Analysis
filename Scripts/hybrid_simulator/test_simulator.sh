@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # Variables
-_telS=../common/telnet.exp
+_scriptDir=`dirname ${BASH_SOURCE[0]}`
+_userDir=$(pwd)
+_telS=$_scriptDir../common/telnet.exp
 
-_simJars="../../bin/*"
+_simJars="$_scriptDir/../../bin/*"
 _defaultrunDir="/tmp/freenet_simulation/"
 _machineName="localhost"
 _defaultPort=4600
@@ -17,9 +19,9 @@ _defaultPort=4600
 # 2 Directory to store run files
 
 #source
-source ./simulationControl.sh
-source ./simulatedNodeControl.sh
-source ../common/parameters.sh
+source $_scriptDir/simulationControl.sh
+source $_scriptDir/simulatedNodeControl.sh
+source $_scriptDir/../common/parameters.sh
 
 declare port
 declare runDir

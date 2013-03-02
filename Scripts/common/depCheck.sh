@@ -1,6 +1,6 @@
 #!/bin/bash
 
-_scriptDir=$(dirname $0)
+_scriptDir=`dirname ${BASH_SOURCE[0]}`
 _userDir=$(pwd)
 
 source $_scriptDir/general.sh
