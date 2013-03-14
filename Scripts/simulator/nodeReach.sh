@@ -42,8 +42,8 @@ function run
     then 
 		local innerCount=0
 		echo "" > graph.analysis.dat	
-		#echo "sleeping..."
-		#sleep 20
+		echo "sleeping..."
+		sleep 20
 		
 		java -cp "$_scriptDir/../../bin/freenet-route-prediction.jar"  frp.gephi.rti.AttackNodeAnalysisSingle -t $3 -n $networkSize -p $degree -htl 4 -ds 0 -o graph.analysis.dat -maxhtl 4 2>>"$_log"
 		while read innerLine
