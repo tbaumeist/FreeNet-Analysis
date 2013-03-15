@@ -60,7 +60,7 @@ randomRoutingChances="0"
 #end variables to loop over
 
 #none-looped variables
-_experimentNum=2
+_experimentNum=3
 _outputHeader="experimentNumber networkSize degree degreeDist topType "
 _outputHeader+="lookAhead lookAheadPrecisionLoss randomRoutingPrecisionChance"
 
