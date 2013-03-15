@@ -39,7 +39,7 @@ function run
     echo "$2 $line" >> "$_output"
 
     
-  done < <(java -jar "$_scriptDir/../../bin/freenet-simulator.jar" $1 2>>"$_log")
+  done < <(java -Xms2500m -jar "$_scriptDir/../../bin/freenet-simulator.jar" $1 2>>"$_log")
 }
 
 #Main entry point
@@ -54,9 +54,9 @@ networkSizes="1000 3000 5000"
 degrees="8 15 26 40"
 degreeDists="--degree-fixed"
 topTypes="--link-flat --link-ideal"
-lookAheads="1 2 3"
-lookPrecisLosses="0.125 0.25 0.5"
-randomRoutingChances="0 0.05 0.075 0.1"
+lookAheads="2 3"
+lookPrecisLosses="1 2 3 4"
+randomRoutingChances="0"
 #end variables to loop over
 
 #none-looped variables
@@ -83,7 +83,7 @@ do
             do
 	      command="--graph-size $networkSize $degreeDist $degree "
               command+="$topType --route-look-ahead $lookAhead  "
-              command+="--route-look-precision $lookPrecisLoss "
+              command+="route-look-significant-digit $lookPrecisLoss "
               command+="--route-random-chance $randomRoutingChance "
               command+="$constCommand"
 
