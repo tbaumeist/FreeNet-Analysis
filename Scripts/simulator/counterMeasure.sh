@@ -39,7 +39,7 @@ function run
     echo "$2 $line" >> "$_output"
 
     
-  done < <(java -Xms2500m -jar "$_scriptDir/../../bin/freenet-simulator.jar" $1 2>>"$_log")
+  done < <(java -jar "$_scriptDir/../../bin/freenet-simulator.jar" $1 2>>"$_log")
 }
 
 #Main entry point
@@ -83,7 +83,7 @@ do
             do
 	      command="--graph-size $networkSize $degreeDist $degree "
               command+="$topType --route-look-ahead $lookAhead  "
-              command+="route-look-significant-digit $lookPrecisLoss "
+              command+="--route-look-significant-digit $lookPrecisLoss "
               command+="--route-random-chance $randomRoutingChance "
               command+="$constCommand"
 
