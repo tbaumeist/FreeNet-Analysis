@@ -16,7 +16,6 @@ folder.
 To check out this project:
 	git clone --recursive git@github.com:tbaumeist/FreeNet-Analysis.git
 	-After cloning the submodules
-		DistTaskController
 		FreeNet-Route-Prediction
 		FreeNet-Simulator
 		FreeNet-Source
